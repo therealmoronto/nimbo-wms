@@ -10,7 +10,7 @@ The project is currently in active development and serves as a foundation for a 
 Looking for the domain model, architecture, or process descriptions?  
 All project documentation is available in the **Nimbo WMS Wiki**:
 
-➡️ **Wiki:** https://github.com/<username>/<repo>/wiki
+➡️ **Wiki:** https://github.com/therealmoronto/nimbo-wms/wiki
 
 ---
 
