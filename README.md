@@ -41,7 +41,7 @@ Nimbo WMS is in its **initial planning and design stage**:
 
 ## 🗺 Roadmap (High-level)
 
-- [ ] Define core domain entities  
+- [x] Define core domain entities  
 - [ ] Implement backend domain models  
 - [ ] Create initial data storage layer  
 - [ ] Implement receiving process flow  
