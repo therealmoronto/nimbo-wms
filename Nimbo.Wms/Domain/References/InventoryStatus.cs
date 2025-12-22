@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Nimbo.Wms.Domain;
+namespace Nimbo.Wms.Domain.References;
 
 /// <summary>
 /// Inventory statuses for <see cref="InventoryItem"/>

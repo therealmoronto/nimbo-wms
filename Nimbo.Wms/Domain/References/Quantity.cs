@@ -1,4 +1,4 @@
-﻿namespace Nimbo.Wms.Domain;
+﻿namespace Nimbo.Wms.Domain.References;
 
 /// <summary>
 /// Immutable quantity with a unit of measure.

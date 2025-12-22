@@ -1,4 +1,4 @@
-﻿namespace Nimbo.Wms.Domain.Extensions;
+﻿namespace Nimbo.Wms.Domain.References.Extensions;
 
 public static class QuantityExtensions
 {

@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Nimbo.Wms.Domain;
+namespace Nimbo.Wms.Domain.References;
 
 /// <summary>
 /// Document statuses for <see cref="IDocument"/>

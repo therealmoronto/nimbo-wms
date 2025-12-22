@@ -1,4 +1,4 @@
-﻿namespace Nimbo.Wms.Domain;
+﻿namespace Nimbo.Wms.Domain.References;
 
 public enum UnitOfMeasure
 {
