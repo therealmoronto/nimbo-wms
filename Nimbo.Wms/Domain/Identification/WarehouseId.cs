@@ -16,4 +16,8 @@ public readonly struct WarehouseId : IEntityId
     public static WarehouseId New() => EntityId.New(id => new WarehouseId(id));
     
     public static WarehouseId From(Guid guid) => EntityId.From(guid, id => new WarehouseId(id));
+
+    public override string ToString() => Value.ToString("D");
+
+    public static implicit operator Guid(WarehouseId id) => id.Value;
 }

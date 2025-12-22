@@ -16,4 +16,8 @@ public readonly struct LocationId : IEntityId
     public static LocationId New() => EntityId.New(id => new LocationId(id));
     
     public static LocationId From(Guid guid) => EntityId.From(guid, id => new LocationId(id));
+
+    public override string ToString() => Value.ToString("D");
+
+    public static implicit operator Guid(LocationId id) => id.Value;
 }

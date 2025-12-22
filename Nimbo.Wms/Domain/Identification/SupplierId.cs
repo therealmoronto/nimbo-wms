@@ -16,4 +16,8 @@ public readonly struct SupplierId : IEntityId
     public static SupplierId New() => EntityId.New(id => new SupplierId(id));
     
     public static SupplierId From(Guid guid) => EntityId.From(guid, id => new SupplierId(id));
+
+    public override string ToString() => Value.ToString("D");
+
+    public static implicit operator Guid(SupplierId id) => id.Value;
 }

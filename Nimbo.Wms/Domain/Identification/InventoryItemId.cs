@@ -16,4 +16,8 @@ public readonly struct InventoryItemId : IEntityId
     public static InventoryItemId New() => EntityId.New(id => new InventoryItemId(id));
     
     public static InventoryItemId From(Guid guid) => EntityId.From(guid, id => new InventoryItemId(id));
+
+    public override string ToString() => Value.ToString("D");
+
+    public static implicit operator Guid(InventoryItemId id) => id.Value;
 }
