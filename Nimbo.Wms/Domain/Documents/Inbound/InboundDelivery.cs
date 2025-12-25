@@ -21,6 +21,8 @@ public class InboundDelivery : Document<InboundDeliveryId, InboundDeliveryStatus
     public SupplierId SupplierId { get; private set; }
 
     public WarehouseId WarehouseId { get; private set; }
+    
+    public DateTime? StartedAt { get; private set; }
 
     public DateTime? ReceivedAt { get; private set; }
 
@@ -31,11 +33,18 @@ public class InboundDelivery : Document<InboundDeliveryId, InboundDeliveryStatus
 
     public InboundDeliveryLine AddLine(ItemId itemId, decimal expectedQuantity, UnitOfMeasure uom, string? batchNumber = null, DateTime? expiryDate = null)
     {
-        EnsureDraft();
+        EnsureStatus(InboundDeliveryStatus.Draft);
 
         var line = new InboundDeliveryLine(itemId, expectedQuantity, uom, batchNumber, expiryDate);
         _lines.Add(line);
         return line;
+    }
+
+    public void Start()
+    {
+        StartedAt = DateTime.UtcNow;
+        EnsureStatus(InboundDeliveryStatus.Draft);
+        Status = InboundDeliveryStatus.InProgress;
     }
 
     public void ReceiveLine(
@@ -46,7 +55,7 @@ public class InboundDelivery : Document<InboundDeliveryId, InboundDeliveryStatus
         bool allowOverReceipt,
         bool batchRequired)
     {
-        EnsureDraft();
+        EnsureStatus(InboundDeliveryStatus.InProgress);
 
         var line = _lines.SingleOrDefault(x => x.Id == lineId)
                    ?? throw new KeyNotFoundException("Inbound delivery line not found.");
@@ -56,7 +65,7 @@ public class InboundDelivery : Document<InboundDeliveryId, InboundDeliveryStatus
 
     public void Complete(DateTime utcNow)
     {
-        EnsureDraft();
+        EnsureStatus(InboundDeliveryStatus.InProgress);
 
         if (_lines.Count == 0)
             throw new InvalidOperationException("Inbound delivery must have at least one line.");
@@ -71,9 +80,9 @@ public class InboundDelivery : Document<InboundDeliveryId, InboundDeliveryStatus
         ReceivedAt = utcNow; // receiving timestamp recorded
     }
 
-    private void EnsureDraft()
+    private void EnsureStatus(InboundDeliveryStatus status)
     {
-        if (Status != InboundDeliveryStatus.Draft)
+        if (Status != status)
             throw new InvalidOperationException("Inbound delivery is closed for editing.");
     }
 }

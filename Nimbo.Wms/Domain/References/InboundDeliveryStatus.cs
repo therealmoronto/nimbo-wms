@@ -3,7 +3,8 @@
 public enum InboundDeliveryStatus
 {
     Draft = 0,
-    Cancelled = 5,
-    ReceivedPartially = 10,
-    ReceivedFully = 20,
+    InProgress = 10,
+    ReceivedPartially = 20,
+    ReceivedFully = 30,
+    Cancelled = 99,
 }
