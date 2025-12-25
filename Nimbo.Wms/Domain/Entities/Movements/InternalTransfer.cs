@@ -1,7 +1,7 @@
 ﻿using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 
-namespace Nimbo.Wms.Domain.Entities;
+namespace Nimbo.Wms.Domain.Entities.Movements;
 
 public class InternalTransfer : IEntity<InternalTransferId>
 {
@@ -37,9 +37,11 @@ public class InternalTransfer : IEntity<InternalTransferId>
     public InternalTransferId Id { get; }
 
     public WarehouseId WarehouseId { get; }
+    
     public ItemId ItemId { get; }
 
     public LocationId FromLocationId { get; }
+    
     public LocationId ToLocationId { get; }
 
     public Quantity Quantity { get; }

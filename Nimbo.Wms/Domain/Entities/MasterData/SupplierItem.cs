@@ -1,6 +1,6 @@
 ﻿using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Domain.Entities;
+namespace Nimbo.Wms.Domain.Entities.MasterData;
 
 public class SupplierItem : IEntity<SupplierItemId>
 {

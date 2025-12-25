@@ -1,7 +1,7 @@
 ﻿using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 
-namespace Nimbo.Wms.Domain.Entities;
+namespace Nimbo.Wms.Domain.Entities.Stock;
 
 public class InventoryItem : IEntity<InventoryItemId>
 {

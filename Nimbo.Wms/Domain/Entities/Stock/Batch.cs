@@ -1,6 +1,6 @@
 ﻿using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Domain.Entities;
+namespace Nimbo.Wms.Domain.Entities.Stock;
 
 public class Batch : IEntity<BatchId>
 {
@@ -48,11 +48,9 @@ public class Batch : IEntity<BatchId>
 
     public string? Notes { get; private set; }
     
-    public void ChangeBatchNumber(string batchNumber)
-        => BatchNumber = RequireNonEmpty(batchNumber, nameof(batchNumber));
+    public void ChangeBatchNumber(string batchNumber) => BatchNumber = RequireNonEmpty(batchNumber, nameof(batchNumber));
 
-    public void SetSupplier(SupplierId? supplierId)
-        => SupplierId = supplierId;
+    public void SetSupplier(SupplierId? supplierId) => SupplierId = supplierId;
 
     public void SetManufacturedAt(DateTime? manufacturedAt)
     {
@@ -66,11 +64,9 @@ public class Batch : IEntity<BatchId>
         ExpiryDate = expiryDate;
     }
 
-    public void SetReceivedAt(DateTime? receivedAt)
-        => ReceivedAt = receivedAt;
+    public void SetReceivedAt(DateTime? receivedAt) => ReceivedAt = receivedAt;
 
-    public void SetNotes(string? notes)
-        => Notes = TrimOrNull(notes);
+    public void SetNotes(string? notes) => Notes = TrimOrNull(notes);
 
     private static void EnsureDatesValid(DateTime? manufacturedAt, DateTime? expiryDate)
     {
@@ -82,9 +78,9 @@ public class Batch : IEntity<BatchId>
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("Value cannot be empty.", paramName);
+
         return value.Trim();
     }
 
-    private static string? TrimOrNull(string? value)
-        => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    private static string? TrimOrNull(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }
