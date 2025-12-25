@@ -9,6 +9,8 @@ public sealed class NimboWmsDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("nimbo");
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(NimboWmsDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
 }
