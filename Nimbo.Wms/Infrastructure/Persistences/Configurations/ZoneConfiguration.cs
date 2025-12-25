@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nimbo.Wms.Domain.Entities.WarehouseData;
-using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Infrastructure.Persistences.Converters;
 
 namespace Nimbo.Wms.Infrastructure.Persistences.Configurations;
@@ -18,7 +17,8 @@ public class ZoneConfiguration : IEntityTypeConfiguration<Zone>
             .HasEntityIdConversion();
         
         builder.Property(x => x.WarehouseId)
-            .HasEntityIdConversion();
+            .HasEntityIdConversion()
+            .IsRequired();
 
         builder.Property(x => x.Code)
             .HasMaxLength(32)
@@ -29,7 +29,8 @@ public class ZoneConfiguration : IEntityTypeConfiguration<Zone>
             .IsRequired();
 
         builder.Property(x => x.Type)
-            .HasDefaultValue(ZoneType.Storage);
+            .HasConversion<string>()
+            .IsRequired();
 
         builder.Property(x => x.IsDamagedArea)
             .HasDefaultValue(false);

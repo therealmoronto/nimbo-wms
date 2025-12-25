@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nimbo.Wms.Domain.Entities.WarehouseData;
-using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Infrastructure.Persistences.Converters;
 
 namespace Nimbo.Wms.Infrastructure.Persistences.Configurations;
@@ -18,10 +17,12 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .HasEntityIdConversion();
         
         builder.Property(x => x.WarehouseId)
-            .HasEntityIdConversion();
+            .HasEntityIdConversion()
+            .IsRequired();
         
         builder.Property(x => x.ZoneId)
-            .HasEntityIdConversion();
+            .HasEntityIdConversion()
+            .IsRequired();
         
         builder.Property(x => x.Code)
             .HasMaxLength(32)
@@ -40,7 +41,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .HasMaxLength(16);
         
         builder.Property(x => x.Type)
-            .HasDefaultValue(LocationType.Pallet);
+            .HasConversion<string>()
+            .IsRequired();
 
         builder.Property(x => x.MaxWeightKg);
         

@@ -14,7 +14,7 @@ public class InventoryItem : IEntity<InventoryItemId>
         LocationId locationId,
         Quantity quantity,
         InventoryStatus status = InventoryStatus.Available,
-        string? batchNumber = null,
+        BatchId? batchId = null,
         string? serialNumber = null,
         decimal? unitCost = null)
     {
@@ -24,7 +24,7 @@ public class InventoryItem : IEntity<InventoryItemId>
         WarehouseId = warehouseId;
         LocationId = locationId;
 
-        BatchNumber = TrimOrNull(batchNumber);
+        BatchId = batchId;
         SerialNumber = TrimOrNull(serialNumber);
 
         Quantity = quantity;
@@ -54,7 +54,7 @@ public class InventoryItem : IEntity<InventoryItemId>
     /// Optional batch/lot identifier stored directly on InventoryItem (MVP).
     /// If you later rely on Batch entity, you can use BatchId instead or keep both.
     /// </summary>
-    public string? BatchNumber { get; private set; }
+    public BatchId? BatchId { get; private set; }
 
     /// <summary>
     /// Optional serial number (when used, quantity is typically 1).
@@ -117,8 +117,7 @@ public class InventoryItem : IEntity<InventoryItemId>
 
     public void StartAudit() => ChangeStatus(InventoryStatus.Audit);
 
-    public void SetBatchNumber(string? batchNumber)
-        => BatchNumber = TrimOrNull(batchNumber);
+    public void SetBatchNumber(BatchId? batchId) => BatchId = batchId;
 
     public void SetSerialNumber(string? serialNumber)
     {

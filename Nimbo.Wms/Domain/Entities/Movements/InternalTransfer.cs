@@ -1,5 +1,4 @@
 ﻿using Nimbo.Wms.Domain.Identification;
-using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Domain.ValueObject;
 
 namespace Nimbo.Wms.Domain.Entities.Movements;

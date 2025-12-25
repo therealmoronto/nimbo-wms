@@ -17,11 +17,13 @@ public class SupplierItemConfiguration : IEntityTypeConfiguration<SupplierItem>
             .HasEntityIdConversion();
         
         builder.Property(x => x.SupplierId)
-            .HasEntityIdConversion();
+            .HasEntityIdConversion()
+            .IsRequired();
         
         builder.Property(x => x.ItemId)
-            .HasEntityIdConversion();
-        
+            .HasEntityIdConversion()
+            .IsRequired();
+
         builder.Property(x => x.SupplierSku)
             .HasMaxLength(128);
         

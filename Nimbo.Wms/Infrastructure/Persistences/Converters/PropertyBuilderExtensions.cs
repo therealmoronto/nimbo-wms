@@ -12,4 +12,12 @@ public static class PropertyBuilderExtensions
         property.Metadata.SetValueComparer(new EntityIdComparer<TId>());
         return property;
     }
+
+    public static PropertyBuilder<TId?> HasEntityIdConversion<TId>(this PropertyBuilder<TId?> property)
+        where TId : struct, IEntityId
+    {
+        property.HasConversion(new EntityIdConverter<TId>());
+        property.Metadata.SetValueComparer(new EntityIdComparer<TId>());
+        return property;
+    }
 }

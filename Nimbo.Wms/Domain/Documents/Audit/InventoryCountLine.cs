@@ -25,7 +25,7 @@ public class InventoryCountLine
 
     public Quantity? CountedQuantity { get; private set; }
 
-    public bool IsCounted => CountedQuantity.HasValue;
+    public bool IsCounted => CountedQuantity != null;
     
     public void SetCountedQuantity(Quantity countedQuantity)
     {
