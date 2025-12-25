@@ -130,7 +130,7 @@ public class InventoryItem : IEntity<InventoryItemId>
 
     private void EnsureReservable()
     {
-        // Wiki: Damaged/Expired/Hold/Audit must not be reservable. :contentReference[oaicite:5]{index=5}
+        // Wiki: Damaged/Expired/Hold/Audit must not be reservable. 
         if (Status is InventoryStatus.Damaged
             or InventoryStatus.Expired
             or InventoryStatus.Hold
@@ -148,7 +148,7 @@ public class InventoryItem : IEntity<InventoryItemId>
 
     private static void EnsureSerialRules(string? serialNumber, Quantity quantity)
     {
-        // Wiki: SerialNumber implies quantity control (typically one unit per record). :contentReference[oaicite:6]{index=6}
+        // Wiki: SerialNumber implies quantity control (typically one unit per record). 
         if (serialNumber is not null && quantity.Value != 1m)
             throw new InvalidOperationException("Serialized stock must have quantity = 1.");
     }
