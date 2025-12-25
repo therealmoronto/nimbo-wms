@@ -1,4 +1,6 @@
-﻿namespace Nimbo.Wms.Domain.References.Extensions;
+﻿using Nimbo.Wms.Domain.ValueObject;
+
+namespace Nimbo.Wms.Domain.References.Extensions;
 
 public static class QuantityExtensions
 {

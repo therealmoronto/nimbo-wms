@@ -1,4 +1,6 @@
-﻿namespace Nimbo.Wms.Domain.References;
+﻿using Nimbo.Wms.Domain.References;
+
+namespace Nimbo.Wms.Domain.ValueObject;
 
 /// <summary>
 /// Immutable quantity with a unit of measure.
@@ -35,4 +37,6 @@ public readonly record struct Quantity(decimal Value, UnitOfMeasure Uom)
     }
 
     public override string ToString() => $"{Value} {Uom}";
+
+    public static implicit operator decimal(Quantity quantity) => quantity.Value;
 }
