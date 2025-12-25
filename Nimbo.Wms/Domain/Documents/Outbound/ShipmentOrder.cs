@@ -87,7 +87,7 @@ public class ShipmentOrder : Document<ShipmentOrderId, ShipmentOrderStatus>
     private void EnsureStatus(ShipmentOrderStatus status)
     {
         if (Status != status)
-            throw new InvalidOperationException($"Operation allowed only in {ShipmentOrderStatus.Draft}.");
+            throw new InvalidOperationException($"Invalid TransferOrder status. Expected {status}, actual {Status}.");
     }
 
 }
