@@ -5,17 +5,6 @@ namespace Nimbo.Wms.Domain.Entities;
 
 public class Item : IEntity<ItemId>
 {
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="id">Item identifier</param>
-    /// <param name="name">Item name</param>
-    /// <param name="internalSku">Item internal SKU</param>
-    /// <param name="barcode">Item barcode</param>
-    /// <param name="baseUomCode">Item base unit of measure</param>
-    /// <param name="manufacturer">Item manufacturer</param>
-    /// <param name="weightKg">Item weight in kilograms</param>
-    /// <param name="volumeM3">Item volume in cubic meters</param>
     /// <exception cref="ArgumentException">Thrown when the provided strings of name, internalSku or barcode are empty or whitespace or when weight or volume are negative</exception>
     public Item(ItemId id,
         string name,

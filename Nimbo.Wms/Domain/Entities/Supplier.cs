@@ -4,6 +4,7 @@ namespace Nimbo.Wms.Domain.Entities;
 
 public class Supplier : IEntity<SupplierId>
 {
+    /// <exception cref="ArgumentException">Thrown when the provided strings of code or name are empty or whitespace</exception>
     public Supplier(
         SupplierId id,
         string code,
