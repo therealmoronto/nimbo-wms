@@ -82,7 +82,8 @@ public sealed class Location : IEntity<LocationId>
 
     public bool IsShippingLocation { get; private set; }
 
-    public bool IsActive { get; private set; } = true;
+    public bool IsActive { get; private set; }
+
     public bool IsBlocked { get; private set; }
 
     public void ChangeCode(string code) => Code = RequireNonEmpty(code, nameof(code));
