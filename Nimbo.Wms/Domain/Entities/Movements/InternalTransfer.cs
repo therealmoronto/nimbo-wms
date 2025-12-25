@@ -5,6 +5,11 @@ namespace Nimbo.Wms.Domain.Entities.Movements;
 
 public class InternalTransfer : IEntity<InternalTransferId>
 {
+    private InternalTransfer()
+    {
+        // Required by EF Core
+    }
+
     /// <exception cref="ArgumentOutOfRangeException">Quantity must be greater than zero.</exception>
     public InternalTransfer(
         InternalTransferId id,

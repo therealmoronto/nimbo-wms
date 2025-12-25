@@ -6,6 +6,11 @@ namespace Nimbo.Wms.Domain.Entities.Stock;
 
 public class InventoryItem : IEntity<InventoryItemId>
 {
+    private InventoryItem()
+    {
+        // Required by EF Core
+    }
+    
     /// <exception cref="ArgumentException">Thrown when the provided strings of batchNumber or serialNumber are empty or whitespace or when quantity is negative</exception>
     public InventoryItem(
         InventoryItemId id,
