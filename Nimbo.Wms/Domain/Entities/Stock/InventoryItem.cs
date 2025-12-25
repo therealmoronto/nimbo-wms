@@ -53,7 +53,7 @@ public class InventoryItem : IEntity<InventoryItemId>
     /// Current stock quantity expressed in a unit of measure.
     /// Usually equals Item.BaseUom.
     /// </summary>
-    public Quantity Quantity { get; private set; }
+    public Quantity Quantity { get; private set; } = null!;
 
     /// <summary>
     /// Optional batch/lot identifier stored directly on InventoryItem (MVP).

@@ -49,7 +49,7 @@ public class InternalTransfer : IEntity<InternalTransferId>
     
     public LocationId ToLocationId { get; }
 
-    public Quantity Quantity { get; }
+    public Quantity Quantity { get; } = null!;
 
     public DateTime OccurredAt { get; }
 
