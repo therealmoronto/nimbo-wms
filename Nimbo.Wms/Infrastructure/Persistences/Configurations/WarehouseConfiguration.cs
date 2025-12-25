@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nimbo.Wms.Domain.Entities.WarehouseData;
-using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Infrastructure.Persistences.Converters;
 
 namespace Nimbo.Wms.Infrastructure.Persistences.Configurations;
