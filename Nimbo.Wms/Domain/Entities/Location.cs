@@ -119,12 +119,6 @@ public sealed class Location : IEntity<LocationId>
 
     public void Activate() => IsActive = true;
 
-    /// <summary>
-    /// Checks if the provided string is non-empty and trims it.
-    /// </summary>
-    /// <param name="value">String to be checked and trimmed</param>
-    /// <param name="paramName">Name of the parameter for exception message</param>
-    /// <returns>Trimmed string or throws ArgumentException if empty</returns>
     /// <exception cref="ArgumentException">Thrown when value is empty</exception>
     private static string RequireNonEmpty(string value, string paramName)
     {
@@ -136,12 +130,6 @@ public sealed class Location : IEntity<LocationId>
     private static string? TrimOrNull(string? value)
         => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
-    /// <summary>
-    /// Checks if the provided decimal is non-negative.
-    /// </summary>
-    /// <param name="value">Decimal value to be checked</param>
-    /// <param name="paramName">Name of the parameter for exception message</param>
-    /// <returns>Original value if non-negative, otherwise throws ArgumentOutOfRangeException</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when value is negative</exception>
     private static decimal? RequireNonNegativeOrNull(decimal? value, string paramName)
     {

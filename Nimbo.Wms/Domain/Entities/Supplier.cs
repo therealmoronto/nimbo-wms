@@ -72,6 +72,7 @@ public class Supplier : IEntity<SupplierId>
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("Value cannot be empty.", paramName);
+
         return value.Trim();
     }
 

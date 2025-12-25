@@ -5,6 +5,7 @@ namespace Nimbo.Wms.Domain.Entities;
 
 public class InventoryItem : IEntity<InventoryItemId>
 {
+    /// <exception cref="ArgumentException">Thrown when the provided strings of batchNumber or serialNumber are empty or whitespace or when quantity is negative</exception>
     public InventoryItem(
         InventoryItemId id,
         ItemId itemId,
@@ -63,8 +64,6 @@ public class InventoryItem : IEntity<InventoryItemId>
 
     public decimal? UnitCost { get; private set; }
     
-     // --------- Stock adjustments ---------
-
     public void Increase(Quantity amount)
     {
         EnsureSameUom(amount);
@@ -76,8 +75,6 @@ public class InventoryItem : IEntity<InventoryItemId>
         EnsureSameUom(amount);
         Quantity -= amount; // Quantity.Subtract already prevents negative results
     }
-
-    // --------- Movement (pure state) ---------
 
     public void MoveWithinWarehouse(LocationId toLocationId)
     {
@@ -93,15 +90,11 @@ public class InventoryItem : IEntity<InventoryItemId>
         LocationId = toLocationId;
     }
 
-    // --------- Status changes (guarded by state machine) ---------
-
     public void ChangeStatus(InventoryStatus newStatus)
     {
         InventoryStatusTransition.EnsureCanTransition(Status, newStatus);
         Status = newStatus;
     }
-
-    // Convenience methods (optional, but readable in use-cases):
 
     public void Reserve()
     {
@@ -123,8 +116,6 @@ public class InventoryItem : IEntity<InventoryItemId>
 
     public void StartAudit() => ChangeStatus(InventoryStatus.Audit);
 
-    // --------- Optional fields ---------
-
     public void SetBatchNumber(string? batchNumber)
         => BatchNumber = TrimOrNull(batchNumber);
 
@@ -136,8 +127,6 @@ public class InventoryItem : IEntity<InventoryItemId>
 
     public void SetUnitCost(decimal? unitCost)
         => UnitCost = RequireNonNegativeOrNull(unitCost, nameof(unitCost));
-
-    // --------- Rules helpers ---------
 
     private void EnsureReservable()
     {
@@ -164,8 +153,7 @@ public class InventoryItem : IEntity<InventoryItemId>
             throw new InvalidOperationException("Serialized stock must have quantity = 1.");
     }
 
-    private static string? TrimOrNull(string? value)
-        => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    private static string? TrimOrNull(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
     private static decimal? RequireNonNegativeOrNull(decimal? value, string paramName)
     {

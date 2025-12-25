@@ -5,6 +5,7 @@ namespace Nimbo.Wms.Domain.Entities;
 
 public class InternalTransfer : IEntity<InternalTransferId>
 {
+    /// <exception cref="ArgumentOutOfRangeException">Quantity must be greater than zero.</exception>
     public InternalTransfer(
         InternalTransferId id,
         WarehouseId warehouseId,
@@ -33,16 +34,6 @@ public class InternalTransfer : IEntity<InternalTransferId>
         Reason = TrimOrNull(reason);
     }
 
-    private static Quantity EnsurePositive(Quantity quantity)
-    {
-        // Wiki: quantity must be > 0 :contentReference[oaicite:2]{index=2}
-        if (quantity.Value <= 0m)
-            throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity must be greater than zero.");
-        return quantity;
-    }
-
-    private static string? TrimOrNull(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
-    
     public InternalTransferId Id { get; }
 
     public WarehouseId WarehouseId { get; }
@@ -60,4 +51,14 @@ public class InternalTransfer : IEntity<InternalTransferId>
     /// </summary>
     public string? Reason { get; }
 
+    /// <exception cref="ArgumentOutOfRangeException">Quantity must be greater than zero.</exception>
+    private static Quantity EnsurePositive(Quantity quantity)
+    {
+        if (quantity.Value <= 0m)
+            throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity must be greater than zero.");
+
+        return quantity;
+    }
+
+    private static string? TrimOrNull(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }
