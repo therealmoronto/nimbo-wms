@@ -3,7 +3,7 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.Persistences.Converters;
 
-public class EntityIdConverter<TId> : ValueConverter<TId, Guid>
+public sealed class EntityIdConverter<TId> : ValueConverter<TId, Guid>
     where TId : struct, IEntityId
 {
     /// <exception cref="InvalidOperationException">Thrown when the provided type TId does not implement IEntityId</exception>

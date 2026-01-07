@@ -3,7 +3,7 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.Persistences.Converters;
 
-public class EntityIdComparer<TId> : ValueComparer<TId>
+public sealed class EntityIdComparer<TId> : ValueComparer<TId>
     where TId : struct, IEntityId
 {
     public EntityIdComparer()
