@@ -5,11 +5,18 @@ namespace Nimbo.Wms.Domain.Documents.Audit;
 
 public class InventoryCountLine
 {
-    public InventoryCountLine(ItemId itemId, LocationId locationId, Quantity systemQuantity)
+    // ReSharper disable once UnusedMember.Local
+    private InventoryCountLine()
+    {
+        // Required by EF Core
+    }
+    
+    public InventoryCountLine(InventoryCountId documentId, ItemId itemId, LocationId locationId, Quantity systemQuantity)
     {
         if (systemQuantity.Value < 0m)
             throw new ArgumentOutOfRangeException(nameof(systemQuantity), "SystemQuantity cannot be negative.");
 
+        InventoryCountId = documentId;
         ItemId = itemId;
         LocationId = locationId;
         SystemQuantity = systemQuantity;
@@ -17,6 +24,8 @@ public class InventoryCountLine
     
     public Guid Id { get; } = Guid.NewGuid();
 
+    public InventoryCountId InventoryCountId { get; }
+    
     public ItemId ItemId { get; }
 
     public LocationId LocationId { get; }

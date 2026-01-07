@@ -6,6 +6,11 @@ public abstract class Document<TId, TStatus> : IEntity<TId>
     where TId : struct, IEntityId
     where TStatus : struct, Enum
 {
+    protected Document()
+    {
+        // Required by EF Core
+    }
+    
     protected Document(TId id,TStatus status,  DateTime createdAt, string? externalReference)
     {
         Id = id;

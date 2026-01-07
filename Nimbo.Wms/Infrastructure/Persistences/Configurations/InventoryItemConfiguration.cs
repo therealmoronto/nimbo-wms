@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Domain.Entities.WarehouseData;
-using Nimbo.Wms.Domain.ValueObject;
 using Nimbo.Wms.Infrastructure.Persistences.Converters;
 
 namespace Nimbo.Wms.Infrastructure.Persistences.Configurations;
@@ -45,7 +44,7 @@ public class InventoryItemConfiguration : IEntityTypeConfiguration<InventoryItem
         builder.Property(x => x.UnitCost)
             .HasColumnType("numeric(18, 4)");   
 
-        builder.OwnsOne<Quantity>(
+        builder.OwnsOne(
             x => x.Quantity,
             q =>
             {

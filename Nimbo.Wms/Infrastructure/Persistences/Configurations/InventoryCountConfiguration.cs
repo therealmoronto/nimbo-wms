@@ -11,12 +11,22 @@ public sealed class InventoryCountConfiguration : IEntityTypeConfiguration<Inven
     public void Configure(EntityTypeBuilder<InventoryCount> builder)
     {
         builder.ToTable("inventory_counts");
-        
+
         builder.HasKey(x => x.Id);
-        
+
         builder.Property(x => x.Id)
-            .HasEntityIdConversion()
+            .HasEntityIdConversion();
+
+        builder.Property(x => x.CreatedAt)
             .IsRequired();
+
+        builder.Property(x => x.Status)
+            .HasConversion<string>()
+            .HasMaxLength(32)
+            .IsRequired();
+
+        builder.Property(x => x.ExternalReference)
+            .HasMaxLength(128);
 
         builder.Property(x => x.WarehouseId)
             .HasEntityIdConversion()
@@ -24,28 +34,28 @@ public sealed class InventoryCountConfiguration : IEntityTypeConfiguration<Inven
 
         builder.Property(x => x.ZoneId)
             .HasEntityIdConversion();
-        
-        builder.Property(x => x.CreatedAt)
-            .IsRequired();
-        
-        builder.Property(x => x.Status)
-            .HasMaxLength(32)
-            .IsRequired();
-
-        builder.Property(x => x.ExternalReference)
-            .HasMaxLength(512);
 
         builder.Property(x => x.StartedAt);
         builder.Property(x => x.ClosedAt);
-        
-        // LocationScope is IReadOnlyCollection<LocationId> exposed via backing field _locationScope
+
+        // LocationScope is IReadOnlyCollection<LocationId> backed by private field _locationScope
+        builder.Ignore(x => x.LocationScope);
         builder.Property<List<LocationId>>("_locationScope")
             .HasColumnName("location_scope")
-            .HasEntityIdListConversion()   // uuid[]
+            .HasEntityIdListConversion() // uuid[]
             .IsRequired();
-        
-        // Ensure EF uses field access (so it doesn't try to set LocationScope)
-        builder.Navigation(x => x.LocationScope)
+
+        // Lines navigation uses backing field _lines
+        builder.Navigation(x => x.Lines)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasMany(x => x.Lines)
+            .WithOne()
+            .HasForeignKey(l => l.InventoryCountId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(x => x.WarehouseId);
+        builder.HasIndex(x => x.Status);
+        builder.HasIndex(x => x.CreatedAt);
     }
 }
