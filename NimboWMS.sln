@@ -2,6 +2,14 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms", "Nimbo.Wms\Nimbo.Wms.csproj", "{414893D4-04A3-473C-BB7F-36458A79493C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Domain", "Nimbo.Wms.Domain\Nimbo.Wms.Domain.csproj", "{EECA7F16-EFDD-4564-8E9D-E9F55CCFA216}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Infrastructure", "Nimbo.Wms.Infrastructure\Nimbo.Wms.Infrastructure.csproj", "{F7C3301C-E72C-4702-A386-D9D8410172D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Application", "Nimbo.Wms.Application\Nimbo.Wms.Application.csproj", "{8145BB32-F68E-432E-A6AC-FC2E0E915B34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Contracts", "Nimbo.Wms.Contracts\Nimbo.Wms.Contracts.csproj", "{67E1596F-4566-4D1D-BD62-083A04CDFA45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +20,21 @@ Global
 		{414893D4-04A3-473C-BB7F-36458A79493C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{414893D4-04A3-473C-BB7F-36458A79493C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{414893D4-04A3-473C-BB7F-36458A79493C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EECA7F16-EFDD-4564-8E9D-E9F55CCFA216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EECA7F16-EFDD-4564-8E9D-E9F55CCFA216}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EECA7F16-EFDD-4564-8E9D-E9F55CCFA216}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EECA7F16-EFDD-4564-8E9D-E9F55CCFA216}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7C3301C-E72C-4702-A386-D9D8410172D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7C3301C-E72C-4702-A386-D9D8410172D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7C3301C-E72C-4702-A386-D9D8410172D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7C3301C-E72C-4702-A386-D9D8410172D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8145BB32-F68E-432E-A6AC-FC2E0E915B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8145BB32-F68E-432E-A6AC-FC2E0E915B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8145BB32-F68E-432E-A6AC-FC2E0E915B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8145BB32-F68E-432E-A6AC-FC2E0E915B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67E1596F-4566-4D1D-BD62-083A04CDFA45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67E1596F-4566-4D1D-BD62-083A04CDFA45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67E1596F-4566-4D1D-BD62-083A04CDFA45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67E1596F-4566-4D1D-BD62-083A04CDFA45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

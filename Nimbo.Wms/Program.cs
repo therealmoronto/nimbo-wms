@@ -1,15 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
-using Nimbo.Wms.Infrastructure.Persistences;
+using Nimbo.Wms.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<NimboWmsDbContext>(options =>
+builder.Services.AddDbContext<NimboWmsDbContext>(
+    options =>
 {
     var cs = builder.Configuration.GetConnectionString("NimboWmsDb");
-    options.UseNpgsql(cs);
+    options.UseNpgsql(cs, npgsql => npgsql.MigrationsAssembly("Nimbo.Wms.Infrastructure"));
 });
 
 builder.Services.AddEndpointsApiExplorer();
