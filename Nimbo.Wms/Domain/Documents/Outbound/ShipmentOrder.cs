@@ -37,7 +37,7 @@ public class ShipmentOrder : Document<ShipmentOrderId, ShipmentOrderStatus>
 
         if (orderedQty <= 0) throw new ArgumentOutOfRangeException(nameof(orderedQty));
 
-        var line = new ShipmentOrderLine(Guid.NewGuid(), itemId, orderedQty, uomCode);
+        var line = new ShipmentOrderLine(Id, itemId, orderedQty, uomCode);
 
         _lines.Add(line);
         return line;

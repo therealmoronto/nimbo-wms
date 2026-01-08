@@ -5,17 +5,15 @@ namespace Nimbo.Wms.Domain.Documents.Outbound;
 
 public class ShipmentOrderLine
 {
+    private ShipmentOrderLine() { }
+    
     /// <exception cref="ArgumentOutOfRangeException">Thrown when ordered quantity is not positive.</exception>
-    public ShipmentOrderLine(
-        Guid id,
-        ItemId itemId,
-        decimal orderedQuantity,
-        UnitOfMeasure uomCode)
+    public ShipmentOrderLine(ShipmentOrderId documentId, ItemId itemId, decimal orderedQuantity, UnitOfMeasure uomCode)
     {
         if (orderedQuantity <= 0)
             throw new ArgumentOutOfRangeException(nameof(orderedQuantity));
 
-        Id = id;
+        ShipmentOrderId = documentId;
         ItemId = itemId;
         OrderedQuantity = orderedQuantity;
         UomCode = uomCode;
@@ -23,18 +21,20 @@ public class ShipmentOrderLine
         ReservedQuantity = 0;
         PickedQuantity = 0;
     }
+    
+    public ShipmentOrderId ShipmentOrderId { get; }
 
-    public Guid Id { get; }
+    public Guid Id { get; } = Guid.NewGuid();
 
     public ItemId ItemId { get; }
 
     public decimal OrderedQuantity { get; }
 
-    public UnitOfMeasure UomCode { get; }
-
     public decimal ReservedQuantity { get; private set; }
 
     public decimal PickedQuantity { get; private set; }
+
+    public UnitOfMeasure UomCode { get; }
 
     public void Reserve(decimal qty)
     {
