@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace Nimbo.Wms.Infrastructure.Persistence;
 
@@ -9,18 +10,55 @@ public sealed class NimboWmsDbContextFactory : IDesignTimeDbContextFactory<Nimbo
 {
     public NimboWmsDbContext CreateDbContext(string[] args)
     {
-        // 1) Prefer env var (works in CI too)
-        var connectionString =
-            Environment.GetEnvironmentVariable("NimboWmsDb")
-            ?? "Host=localhost;Port=5432;Database=nimbo_wms;Username=nimbo_admin;Password=im1i0pgf";
+        // 1) CI / explicit override
+        var envConn = Environment.GetEnvironmentVariable("NIMBO_WMS_CONNECTION_STRING");
+        if (!string.IsNullOrWhiteSpace(envConn))
+            return Create(envConn);
+        
+        // 2) Local dev from solution root: read Nimbo.Wms/appsettings*.json
+        var solutionRoot = FindSolutionRoot(Directory.GetCurrentDirectory());
+        var apiProjectPath = Path.Combine(solutionRoot, "Nimbo.Wms"); // API project folder
 
-        var optionsBuilder = new DbContextOptionsBuilder<NimboWmsDbContext>()
-            .UseNpgsql(connectionString, npgsql =>
-            {
-                // migrations stay in Infrastructure
-                npgsql.MigrationsAssembly(typeof(NimboWmsDbContext).Assembly.FullName);
-            });
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
 
-        return new NimboWmsDbContext(optionsBuilder.Options);
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(apiProjectPath)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+            .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: false)
+            .AddEnvironmentVariables()
+            .Build();
+        
+        var conn = configuration.GetConnectionString("NimboWmsDb");
+        if (string.IsNullOrWhiteSpace(conn))
+            throw new InvalidOperationException(
+                "Connection string 'ConnectionStrings:NimboWmsDb' was not found. " +
+                "Check Nimbo.Wms/appsettings*.json or set NIMBO_WMS_CONNECTION_STRING.");
+
+        return Create(conn);
+    }
+    
+    private static NimboWmsDbContext Create(string connectionString)
+    {
+        var options = new DbContextOptionsBuilder<NimboWmsDbContext>()
+            .UseNpgsql(connectionString, npgsql => npgsql.MigrationsAssembly(typeof(NimboWmsDbContext).Assembly.FullName))
+            .Options;
+
+        return new NimboWmsDbContext(options);
+    }
+    
+    private static string FindSolutionRoot(string startDir)
+    {
+        var dir = new DirectoryInfo(startDir);
+
+        while (dir != null)
+        {
+            if (dir.GetFiles("*.sln").Length > 0)
+                return dir.FullName;
+
+            dir = dir.Parent;
+        }
+
+        // Fallback: current dir
+        return startDir;
     }
 }
