@@ -35,7 +35,7 @@ public class InboundDelivery : Document<InboundDeliveryId, InboundDeliveryStatus
     {
         EnsureStatus(InboundDeliveryStatus.Draft);
 
-        var line = new InboundDeliveryLine(itemId, expectedQuantity, uom, batchNumber, expiryDate);
+        var line = new InboundDeliveryLine(Id, itemId, expectedQuantity, uom, batchNumber, expiryDate);
         _lines.Add(line);
         return line;
     }
