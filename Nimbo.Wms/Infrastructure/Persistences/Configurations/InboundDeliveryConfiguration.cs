@@ -37,7 +37,7 @@ public class InboundDeliveryConfiguration : IEntityTypeConfiguration<InboundDeli
 
         builder.Property(x => x.StartedAt);
 
-        builder.Property(x => x.StartedAt);
+        builder.Property(x => x.ReceivedAt);
 
         builder.Navigation(x => x.Lines)
             .UsePropertyAccessMode(PropertyAccessMode.Field);

@@ -14,10 +14,11 @@ public class InboundDelivery : Document<InboundDeliveryId, InboundDeliveryStatus
     
     public InboundDelivery(
         InboundDeliveryId id,
+        DateTime createdAt,
         SupplierId supplierId,
         WarehouseId warehouseId,
         string? externalReference)
-        : base(id, InboundDeliveryStatus.Draft, DateTime.UtcNow, externalReference)
+        : base(id, InboundDeliveryStatus.Draft, createdAt, externalReference)
     {
         SupplierId = supplierId;
         WarehouseId = warehouseId;
@@ -32,9 +33,6 @@ public class InboundDelivery : Document<InboundDeliveryId, InboundDeliveryStatus
     public DateTime? ReceivedAt { get; private set; }
 
     public IReadOnlyCollection<InboundDeliveryLine> Lines => _lines;
-
-    public static InboundDelivery Create(SupplierId supplierId, WarehouseId warehouseId, string? externalReference = null)
-        => new(InboundDeliveryId.New(), supplierId, warehouseId, externalReference);
 
     public InboundDeliveryLine AddLine(ItemId itemId, decimal expectedQuantity, UnitOfMeasure uom, string? batchNumber = null, DateTime? expiryDate = null)
     {
