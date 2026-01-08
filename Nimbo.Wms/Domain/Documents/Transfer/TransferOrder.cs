@@ -43,7 +43,7 @@ public class TransferOrder : Document<TransferOrderId, TransferOrderStatus>
     {
         EnsureStatus(TransferOrderStatus.Draft);
 
-        var line = new TransferOrderLine(itemId, plannedQuantity);
+        var line = new TransferOrderLine(Id, itemId, plannedQuantity);
         _lines.Add(line);
         return line;
     }
