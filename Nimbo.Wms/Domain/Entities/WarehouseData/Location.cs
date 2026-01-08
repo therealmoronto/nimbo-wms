@@ -5,6 +5,12 @@ namespace Nimbo.Wms.Domain.Entities.WarehouseData;
 
 public sealed class Location : IEntity<LocationId>
 {
+    // ReSharper disable once UnusedMember.Global
+    public Location()
+    {
+        // Required by EF Core
+    }
+
     /// <exception cref="ArgumentException">Thrown when the provided strings of code or name are empty or whitespace</exception>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the provided decimal params is negative</exception>
     public Location(
@@ -82,7 +88,8 @@ public sealed class Location : IEntity<LocationId>
 
     public bool IsShippingLocation { get; private set; }
 
-    public bool IsActive { get; private set; } = true;
+    public bool IsActive { get; private set; }
+
     public bool IsBlocked { get; private set; }
 
     public void ChangeCode(string code) => Code = RequireNonEmpty(code, nameof(code));

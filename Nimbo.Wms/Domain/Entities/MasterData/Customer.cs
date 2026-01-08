@@ -4,6 +4,12 @@ namespace Nimbo.Wms.Domain.Entities.MasterData;
 
 public class Customer : IEntity<CustomerId>
 {
+    // ReSharper disable once UnusedMember.Global
+    public Customer()
+    {
+        // Required by EF Core
+    }
+    
     public Customer(
         CustomerId id,
         string code,

@@ -5,7 +5,12 @@ namespace Nimbo.Wms.Domain.Entities.WarehouseData;
 
 public sealed class Zone : IEntity<ZoneId>
 {
-    
+    // ReSharper disable once UnusedMember.Global
+    public Zone()
+    {
+        // Required by EF Core
+    }
+
     /// <exception cref="ArgumentException">Thrown when the provided decimal params is negative or when the provided strings code and name are empty or whitespace</exception>
     public Zone(
         ZoneId id,

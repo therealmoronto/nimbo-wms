@@ -5,11 +5,17 @@ namespace Nimbo.Wms.Domain.Documents.Inbound;
 
 public sealed class InboundDeliveryLine
 {
-    public InboundDeliveryLine(ItemId itemId, decimal expectedQuantity, UnitOfMeasure uom, string? batchNumber = null, DateTime? expiryDate = null)
+    private InboundDeliveryLine()
+    {
+        // Required by EF Core
+    } 
+    
+    public InboundDeliveryLine(InboundDeliveryId documentId, ItemId itemId, decimal expectedQuantity, UnitOfMeasure uom, string? batchNumber = null, DateTime? expiryDate = null)
     {
         if (expectedQuantity <= 0)
             throw new ArgumentOutOfRangeException(nameof(expectedQuantity), "Expected quantity must be > 0.");
 
+        DocumentId = documentId;
         ItemId = itemId;
         ExpectedQuantity = expectedQuantity;
         Uom = uom;
@@ -19,6 +25,8 @@ public sealed class InboundDeliveryLine
     }
 
     public Guid Id { get; } = Guid.NewGuid();
+    
+    public InboundDeliveryId DocumentId { get; }
 
     public ItemId ItemId { get; }
 

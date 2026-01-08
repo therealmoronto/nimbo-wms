@@ -5,17 +5,22 @@ namespace Nimbo.Wms.Domain.Documents.Transfer;
 
 public class TransferOrderLine
 {
-    public TransferOrderLine(ItemId itemId, Quantity plannedQuantity)
+    private TransferOrderLine() { }
+    
+    public TransferOrderLine(TransferOrderId documentId, ItemId itemId, Quantity plannedQuantity)
     {
         if (plannedQuantity.Value <= 0m)
             throw new ArgumentOutOfRangeException(nameof(plannedQuantity), "Planned quantity must be > 0.");
 
+        DocumentId = documentId;
         ItemId = itemId;
         PlannedQuantity = plannedQuantity;
 
         PickedQuantity = new Quantity(0m, plannedQuantity.Uom);
         ReceivedQuantity = new Quantity(0m, plannedQuantity.Uom);
     }
+    
+    public TransferOrderId DocumentId { get; }
 
     public Guid Id { get; } = Guid.NewGuid();
 

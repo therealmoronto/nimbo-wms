@@ -4,6 +4,12 @@ namespace Nimbo.Wms.Domain.Entities.MasterData;
 
 public class SupplierItem : IEntity<SupplierItemId>
 {
+    // ReSharper disable once UnusedMember.Global
+    public SupplierItem()
+    {
+        // Required by EF Core
+    }
+
     /// <exception cref="ArgumentException">Thrown when the provided strings of supplierSku or supplierBarcode are empty or whitespace or when defaultPurchasePrice, unitsPerPurchaseUom, leadTimeDays or minOrderQty are negative</exception>
     public SupplierItem(
         SupplierItemId id,

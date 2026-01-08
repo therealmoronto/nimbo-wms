@@ -7,6 +7,11 @@ public class ShipmentOrder : Document<ShipmentOrderId, ShipmentOrderStatus>
 {
     private readonly List<ShipmentOrderLine> _lines = new();
 
+    private ShipmentOrder()
+    {
+        // Required by EF Core
+    }
+    
     public ShipmentOrder(
         ShipmentOrderId id,
         DateTime createdAt,
@@ -29,7 +34,7 @@ public class ShipmentOrder : Document<ShipmentOrderId, ShipmentOrderStatus>
 
     public string? CancelReason { get; private set; }
 
-    public IReadOnlyCollection<ShipmentOrderLine> Lines => _lines.AsReadOnly();
+    public IReadOnlyCollection<ShipmentOrderLine> Lines => _lines;
 
     public ShipmentOrderLine AddLine(ItemId itemId, decimal orderedQty, UnitOfMeasure uomCode)
     {
@@ -37,7 +42,7 @@ public class ShipmentOrder : Document<ShipmentOrderId, ShipmentOrderStatus>
 
         if (orderedQty <= 0) throw new ArgumentOutOfRangeException(nameof(orderedQty));
 
-        var line = new ShipmentOrderLine(Guid.NewGuid(), itemId, orderedQty, uomCode);
+        var line = new ShipmentOrderLine(Id, itemId, orderedQty, uomCode);
 
         _lines.Add(line);
         return line;
@@ -85,9 +90,9 @@ public class ShipmentOrder : Document<ShipmentOrderId, ShipmentOrderStatus>
     private ShipmentOrderLine GetLine(Guid lineId) => _lines.FirstOrDefault(x => x.Id.Equals(lineId)) ?? throw new InvalidOperationException($"Line not found: {lineId}");
 
     private void EnsureStatus(ShipmentOrderStatus status)
-    {
+    {   
         if (Status != status)
-            throw new InvalidOperationException($"Invalid TransferOrder status. Expected {status}, actual {Status}.");
+            throw new InvalidOperationException($"Invalid ShipmentOrder status. Expected {status}, actual {Status}.");
     }
 
 }

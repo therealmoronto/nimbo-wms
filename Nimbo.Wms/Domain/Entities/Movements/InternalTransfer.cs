@@ -1,11 +1,16 @@
 ﻿using Nimbo.Wms.Domain.Identification;
-using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Domain.ValueObject;
 
 namespace Nimbo.Wms.Domain.Entities.Movements;
 
 public class InternalTransfer : IEntity<InternalTransferId>
 {
+    // ReSharper disable once UnusedMember.Local
+    private InternalTransfer()
+    {
+        // Required by EF Core
+    }
+
     /// <exception cref="ArgumentOutOfRangeException">Quantity must be greater than zero.</exception>
     public InternalTransfer(
         InternalTransferId id,
@@ -45,7 +50,7 @@ public class InternalTransfer : IEntity<InternalTransferId>
     
     public LocationId ToLocationId { get; }
 
-    public Quantity Quantity { get; }
+    public Quantity Quantity { get; } = null!;
 
     public DateTime OccurredAt { get; }
 

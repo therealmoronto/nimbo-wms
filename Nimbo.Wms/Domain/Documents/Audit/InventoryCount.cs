@@ -9,6 +9,11 @@ public class InventoryCount : Document<InventoryCountId, InventoryCountStatus>
     private readonly List<InventoryCountLine> _lines = new();
     private readonly List<LocationId> _locationScope;
 
+    private InventoryCount()
+    {
+        // Required by EF Core
+    }
+
     public InventoryCount(
         InventoryCountId id,
         WarehouseId warehouseId,
@@ -33,7 +38,7 @@ public class InventoryCount : Document<InventoryCountId, InventoryCountStatus>
     /// </summary>
     public IReadOnlyCollection<LocationId> LocationScope => _locationScope;
 
-    public IReadOnlyCollection<InventoryCountLine> Lines => _lines.AsReadOnly();
+    public IReadOnlyCollection<InventoryCountLine> Lines => _lines;
 
     public DateTime? StartedAt { get; private set; }
 
@@ -61,7 +66,7 @@ public class InventoryCount : Document<InventoryCountId, InventoryCountStatus>
     {
         EnsureStatus(InventoryCountStatus.InProgress);
 
-        var line = new InventoryCountLine(itemId, locationId, systemQuantity);
+        var line = new InventoryCountLine(Id, itemId, locationId, systemQuantity);
         _lines.Add(line);
         return line;
     }

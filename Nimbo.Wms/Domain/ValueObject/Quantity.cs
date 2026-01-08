@@ -5,7 +5,7 @@ namespace Nimbo.Wms.Domain.ValueObject;
 /// <summary>
 /// Immutable quantity with a unit of measure.
 /// </summary>
-public readonly record struct Quantity(decimal Value, UnitOfMeasure Uom)
+public record Quantity(decimal Value, UnitOfMeasure Uom)
 {
     public static Quantity Zero(UnitOfMeasure uom) => new(0m, uom);
 
