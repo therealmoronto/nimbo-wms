@@ -12,7 +12,7 @@ public class TransferOrderLine
         if (plannedQuantity.Value <= 0m)
             throw new ArgumentOutOfRangeException(nameof(plannedQuantity), "Planned quantity must be > 0.");
 
-        TransferOrderId = documentId;
+        DocumentId = documentId;
         ItemId = itemId;
         PlannedQuantity = plannedQuantity;
 
@@ -20,7 +20,7 @@ public class TransferOrderLine
         ReceivedQuantity = new Quantity(0m, plannedQuantity.Uom);
     }
     
-    public TransferOrderId TransferOrderId { get; }
+    public TransferOrderId DocumentId { get; }
 
     public Guid Id { get; } = Guid.NewGuid();
 

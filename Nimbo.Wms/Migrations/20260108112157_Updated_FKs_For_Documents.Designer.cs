@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nimbo.Wms.Infrastructure.Persistences;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Nimbo.Wms.Migrations
 {
     [DbContext(typeof(NimboWmsDbContext))]
-    partial class NimboWmsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260108112157_Updated_FKs_For_Documents")]
+    partial class Updated_FKs_For_Documents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,7 +76,7 @@ namespace Nimbo.Wms.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("DocumentId")
+                    b.Property<Guid>("InventoryCountId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ItemId")
@@ -84,7 +87,7 @@ namespace Nimbo.Wms.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DocumentId");
+                    b.HasIndex("InventoryCountId");
 
                     b.HasIndex("ItemId");
 
@@ -144,14 +147,14 @@ namespace Nimbo.Wms.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
-                    b.Property<Guid>("DocumentId")
-                        .HasColumnType("uuid");
-
                     b.Property<decimal>("ExpectedQuantity")
                         .HasColumnType("numeric(8)");
 
                     b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("InboundDeliveryId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ItemId")
                         .HasColumnType("uuid");
@@ -165,7 +168,7 @@ namespace Nimbo.Wms.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DocumentId");
+                    b.HasIndex("InboundDeliveryId");
 
                     b.HasIndex("ItemId");
 
@@ -223,9 +226,6 @@ namespace Nimbo.Wms.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("DocumentId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("ItemId")
                         .HasColumnType("uuid");
 
@@ -238,15 +238,18 @@ namespace Nimbo.Wms.Migrations
                     b.Property<decimal>("ReservedQuantity")
                         .HasColumnType("numeric(8)");
 
+                    b.Property<Guid>("ShipmentOrderId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("UomCode")
                         .HasMaxLength(16)
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DocumentId");
-
                     b.HasIndex("ItemId");
+
+                    b.HasIndex("ShipmentOrderId");
 
                     b.ToTable("shipment_order_lines", "nimbo");
                 });
@@ -301,17 +304,17 @@ namespace Nimbo.Wms.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("DocumentId")
+                    b.Property<Guid>("ItemId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ItemId")
+                    b.Property<Guid>("TransferOrderId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DocumentId");
-
                     b.HasIndex("ItemId");
+
+                    b.HasIndex("TransferOrderId");
 
                     b.ToTable("transfer_order_lines", "nimbo");
                 });
@@ -770,7 +773,7 @@ namespace Nimbo.Wms.Migrations
                 {
                     b.HasOne("Nimbo.Wms.Domain.Documents.Audit.InventoryCount", null)
                         .WithMany("Lines")
-                        .HasForeignKey("DocumentId")
+                        .HasForeignKey("InventoryCountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -830,7 +833,7 @@ namespace Nimbo.Wms.Migrations
                 {
                     b.HasOne("Nimbo.Wms.Domain.Documents.Inbound.InboundDelivery", null)
                         .WithMany("Lines")
-                        .HasForeignKey("DocumentId")
+                        .HasForeignKey("InboundDeliveryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -839,7 +842,7 @@ namespace Nimbo.Wms.Migrations
                 {
                     b.HasOne("Nimbo.Wms.Domain.Documents.Outbound.ShipmentOrder", null)
                         .WithMany("Lines")
-                        .HasForeignKey("DocumentId")
+                        .HasForeignKey("ShipmentOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -848,7 +851,7 @@ namespace Nimbo.Wms.Migrations
                 {
                     b.HasOne("Nimbo.Wms.Domain.Documents.Transfer.TransferOrder", null)
                         .WithMany("Lines")
-                        .HasForeignKey("DocumentId")
+                        .HasForeignKey("TransferOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

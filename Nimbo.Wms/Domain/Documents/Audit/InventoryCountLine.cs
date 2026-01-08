@@ -16,7 +16,7 @@ public class InventoryCountLine
         if (systemQuantity.Value < 0m)
             throw new ArgumentOutOfRangeException(nameof(systemQuantity), "SystemQuantity cannot be negative.");
 
-        InventoryCountId = documentId;
+        DocumentId = documentId;
         ItemId = itemId;
         LocationId = locationId;
         SystemQuantity = systemQuantity;
@@ -24,7 +24,7 @@ public class InventoryCountLine
     
     public Guid Id { get; } = Guid.NewGuid();
 
-    public InventoryCountId InventoryCountId { get; }
+    public InventoryCountId DocumentId { get; }
     
     public ItemId ItemId { get; }
 

@@ -41,18 +41,15 @@ public class ShipmentOrderConfiguration : IEntityTypeConfiguration<ShipmentOrder
         
         builder.Property(x => x.CancelReason)
             .HasMaxLength(512);
-        
-        builder.Metadata
-            .FindNavigation(nameof(ShipmentOrder.Lines))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
+ 
+        builder.Navigation(x => x.Lines)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.HasMany<ShipmentOrderLine>("_lines")
+        builder.HasMany(x => x.Lines)
             .WithOne()
-            .HasForeignKey(l => l.ShipmentOrderId)
+            .HasForeignKey(l => l.DocumentId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Navigation("_lines");
-        
         builder.HasIndex(x => x.WarehouseId);
         builder.HasIndex(x => x.CustomerId);
         builder.HasIndex(x => x.CreatedAt);

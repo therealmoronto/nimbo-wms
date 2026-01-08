@@ -15,7 +15,7 @@ public sealed class InboundDeliveryLine
         if (expectedQuantity <= 0)
             throw new ArgumentOutOfRangeException(nameof(expectedQuantity), "Expected quantity must be > 0.");
 
-        InboundDeliveryId = documentId;
+        DocumentId = documentId;
         ItemId = itemId;
         ExpectedQuantity = expectedQuantity;
         Uom = uom;
@@ -26,7 +26,7 @@ public sealed class InboundDeliveryLine
 
     public Guid Id { get; } = Guid.NewGuid();
     
-    public InboundDeliveryId InboundDeliveryId { get; }
+    public InboundDeliveryId DocumentId { get; }
 
     public ItemId ItemId { get; }
 

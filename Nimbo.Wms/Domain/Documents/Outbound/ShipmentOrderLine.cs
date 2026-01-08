@@ -13,7 +13,7 @@ public class ShipmentOrderLine
         if (orderedQuantity <= 0)
             throw new ArgumentOutOfRangeException(nameof(orderedQuantity));
 
-        ShipmentOrderId = documentId;
+        DocumentId = documentId;
         ItemId = itemId;
         OrderedQuantity = orderedQuantity;
         UomCode = uomCode;
@@ -22,7 +22,7 @@ public class ShipmentOrderLine
         PickedQuantity = 0;
     }
     
-    public ShipmentOrderId ShipmentOrderId { get; }
+    public ShipmentOrderId DocumentId { get; }
 
     public Guid Id { get; } = Guid.NewGuid();
 

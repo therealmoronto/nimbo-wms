@@ -20,7 +20,7 @@ public class InboundDeliveryLineConfiguration : IEntityTypeConfiguration<Inbound
             .HasEntityIdConversion()
             .IsRequired();
 
-        builder.Property(x => x.InboundDeliveryId)
+        builder.Property(x => x.DocumentId)
             .HasEntityIdConversion()
             .IsRequired();
 

@@ -16,7 +16,7 @@ public class InventoryCountLineConfiguration : IEntityTypeConfiguration<Inventor
         builder.Property(x => x.Id)
             .ValueGeneratedNever();
 
-        builder.Property(x => x.InventoryCountId)
+        builder.Property(x => x.DocumentId)
             .HasEntityIdConversion()
             .IsRequired();
         

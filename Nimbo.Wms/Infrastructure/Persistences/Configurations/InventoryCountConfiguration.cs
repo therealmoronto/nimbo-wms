@@ -45,16 +45,13 @@ public sealed class InventoryCountConfiguration : IEntityTypeConfiguration<Inven
             .HasEntityIdListConversion() // uuid[]
             .IsRequired();
         
-        builder.Metadata
-            .FindNavigation(nameof(InventoryCount.Lines))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        builder.Navigation(x => x.Lines)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
 
         builder.HasMany(x => x.Lines)
             .WithOne()
-            .HasForeignKey(l => l.InventoryCountId)
+            .HasForeignKey(l => l.DocumentId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Navigation("_lines");
 
         builder.HasIndex(x => x.WarehouseId);
         builder.HasIndex(x => x.Status);

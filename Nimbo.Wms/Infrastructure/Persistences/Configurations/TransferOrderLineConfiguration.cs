@@ -20,7 +20,7 @@ public class TransferOrderLineConfiguration : IEntityTypeConfiguration<TransferO
             .HasEntityIdConversion()
             .IsRequired();
         
-        builder.Property(x => x.TransferOrderId)
+        builder.Property(x => x.DocumentId)
             .HasEntityIdConversion()
             .IsRequired();
         

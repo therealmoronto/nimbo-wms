@@ -38,17 +38,14 @@ public class InboundDeliveryConfiguration : IEntityTypeConfiguration<InboundDeli
         builder.Property(x => x.StartedAt);
 
         builder.Property(x => x.StartedAt);
-                
-        builder.Metadata
-            .FindNavigation(nameof(InboundDelivery.Lines))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.HasMany<InboundDeliveryLine>("_lines")
+        builder.Navigation(x => x.Lines)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasMany(x => x.Lines)
             .WithOne()
-            .HasForeignKey(l => l.InboundDeliveryId)
+            .HasForeignKey(l => l.DocumentId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Navigation("_lines");
 
         builder.HasIndex(x => x.SupplierId);
         builder.HasIndex(x => x.WarehouseId);

@@ -16,7 +16,7 @@ public class ShipmentOrderLineConfiguration : IEntityTypeConfiguration<ShipmentO
         builder.Property(x => x.Id)
             .ValueGeneratedNever();
         
-        builder.Property(x => x.ShipmentOrderId)
+        builder.Property(x => x.DocumentId)
             .HasEntityIdConversion()
             .IsRequired();
         
