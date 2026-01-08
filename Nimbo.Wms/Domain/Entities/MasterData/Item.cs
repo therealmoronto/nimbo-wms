@@ -5,6 +5,12 @@ namespace Nimbo.Wms.Domain.Entities.MasterData;
 
 public class Item : IEntity<ItemId>
 {
+    // ReSharper disable once UnusedMember.Global
+    public Item()
+    {
+        // Required by EF Core
+    }
+
     /// <exception cref="ArgumentException">Thrown when the provided strings of name, internalSku or barcode are empty or whitespace or when weight or volume are negative</exception>
     public Item(ItemId id,
         string name,

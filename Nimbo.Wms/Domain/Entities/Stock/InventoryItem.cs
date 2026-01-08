@@ -6,6 +6,7 @@ namespace Nimbo.Wms.Domain.Entities.Stock;
 
 public class InventoryItem : IEntity<InventoryItemId>
 {
+    // ReSharper disable once UnusedMember.Local
     private InventoryItem()
     {
         // Required by EF Core

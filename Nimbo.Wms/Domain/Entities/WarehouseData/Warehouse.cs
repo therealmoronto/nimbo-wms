@@ -4,6 +4,12 @@ namespace Nimbo.Wms.Domain.Entities.WarehouseData;
 
 public sealed class Warehouse : IEntity<WarehouseId>
 {
+    // ReSharper disable once UnusedMember.Global
+    public Warehouse()
+    {
+        // Required by EF Core
+    }
+
     /// <exception cref="ArgumentException">Thrown when the provided strings of code or name are empty or whitespace</exception>
     public Warehouse(
         WarehouseId id,

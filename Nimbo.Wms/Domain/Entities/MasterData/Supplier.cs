@@ -4,6 +4,12 @@ namespace Nimbo.Wms.Domain.Entities.MasterData;
 
 public class Supplier : IEntity<SupplierId>
 {
+    // ReSharper disable once UnusedMember.Global
+    public Supplier()
+    {
+        // Required by EF Core
+    }
+
     /// <exception cref="ArgumentException">Thrown when the provided strings of code or name are empty or whitespace</exception>
     public Supplier(
         SupplierId id,

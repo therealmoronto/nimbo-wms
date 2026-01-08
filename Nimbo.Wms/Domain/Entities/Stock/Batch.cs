@@ -4,6 +4,12 @@ namespace Nimbo.Wms.Domain.Entities.Stock;
 
 public class Batch : IEntity<BatchId>
 {
+    // ReSharper disable once UnusedMember.Global
+    public Batch()
+    {
+        // Required by EF Core
+    }
+
     /// <exception cref="ArgumentException">Thrown when the provided strings of batchNumber are empty or whitespace or when expiryDate is earlier than manufacturedAt</exception>
     public Batch(
         BatchId id,

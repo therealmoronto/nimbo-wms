@@ -5,6 +5,7 @@ namespace Nimbo.Wms.Domain.Entities.Movements;
 
 public class InternalTransfer : IEntity<InternalTransferId>
 {
+    // ReSharper disable once UnusedMember.Local
     private InternalTransfer()
     {
         // Required by EF Core
