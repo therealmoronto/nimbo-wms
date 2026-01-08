@@ -44,15 +44,17 @@ public sealed class InventoryCountConfiguration : IEntityTypeConfiguration<Inven
             .HasColumnName("location_scope")
             .HasEntityIdListConversion() // uuid[]
             .IsRequired();
-
-        // Lines navigation uses backing field _lines
-        builder.Navigation(x => x.Lines)
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
+        
+        builder.Metadata
+            .FindNavigation(nameof(InventoryCount.Lines))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
 
         builder.HasMany(x => x.Lines)
             .WithOne()
             .HasForeignKey(l => l.InventoryCountId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation("_lines");
 
         builder.HasIndex(x => x.WarehouseId);
         builder.HasIndex(x => x.Status);

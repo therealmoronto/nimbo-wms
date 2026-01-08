@@ -41,14 +41,17 @@ public class TransferOrderConfiguration : IEntityTypeConfiguration<TransferOrder
 
         builder.Property(x => x.ReceivedAt);
         
-        builder.Navigation(x => x.Lines)
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
-        
-        builder.HasMany(x => x.Lines)
+        builder.Metadata
+            .FindNavigation(nameof(TransferOrder.Lines))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasMany<TransferOrderLine>("_lines")
             .WithOne()
             .HasForeignKey(l => l.TransferOrderId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
+        builder.Navigation("_lines");
+
         builder.HasIndex(x => x.FromWarehouseId);
         builder.HasIndex(x => x.ToWarehouseId);
         builder.HasIndex(x => x.CreatedAt);

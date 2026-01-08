@@ -17,8 +17,8 @@ public static class PropertyBuilderExtensions
     public static PropertyBuilder<TId?> HasEntityIdConversion<TId>(this PropertyBuilder<TId?> property)
         where TId : struct, IEntityId
     {
-        property.HasConversion(new EntityIdConverter<TId>());
-        property.Metadata.SetValueComparer(new EntityIdComparer<TId>());
+        property.HasConversion(new NullableEntityIdConverter<TId>());
+        property.Metadata.SetValueComparer(new NullableEntityIdComparer<TId>());
         return property;
     }
     

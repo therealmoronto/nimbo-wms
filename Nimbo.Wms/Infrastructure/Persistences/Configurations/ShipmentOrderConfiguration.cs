@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.Xml;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nimbo.Wms.Domain.Documents.Outbound;
 using Nimbo.Wms.Infrastructure.Persistences.Converters;
@@ -43,13 +42,16 @@ public class ShipmentOrderConfiguration : IEntityTypeConfiguration<ShipmentOrder
         builder.Property(x => x.CancelReason)
             .HasMaxLength(512);
         
-        builder.Navigation(x => x.Lines)
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
+        builder.Metadata
+            .FindNavigation(nameof(ShipmentOrder.Lines))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.HasMany(x => x.Lines)
+        builder.HasMany<ShipmentOrderLine>("_lines")
             .WithOne()
             .HasForeignKey(l => l.ShipmentOrderId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation("_lines");
         
         builder.HasIndex(x => x.WarehouseId);
         builder.HasIndex(x => x.CustomerId);

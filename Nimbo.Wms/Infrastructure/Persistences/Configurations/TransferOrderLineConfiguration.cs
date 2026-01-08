@@ -13,7 +13,8 @@ public class TransferOrderLineConfiguration : IEntityTypeConfiguration<TransferO
         
         builder.HasKey(x => x.Id);
         
-        builder.Property(x => x.Id);
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
         
         builder.Property(x => x.ItemId)
             .HasEntityIdConversion()

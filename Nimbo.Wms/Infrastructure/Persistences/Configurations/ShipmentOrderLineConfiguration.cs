@@ -13,7 +13,8 @@ public class ShipmentOrderLineConfiguration : IEntityTypeConfiguration<ShipmentO
         
         builder.HasKey(x => x.Id);
         
-        builder.Property(x => x.Id);
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
         
         builder.Property(x => x.ShipmentOrderId)
             .HasEntityIdConversion()

@@ -38,16 +38,18 @@ public class InboundDeliveryConfiguration : IEntityTypeConfiguration<InboundDeli
         builder.Property(x => x.StartedAt);
 
         builder.Property(x => x.StartedAt);
-        
-        // Lines navigation uses backing field _lines
-        builder.Navigation(x => x.Lines)
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
+                
+        builder.Metadata
+            .FindNavigation(nameof(InboundDelivery.Lines))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.HasMany(x => x.Lines)
+        builder.HasMany<InboundDeliveryLine>("_lines")
             .WithOne()
             .HasForeignKey(l => l.InboundDeliveryId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
+        builder.Navigation("_lines");
+
         builder.HasIndex(x => x.SupplierId);
         builder.HasIndex(x => x.WarehouseId);
         builder.HasIndex(x => x.Status);

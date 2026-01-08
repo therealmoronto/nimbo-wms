@@ -38,7 +38,7 @@ public class InventoryCount : Document<InventoryCountId, InventoryCountStatus>
     /// </summary>
     public IReadOnlyCollection<LocationId> LocationScope => _locationScope;
 
-    public IReadOnlyCollection<InventoryCountLine> Lines => _lines.AsReadOnly();
+    public IReadOnlyCollection<InventoryCountLine> Lines => _lines;
 
     public DateTime? StartedAt { get; private set; }
 

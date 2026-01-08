@@ -8,10 +8,21 @@ public class TransferOrder : Document<TransferOrderId, TransferOrderStatus>
 {
     private readonly List<TransferOrderLine> _lines = new();
 
+    private TransferOrder()
+    {
+        // Required by EF Core
+    }
+    
+    public TransferOrder(WarehouseId from, WarehouseId to)
+    {
+        FromWarehouseId = from;
+        ToWarehouseId = to;
+    }
+
     public WarehouseId FromWarehouseId { get; }
     public WarehouseId ToWarehouseId { get; }
 
-    public IReadOnlyCollection<TransferOrderLine> Lines => _lines.AsReadOnly();
+    public IReadOnlyCollection<TransferOrderLine> Lines => _lines;
 
     public DateTime? PickingStartedAt { get; private set; }
     public DateTime? ShippedAt { get; private set; }
