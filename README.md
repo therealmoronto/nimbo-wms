@@ -3,6 +3,8 @@
 **Nimbo WMS** is a modular and extensible Warehouse Management System designed to support essential warehouse operations such as receiving, putaway, storage, inventory tracking, and picking.  
 The project is currently in active development and serves as a foundation for a future SaaS-oriented warehouse solution.
 
+<img src="./socials_preview.png"/>
+
 ---
 
 ## 📘 Documentation
