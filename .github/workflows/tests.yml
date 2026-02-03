@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  intergrational:
+  integrational:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,9 +17,13 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+          under-prerelease: true
 
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Run intergrational tests
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run integrational tests
         run: dotnet test ./Nimbo.Wms.Infrastructure.Tests/Nimbo.Wms.Infrastructure.Tests.csproj --configuration Release --no-build --verbosity normal
