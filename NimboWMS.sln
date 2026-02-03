@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Application", "Ni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Contracts", "Nimbo.Wms.Contracts\Nimbo.Wms.Contracts.csproj", "{67E1596F-4566-4D1D-BD62-083A04CDFA45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Infrastructure.Tests", "Nimbo.Wms.Infrastructure.Tests\Nimbo.Wms.Infrastructure.Tests.csproj", "{313420E4-FF6C-4D71-A629-0ADA0A6996F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{67E1596F-4566-4D1D-BD62-083A04CDFA45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67E1596F-4566-4D1D-BD62-083A04CDFA45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67E1596F-4566-4D1D-BD62-083A04CDFA45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{313420E4-FF6C-4D71-A629-0ADA0A6996F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{313420E4-FF6C-4D71-A629-0ADA0A6996F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{313420E4-FF6C-4D71-A629-0ADA0A6996F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{313420E4-FF6C-4D71-A629-0ADA0A6996F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
