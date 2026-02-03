@@ -1,0 +1,25 @@
+name: tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  intergrational:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Run intergrational tests
+        run: dotnet test ./Nimbo.Wms.Infrastructure.Tests/Nimbo.Wms.Infrastructure.Tests.csproj --configuration Release --no-build --verbosity normal
