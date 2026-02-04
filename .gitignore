@@ -33,6 +33,7 @@ out/
 #   BACK-END (ASP.NET)
 # ============================
 bin/
+bin\\*
 obj/
 Debug/
 Release/
