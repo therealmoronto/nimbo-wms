@@ -14,11 +14,13 @@ public class ShipmentOrder : Document<ShipmentOrderId, ShipmentOrderStatus>
     
     public ShipmentOrder(
         ShipmentOrderId id,
+        string code,
+        string name,
         DateTime createdAt,
         WarehouseId warehouseId,
         CustomerId customerId,
         string? externalReference = null)
-        : base(id, ShipmentOrderStatus.Draft, createdAt, externalReference)
+        : base(id, code, name, ShipmentOrderStatus.Draft, createdAt, externalReference)
     {
         WarehouseId = warehouseId;
         CustomerId = customerId;

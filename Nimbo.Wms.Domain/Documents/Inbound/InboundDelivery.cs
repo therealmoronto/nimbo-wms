@@ -14,11 +14,13 @@ public class InboundDelivery : Document<InboundDeliveryId, InboundDeliveryStatus
     
     public InboundDelivery(
         InboundDeliveryId id,
+        string code,
+        string name,
         DateTime createdAt,
         SupplierId supplierId,
         WarehouseId warehouseId,
         string? externalReference)
-        : base(id, InboundDeliveryStatus.Draft, createdAt, externalReference)
+        : base(id, code, name, InboundDeliveryStatus.Draft, createdAt, externalReference)
     {
         SupplierId = supplierId;
         WarehouseId = warehouseId;

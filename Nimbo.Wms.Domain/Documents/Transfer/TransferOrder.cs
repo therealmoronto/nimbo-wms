@@ -13,10 +13,21 @@ public class TransferOrder : Document<TransferOrderId, TransferOrderStatus>
         // Required by EF Core
     }
     
-    public TransferOrder(WarehouseId from, WarehouseId to)
+    public TransferOrder(
+        TransferOrderId id,
+        string code,
+        string name,
+        DateTime createdAt,
+        WarehouseId fromWarehouseId,
+        WarehouseId toWarehouseId,
+        string? externalReference = null)
+        : base(id, code, name, TransferOrderStatus.Draft, createdAt, externalReference)
     {
-        FromWarehouseId = from;
-        ToWarehouseId = to;
+        if (fromWarehouseId.Value == toWarehouseId.Value)
+            throw new ArgumentException("FromWarehouseId and ToWarehouseId cannot be the same.");
+
+        FromWarehouseId = fromWarehouseId;
+        ToWarehouseId = toWarehouseId;
     }
 
     public WarehouseId FromWarehouseId { get; }
@@ -27,28 +38,6 @@ public class TransferOrder : Document<TransferOrderId, TransferOrderStatus>
     public DateTime? PickingStartedAt { get; private set; }
     public DateTime? ShippedAt { get; private set; }
     public DateTime? ReceivedAt { get; private set; }
-
-    public TransferOrder(
-        TransferOrderId id,
-        DateTime createdAt,
-        WarehouseId fromWarehouseId,
-        WarehouseId toWarehouseId,
-        string? externalReference = null)
-        : base(id, TransferOrderStatus.Draft, createdAt, externalReference)
-    {
-        if (fromWarehouseId.Value == toWarehouseId.Value)
-            throw new ArgumentException("FromWarehouseId and ToWarehouseId cannot be the same.");
-
-        FromWarehouseId = fromWarehouseId;
-        ToWarehouseId = toWarehouseId;
-    }
-
-    public static TransferOrder Create(
-        WarehouseId fromWarehouseId,
-        WarehouseId toWarehouseId,
-        DateTime createdAt,
-        string? externalReference = null)
-        => new(TransferOrderId.New(), createdAt, fromWarehouseId, toWarehouseId, externalReference);
 
     public TransferOrderLine AddLine(ItemId itemId, Quantity plannedQuantity)
     {
