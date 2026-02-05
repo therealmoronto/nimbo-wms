@@ -25,4 +25,4 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Run integrational tests
-        run: dotnet test ./Nimbo.Wms.Infrastructure.Tests/Nimbo.Wms.Infrastructure.Tests.csproj --configuration Release --no-build --verbosity normal
+        run: dotnet test --filter "Category=Integration" --configuration Release --no-build --verbosity normal

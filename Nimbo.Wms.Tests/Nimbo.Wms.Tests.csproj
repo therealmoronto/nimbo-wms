@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
-        <RootNamespace>Nimbo.Wms.Infrastructure.Tests</RootNamespace>
+        <RootNamespace>Nimbo.Wms.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using Xunit.Sdk;
 
-namespace Nimbo.Wms.Infrastructure.Tests;
+namespace Nimbo.Wms.Tests.Infrastructure;
 
 public static class TestSkip
 {

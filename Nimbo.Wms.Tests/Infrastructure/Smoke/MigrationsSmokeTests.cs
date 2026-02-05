@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Infrastructure.Tests.Infrastructure;
+using Nimbo.Wms.Tests.Common;
 
-namespace Nimbo.Wms.Infrastructure.Tests.Smoke;
+namespace Nimbo.Wms.Tests.Infrastructure.Smoke;
 
+[IntegrationTest]
 [Collection(PostgresCollection.Name)]
 public class MigrationsSmokeTests
 {
@@ -21,7 +21,7 @@ public class MigrationsSmokeTests
 
         await using var db = DbContextFactory.Create(_fixture.ConnectionString);
         
-        await db.Database.MigrateAsync();
+        await _fixture.EnsureMigratedAsync();
         
         var canConnect = await db.Database.CanConnectAsync();
 

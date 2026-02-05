@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Converters;
@@ -6,16 +7,21 @@ namespace Nimbo.Wms.Infrastructure.Persistence.Converters;
 public sealed class EntityIdConverter<TId> : ValueConverter<TId, Guid>
     where TId : struct, IEntityId
 {
+    
+    private static readonly Func<Guid, TId> Factory = CreateFactory();
+
     /// <exception cref="InvalidOperationException">Thrown when the provided type TId does not implement IEntityId</exception>
     public EntityIdConverter()
-        : base(v => v.Value, v => Create(v)) { }
+        : base(v => v.Value, v => Factory(v)) { }
 
-    private static TId Create(Guid guid)
+    private static Func<Guid, TId> CreateFactory()
     {
-        var value = Activator.CreateInstance(typeof(TId), guid);
-        if (value == null)
-            throw new InvalidOperationException($"Could not create an instance of {typeof(TId)}");
+        var ctor = typeof(TId).GetConstructor([typeof(Guid)])
+                   ?? throw new InvalidOperationException(
+                       $"Type '{typeof(TId).Name}' must have a public constructor .ctor(Guid).");
 
-        return (TId)value;
+        var g = Expression.Parameter(typeof(Guid), "g");
+        var body = Expression.New(ctor, g);
+        return Expression.Lambda<Func<Guid, TId>>(body, g).Compile();
     }
 }

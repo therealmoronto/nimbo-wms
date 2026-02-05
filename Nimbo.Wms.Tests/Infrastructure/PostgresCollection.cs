@@ -1,4 +1,4 @@
-﻿namespace Nimbo.Wms.Infrastructure.Tests.Infrastructure;
+﻿namespace Nimbo.Wms.Tests.Infrastructure;
 
 [CollectionDefinition(Name)]
 public class PostgresCollection : ICollectionFixture<PostgresFixture>
