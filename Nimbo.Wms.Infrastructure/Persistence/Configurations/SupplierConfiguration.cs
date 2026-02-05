@@ -28,7 +28,7 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
             .HasMaxLength(64);
 
         builder.Property(x => x.Address)
-            .HasMaxLength(512);
+            .HasMaxLength(1024);
 
         builder.Property(x => x.ContactName)
             .HasMaxLength(512);
@@ -37,7 +37,7 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
             .HasMaxLength(64);
 
         builder.Property(x => x.Email)
-            .HasMaxLength(16);
+            .HasMaxLength(512);
 
         builder.Property(x => x.IsActive)
             .IsRequired();
