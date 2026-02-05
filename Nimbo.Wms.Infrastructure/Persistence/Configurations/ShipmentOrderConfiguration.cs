@@ -24,6 +24,14 @@ public class ShipmentOrderConfiguration : IEntityTypeConfiguration<ShipmentOrder
             .HasEntityIdConversion()
             .IsRequired();
         
+        builder.Property(x => x.Code)
+            .HasMaxLength(64)
+            .IsRequired();
+
+        builder.Property(x => x.Name)
+            .HasMaxLength(512)
+            .IsRequired();
+
         builder.Property(x => x.CreatedAt)
             .IsRequired();
         

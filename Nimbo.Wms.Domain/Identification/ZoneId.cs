@@ -1,16 +1,26 @@
-﻿namespace Nimbo.Wms.Domain.Identification;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
+namespace Nimbo.Wms.Domain.Identification;
+
+[PublicAPI]
 public readonly struct ZoneId : IEntityId
 {
     public ZoneId(Guid value)
     {
-        EntityId.EnsureNotEmpty<WarehouseId>(value);
+        EntityIdExtensions.EnsureNotEmpty<WarehouseId>(value);
         Value = value;
     }
     
     public Guid Value { get; }
     
-    public static ZoneId New() => EntityId.New(id => new ZoneId(id));
+    public static ZoneId New() => EntityIdExtensions.New(id => new ZoneId(id));
     
-    public static ZoneId From(Guid guid) => EntityId.From(guid, id => new ZoneId(id));
+    public static ZoneId From(Guid guid) => EntityIdExtensions.From(guid, id => new ZoneId(id));
+
+    public override bool Equals([NotNullWhen(true)] object? obj) => obj is ZoneId id && Value.Equals(id.Value);
+    
+    public bool Equals(ZoneId other) => Value.Equals(other.Value);
+    
+    public override int GetHashCode() => Value.GetHashCode();
 }

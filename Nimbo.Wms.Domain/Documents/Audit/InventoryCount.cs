@@ -17,11 +17,13 @@ public class InventoryCount : Document<InventoryCountId, InventoryCountStatus>
     public InventoryCount(
         InventoryCountId id,
         WarehouseId warehouseId,
+        string code,
+        string name,
         DateTime createdAt,
         string? externalReference = null,
         ZoneId? zoneId = null,
         IEnumerable<LocationId>? locationScope = null)
-        : base(id, InventoryCountStatus.Draft, createdAt, externalReference)
+        : base(id, code, name, InventoryCountStatus.Draft, createdAt, externalReference)
     {
         WarehouseId = warehouseId;
         ZoneId = zoneId;
@@ -43,14 +45,6 @@ public class InventoryCount : Document<InventoryCountId, InventoryCountStatus>
     public DateTime? StartedAt { get; private set; }
 
     public DateTime? ClosedAt { get; private set; }
-    
-    public static InventoryCount Create(
-        WarehouseId warehouseId,
-        DateTime createdAt,
-        string? externalReference = null,
-        ZoneId? zoneId = null,
-        IEnumerable<LocationId>? locationScope = null)
-        => new(InventoryCountId.New(), warehouseId, createdAt, externalReference, zoneId, locationScope);
 
     /// <summary>
     /// Start counting. After this point stock is expected to be locked (InventoryItem.Status -> Audit) by process layer.
