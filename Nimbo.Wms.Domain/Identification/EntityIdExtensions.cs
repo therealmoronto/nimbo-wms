@@ -4,7 +4,7 @@
 /// Strongly-typed entity identifier (wraps Guid).
 /// No business rules besides non-empty.
 /// </summary>
-public static class EntityId
+public static class EntityIdExtensions
 {
     /// <summary>
     /// Creates a new entity identifier.

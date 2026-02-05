@@ -1,5 +1,9 @@
-﻿namespace Nimbo.Wms.Domain.Identification;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
+namespace Nimbo.Wms.Domain.Identification;
+
+[PublicAPI]
 public readonly struct InternalTransferId : IEntityId
 {
     public InternalTransferId(Guid value)
@@ -12,11 +16,17 @@ public readonly struct InternalTransferId : IEntityId
 
     public Guid Value { get; }
 
-    public static InternalTransferId New() => EntityId.New(id => new InternalTransferId(id));
+    public static InternalTransferId New() => EntityIdExtensions.New(id => new InternalTransferId(id));
 
-    public static InternalTransferId From(Guid guid) => EntityId.From(guid, id => new InternalTransferId(id));
+    public static InternalTransferId From(Guid guid) => EntityIdExtensions.From(guid, id => new InternalTransferId(id));
 
     public override string ToString() => Value.ToString("D");
 
     public static implicit operator Guid(InternalTransferId id) => id.Value;
+
+    public override bool Equals([NotNullWhen(true)] object? obj) => obj is InternalTransferId id && Value.Equals(id.Value);
+
+    public bool Equals(InternalTransferId other) => Value.Equals(other.Value);
+    
+    public override int GetHashCode() => Value.GetHashCode();
 }

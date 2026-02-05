@@ -1,6 +1,10 @@
-﻿namespace Nimbo.Wms.Domain.Identification;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
-public readonly struct ShipmentOrderId : IEntityId
+namespace Nimbo.Wms.Domain.Identification;
+
+[PublicAPI]
+public readonly struct ShipmentOrderId : IEntityId, IEquatable<ShipmentOrderId>
 {
     public ShipmentOrderId(Guid value)
     {
@@ -12,11 +16,17 @@ public readonly struct ShipmentOrderId : IEntityId
 
     public Guid Value { get; }
 
-    public static ShipmentOrderId New() => EntityId.New(id => new ShipmentOrderId(id));
+    public static ShipmentOrderId New() => EntityIdExtensions.New(id => new ShipmentOrderId(id));
 
-    public static ShipmentOrderId From(Guid guid) => EntityId.From(guid, id => new ShipmentOrderId(id));
+    public static ShipmentOrderId From(Guid guid) => EntityIdExtensions.From(guid, id => new ShipmentOrderId(id));
 
     public override string ToString() => Value.ToString("D");
 
     public static implicit operator Guid(ShipmentOrderId id) => id.Value;
+
+    public override bool Equals([NotNullWhen(true)] object? obj) => obj is ShipmentOrderId id && Value.Equals(id.Value);
+
+    public bool Equals(ShipmentOrderId other) => Value.Equals(other.Value);
+
+    public override int GetHashCode() => Value.GetHashCode();
 }
