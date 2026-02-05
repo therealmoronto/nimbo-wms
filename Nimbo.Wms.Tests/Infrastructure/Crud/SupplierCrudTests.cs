@@ -23,7 +23,7 @@ public class SupplierCrudTests
         
         var guid = Guid.NewGuid();
         var id = SupplierId.From(guid);
-        var code = $"SUP-{guid:N}";
+        var code = $"SUP-{guid:N}".Substring(0, 32);
         var supplier = new Supplier(
             id,
             code,
@@ -54,7 +54,7 @@ public class SupplierCrudTests
         await using (var db = DbContextFactory.Create(_fixture.ConnectionString))
         {
             var loaded = await db.Set<Supplier>()
-                .SingleAsync(x => x.Equals(id));
+                .SingleAsync(x => x.Id.Equals(id));
 
             loaded.Rename("Renamed Supplier");
             loaded.Deactivate();
@@ -67,7 +67,7 @@ public class SupplierCrudTests
             db.ChangeTracker.Clear();
 
             var loaded = await db.Set<Supplier>()
-                .SingleAsync(x => x.Equals(id));
+                .SingleAsync(x => x.Id.Equals(id));
 
             loaded.Name.Should().Be("Renamed Supplier");
             loaded.IsActive.Should().BeFalse();
@@ -77,7 +77,7 @@ public class SupplierCrudTests
         await using (var db = DbContextFactory.Create(_fixture.ConnectionString))
         {
             var loaded = await db.Set<Supplier>()
-                .SingleAsync(x => x.Equals(id));
+                .SingleAsync(x => x.Id.Equals(id));
 
             db.Remove(loaded);
             await db.SaveChangesAsync();
@@ -85,7 +85,7 @@ public class SupplierCrudTests
 
         await using (var db = DbContextFactory.Create(_fixture.ConnectionString))
         {
-            var exists = await db.Set<Supplier>().AnyAsync(x => x.Equals(id));
+            var exists = await db.Set<Supplier>().AnyAsync(x => x.Id.Equals(id));
             exists.Should().BeFalse();
         }
     }
