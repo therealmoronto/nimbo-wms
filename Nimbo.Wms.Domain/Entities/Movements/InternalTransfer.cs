@@ -3,7 +3,7 @@ using Nimbo.Wms.Domain.ValueObject;
 
 namespace Nimbo.Wms.Domain.Entities.Movements;
 
-public class InternalTransfer : IEntity<InternalTransferId>
+public class InternalTransfer : BaseEntity<InternalTransferId>
 {
     // ReSharper disable once UnusedMember.Local
     private InternalTransfer()
@@ -40,7 +40,7 @@ public class InternalTransfer : IEntity<InternalTransferId>
         Reason = TrimOrNull(reason);
     }
 
-    public InternalTransferId Id { get; }
+    public new InternalTransferId Id { get; }
 
     public WarehouseId WarehouseId { get; }
     

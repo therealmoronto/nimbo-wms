@@ -2,7 +2,7 @@
 
 namespace Nimbo.Wms.Domain.Entities.WarehouseData;
 
-public sealed class Warehouse : IEntity<WarehouseId>
+public sealed class Warehouse : BaseEntity<WarehouseId>
 {
     // ReSharper disable once UnusedMember.Global
     public Warehouse()
@@ -27,7 +27,7 @@ public sealed class Warehouse : IEntity<WarehouseId>
         IsActive = isActive;
     }
     
-    public WarehouseId Id { get; }
+    public new WarehouseId Id { get; }
     
     public string Code { get; private set; }
     

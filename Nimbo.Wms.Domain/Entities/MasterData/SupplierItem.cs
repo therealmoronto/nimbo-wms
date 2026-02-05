@@ -2,7 +2,7 @@
 
 namespace Nimbo.Wms.Domain.Entities.MasterData;
 
-public class SupplierItem : IEntity<SupplierItemId>
+public class SupplierItem : BaseEntity<SupplierItemId>
 {
     // ReSharper disable once UnusedMember.Global
     public SupplierItem()
@@ -43,7 +43,7 @@ public class SupplierItem : IEntity<SupplierItemId>
         IsPreferred = isPreferred;
     }
     
-    public SupplierItemId Id { get; }
+    public new SupplierItemId Id { get; }
     
     public SupplierId SupplierId { get; }
 

@@ -2,7 +2,7 @@
 
 namespace Nimbo.Wms.Domain.Documents;
 
-public abstract class Document<TId, TStatus> : IEntity<TId>
+public abstract class Document<TId, TStatus> : BaseEntity<TId>
     where TId : struct, IEntityId
     where TStatus : struct, Enum
 {
@@ -21,7 +21,7 @@ public abstract class Document<TId, TStatus> : IEntity<TId>
         UpdateName(name);
     }
 
-    public TId Id { get; }
+    public new TId Id { get; }
     
     public string Code { get; private set; }
     
