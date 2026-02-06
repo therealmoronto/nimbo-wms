@@ -42,9 +42,9 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
     
     public bool IsActive { get; private set; }
 
-    public IReadOnlyCollection<Zone> Zones => _zones.AsReadOnly();
+    public IReadOnlyCollection<Zone> Zones => _zones;
 
-    public IReadOnlyCollection<Location> Locations => _locations.AsReadOnly();
+    public IReadOnlyCollection<Location> Locations => _locations;
 
     public void Rename(string name) => Name = RequireNonEmpty(name, nameof(name));
 
@@ -74,7 +74,6 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
         if (_locations.Any(l => l.Code == code))
             throw new DomainException("Location code must be unique within warehouse");
 
-        var zone = _zones.SingleOrDefault(z => z.Id.Equals(zoneId));
         if (_zones.All(z => !z.Id.Equals(zoneId)))
             throw new DomainException("Zone does not belong to warehouse");
 
