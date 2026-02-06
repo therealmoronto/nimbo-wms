@@ -42,9 +42,9 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
     
     public bool IsActive { get; private set; }
 
-    public IReadOnlyCollection<Zone> Zones => _zones;
+    public IReadOnlyCollection<Zone> Zones => _zones.AsReadOnly();
 
-    public IReadOnlyCollection<Location> Locations => _locations;
+    public IReadOnlyCollection<Location> Locations => _locations.AsReadOnly();
 
     public void Rename(string name) => Name = RequireNonEmpty(name, nameof(name));
 

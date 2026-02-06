@@ -11,7 +11,7 @@ public class SupplierItem : BaseEntity<SupplierItemId>
     }
 
     /// <exception cref="ArgumentException">Thrown when the provided strings of supplierSku or supplierBarcode are empty or whitespace or when defaultPurchasePrice, unitsPerPurchaseUom, leadTimeDays or minOrderQty are negative</exception>
-    public SupplierItem(
+    internal SupplierItem(
         SupplierItemId id,
         SupplierId supplierId,
         ItemId itemId,
@@ -43,9 +43,9 @@ public class SupplierItem : BaseEntity<SupplierItemId>
         IsPreferred = isPreferred;
     }
     
-    public SupplierId SupplierId { get; }
+    public SupplierId SupplierId { get; private set; }
 
-    public ItemId ItemId { get; }
+    public ItemId ItemId { get; private set; }
 
     public string? SupplierSku { get; private set; }
 

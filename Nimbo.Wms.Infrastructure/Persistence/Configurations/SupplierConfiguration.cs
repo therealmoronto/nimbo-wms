@@ -42,6 +42,16 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
         builder.Property(x => x.IsActive)
             .IsRequired();
         
+        // Locations collection (backing field)
+        builder.HasMany(x => x.Items)
+            .WithOne()
+            .HasForeignKey(l => l.SupplierId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(x => x.Items)
+            .HasField("_items")
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
         builder.HasIndex(x => x.Code).IsUnique();
         builder.HasIndex(x => x.IsActive);
     }
