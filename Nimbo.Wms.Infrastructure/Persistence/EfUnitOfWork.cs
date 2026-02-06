@@ -2,7 +2,7 @@ using Nimbo.Wms.Application.Abstractions.Persistence;
 
 namespace Nimbo.Wms.Infrastructure.Persistence;
 
-public class EfUnitOfWork : IUnitOfWork
+internal sealed class EfUnitOfWork : IUnitOfWork
 {
     private readonly NimboWmsDbContext _dbContext;
 
