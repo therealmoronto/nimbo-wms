@@ -615,7 +615,7 @@ namespace Nimbo.Wms.Migrations
                     b.ToTable("inventory_items", "nimbo");
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Location", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Location", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -687,7 +687,7 @@ namespace Nimbo.Wms.Migrations
                     b.ToTable("locations", "nimbo");
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Warehouse", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Warehouse", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -723,7 +723,7 @@ namespace Nimbo.Wms.Migrations
                     b.ToTable("warehouses", "nimbo");
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Zone", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Zone", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -1005,13 +1005,13 @@ namespace Nimbo.Wms.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Nimbo.Wms.Domain.Entities.WarehouseData.Location", null)
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Location", null)
                         .WithMany()
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Nimbo.Wms.Domain.Entities.WarehouseData.Warehouse", null)
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Warehouse", null)
                         .WithMany()
                         .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1044,24 +1044,24 @@ namespace Nimbo.Wms.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Location", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Location", b =>
                 {
-                    b.HasOne("Nimbo.Wms.Domain.Entities.WarehouseData.Warehouse", null)
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Warehouse", null)
                         .WithMany()
                         .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Nimbo.Wms.Domain.Entities.WarehouseData.Zone", null)
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Zone", null)
                         .WithMany()
                         .HasForeignKey("ZoneId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Zone", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Zone", b =>
                 {
-                    b.HasOne("Nimbo.Wms.Domain.Entities.WarehouseData.Warehouse", null)
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Warehouse", null)
                         .WithMany()
                         .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Restrict)

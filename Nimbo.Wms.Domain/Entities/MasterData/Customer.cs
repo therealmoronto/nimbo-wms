@@ -2,7 +2,7 @@
 
 namespace Nimbo.Wms.Domain.Entities.MasterData;
 
-public class Customer : IEntity<CustomerId>
+public class Customer : BaseEntity<CustomerId>
 {
     // ReSharper disable once UnusedMember.Global
     public Customer()
@@ -35,8 +35,6 @@ public class Customer : IEntity<CustomerId>
 
         IsActive = isActive;
     }
-
-    public CustomerId Id { get; }
 
     public string Code { get; private set; }
     

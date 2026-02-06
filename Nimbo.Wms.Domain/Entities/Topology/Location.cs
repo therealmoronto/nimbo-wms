@@ -1,9 +1,9 @@
 ﻿using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 
-namespace Nimbo.Wms.Domain.Entities.WarehouseData;
+namespace Nimbo.Wms.Domain.Entities.Topology;
 
-public sealed class Location : IEntity<LocationId>
+public sealed class Location : BaseEntity<LocationId>
 {
     // ReSharper disable once UnusedMember.Global
     public Location()
@@ -57,8 +57,6 @@ public sealed class Location : IEntity<LocationId>
         Level = TrimOrNull(level);
         Position = TrimOrNull(position);
     }
-
-    public LocationId Id { get; }
 
     public WarehouseId WarehouseId { get; }
 

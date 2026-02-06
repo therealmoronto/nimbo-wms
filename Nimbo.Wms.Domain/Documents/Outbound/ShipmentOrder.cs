@@ -36,7 +36,7 @@ public class ShipmentOrder : Document<ShipmentOrderId, ShipmentOrderStatus>
 
     public string? CancelReason { get; private set; }
 
-    public IReadOnlyCollection<ShipmentOrderLine> Lines => _lines;
+    public IReadOnlyCollection<ShipmentOrderLine> Lines => _lines.AsReadOnly();
 
     public ShipmentOrderLine AddLine(ItemId itemId, decimal orderedQty, UnitOfMeasure uomCode)
     {

@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Nimbo.Wms.Application\Nimbo.Wms.Application.csproj" />
       <ProjectReference Include="..\Nimbo.Wms.Domain\Nimbo.Wms.Domain.csproj" />
     </ItemGroup>
 

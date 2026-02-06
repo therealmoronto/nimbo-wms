@@ -26,7 +26,7 @@ namespace Nimbo.Wms.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Warehouse", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Warehouse", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");

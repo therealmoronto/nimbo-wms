@@ -533,7 +533,7 @@ namespace Nimbo.Wms.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.HasIndex("SupplierId");
+                    b.HasIndex("SupplierId", "ItemId");
 
                     b.ToTable("supplier_items", "nimbo");
                 });
@@ -652,7 +652,7 @@ namespace Nimbo.Wms.Migrations
                     b.ToTable("inventory_items", "nimbo");
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Location", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Location", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -724,7 +724,7 @@ namespace Nimbo.Wms.Migrations
                     b.ToTable("locations", "nimbo");
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Warehouse", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Warehouse", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -760,7 +760,7 @@ namespace Nimbo.Wms.Migrations
                     b.ToTable("warehouses", "nimbo");
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Zone", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Zone", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -980,7 +980,7 @@ namespace Nimbo.Wms.Migrations
                         .IsRequired();
 
                     b.HasOne("Nimbo.Wms.Domain.Entities.MasterData.Supplier", null)
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1042,13 +1042,13 @@ namespace Nimbo.Wms.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Nimbo.Wms.Domain.Entities.WarehouseData.Location", null)
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Location", null)
                         .WithMany()
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Nimbo.Wms.Domain.Entities.WarehouseData.Warehouse", null)
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Warehouse", null)
                         .WithMany()
                         .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1081,27 +1081,21 @@ namespace Nimbo.Wms.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Location", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Location", b =>
                 {
-                    b.HasOne("Nimbo.Wms.Domain.Entities.WarehouseData.Warehouse", null)
-                        .WithMany()
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Warehouse", null)
+                        .WithMany("Locations")
                         .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Nimbo.Wms.Domain.Entities.WarehouseData.Zone", null)
-                        .WithMany()
-                        .HasForeignKey("ZoneId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.WarehouseData.Zone", b =>
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Zone", b =>
                 {
-                    b.HasOne("Nimbo.Wms.Domain.Entities.WarehouseData.Warehouse", null)
-                        .WithMany()
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Warehouse", null)
+                        .WithMany("Zones")
                         .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -1123,6 +1117,18 @@ namespace Nimbo.Wms.Migrations
             modelBuilder.Entity("Nimbo.Wms.Domain.Documents.Transfer.TransferOrder", b =>
                 {
                     b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.MasterData.Supplier", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Warehouse", b =>
+                {
+                    b.Navigation("Locations");
+
+                    b.Navigation("Zones");
                 });
 #pragma warning restore 612, 618
         }

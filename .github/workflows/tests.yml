@@ -2,27 +2,54 @@ name: tests
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
 
 jobs:
-  integrational:
+  unit:
+    name: unit
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup dotnet
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: 10.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Restore
+        run: dotnet restore NimboWMS.sln
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build NimboWMS.sln --no-restore -c Release
 
-      - name: Run integrational tests
-        run: dotnet test --filter "Category=Integration" --configuration Release --no-build --verbosity normal
+      - name: Run unit tests
+        run: dotnet test NimboWMS.sln --no-build -c Release --filter "Category!=Integration"
+
+  integration:
+    name: integration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore NimboWMS.sln
+
+      - name: Build
+        run: dotnet build NimboWMS.sln --no-restore -c Release
+
+      - name: Run integration tests
+        run: dotnet test NimboWMS.sln --no-build -c Release --filter "Category=Integration"
