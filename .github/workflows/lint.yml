@@ -39,4 +39,4 @@ jobs:
 
       # Lint/format check (doesn't modify files, just fails if changes required)
       - name: dotnet format (verify no changes)
-        run: dotnet format --verify-no-changes --no-restore
+        run: dotnet format --check --no-restore
