@@ -38,8 +38,6 @@ public class Batch : BaseEntity<BatchId>
         Notes = TrimOrNull(notes);
     }
     
-    public new BatchId Id { get; }
-
     public ItemId ItemId { get; }
 
     public string BatchNumber { get; private set; }

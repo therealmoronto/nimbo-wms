@@ -40,8 +40,6 @@ public class InternalTransfer : BaseEntity<InternalTransferId>
         Reason = TrimOrNull(reason);
     }
 
-    public new InternalTransferId Id { get; }
-
     public WarehouseId WarehouseId { get; }
     
     public ItemId ItemId { get; }

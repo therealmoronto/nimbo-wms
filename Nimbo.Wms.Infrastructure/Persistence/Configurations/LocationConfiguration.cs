@@ -65,16 +65,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         
         builder.Property(x => x.IsBlocked)
             .IsRequired();
-        
-        builder.HasOne<Warehouse>()
-            .WithMany()
-            .HasForeignKey(x => x.WarehouseId)
-            .OnDelete(DeleteBehavior.Restrict);
-        
-        builder.HasOne<Zone>()
-            .WithMany()
-            .HasForeignKey(x => x.ZoneId)
-            .OnDelete(DeleteBehavior.Restrict);
 
         // Unique per warehouse: you can't have two locations with the same code in same warehouse
         builder.HasIndex(x => new { x.WarehouseId, x.Code }).IsUnique();

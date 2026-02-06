@@ -34,9 +34,7 @@ public class Item : BaseEntity<ItemId>
         WeightKg = RequirePositiveOrNull(weightKg, nameof(weightKg));
         VolumeM3 = RequirePositiveOrNull(volumeM3, nameof(volumeM3));
     }
-    
-    public new ItemId Id { get; }
-    
+
     public string Name { get; private set; }
     
     public string InternalSku { get; private set; }

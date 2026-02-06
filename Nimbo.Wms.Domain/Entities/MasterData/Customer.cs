@@ -36,8 +36,6 @@ public class Customer : BaseEntity<CustomerId>
         IsActive = isActive;
     }
 
-    public new CustomerId Id { get; }
-
     public string Code { get; private set; }
     
     public string Name { get; private set; }

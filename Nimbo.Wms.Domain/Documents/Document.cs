@@ -21,8 +21,6 @@ public abstract class Document<TId, TStatus> : BaseEntity<TId>
         UpdateName(name);
     }
 
-    public new TId Id { get; }
-    
     public string Code { get; private set; }
     
     public string Name { get; private set; }

@@ -1,9 +1,14 @@
-﻿using Nimbo.Wms.Domain.Identification;
+﻿using Nimbo.Wms.Domain.Common;
+using Nimbo.Wms.Domain.Identification;
+using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Domain.Entities.WarehouseData;
 
 public sealed class Warehouse : BaseEntity<WarehouseId>
 {
+    private readonly List<Zone> _zones = new();
+    private readonly List<Location> _locations = new();
+
     // ReSharper disable once UnusedMember.Global
     public Warehouse()
     {
@@ -26,9 +31,7 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
         Description = description;
         IsActive = isActive;
     }
-    
-    public new WarehouseId Id { get; }
-    
+
     public string Code { get; private set; }
     
     public string Name { get; private set; }
@@ -38,7 +41,11 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
     public string? Description { get; private set; }
     
     public bool IsActive { get; private set; }
-    
+
+    public IReadOnlyCollection<Zone> Zones => _zones.AsReadOnly();
+
+    public IReadOnlyCollection<Location> Locations => _locations.AsReadOnly();
+
     public void Rename(string name) => Name = RequireNonEmpty(name, nameof(name));
 
     public void ChangeCode(string code) => Code = RequireNonEmpty(code, nameof(code));
@@ -50,6 +57,32 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
     public void Deactivate() => IsActive = false;
 
     public void Activate() => IsActive = true;
+
+    public Zone AddZone(ZoneId zoneId, string code, string name, ZoneType type)
+    {
+        if (_zones.Any(z => z.Code == code))
+            throw new DomainException("Zone code must be unique within warehouse");
+
+        var zone = new Zone(zoneId, Id, code, name, type);
+        _zones.Add(zone);
+
+        return zone;
+    }
+
+    public Location AddLocation(LocationId locationId, ZoneId zoneId, string code, LocationType type)
+    {
+        if (_locations.Any(l => l.Code == code))
+            throw new DomainException("Location code must be unique within warehouse");
+
+        var zone = _zones.SingleOrDefault(z => z.Id.Equals(zoneId));
+        if (_zones.All(z => !z.Id.Equals(zoneId)))
+            throw new DomainException("Zone does not belong to warehouse");
+
+        var location = new Location(locationId, Id, zoneId, code, type);
+        _locations.Add(location);
+
+        return location;
+    }
 
     /// <summary>
     /// Checks if the provided string is non-empty and trims it.

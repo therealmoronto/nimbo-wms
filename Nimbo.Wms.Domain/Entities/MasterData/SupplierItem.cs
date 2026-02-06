@@ -43,8 +43,6 @@ public class SupplierItem : BaseEntity<SupplierItemId>
         IsPreferred = isPreferred;
     }
     
-    public new SupplierItemId Id { get; }
-    
     public SupplierId SupplierId { get; }
 
     public ItemId ItemId { get; }

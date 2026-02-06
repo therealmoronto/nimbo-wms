@@ -38,14 +38,6 @@ public class ZoneConfiguration : IEntityTypeConfiguration<Zone>
         builder.Property(x => x.IsQuarantine)
             .HasDefaultValue(false);
 
-        builder.Property(x => x.MaxVolumeM3);
-        builder.Property(x => x.MaxWeightKg);
-        
-        builder.HasOne<Warehouse>()
-            .WithMany()
-            .HasForeignKey(x => x.WarehouseId)
-            .OnDelete(DeleteBehavior.Restrict);
-
         // Uniqueness: zone codes unique per warehouse
         builder.HasIndex(x => new { x.WarehouseId, x.Code }).IsUnique();
     }

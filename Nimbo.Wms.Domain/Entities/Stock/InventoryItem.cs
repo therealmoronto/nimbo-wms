@@ -41,9 +41,6 @@ public class InventoryItem : BaseEntity<InventoryItemId>
         UnitCost = RequireNonNegativeOrNull(unitCost, nameof(unitCost));
     }
 
-    
-    public new InventoryItemId Id { get; }
-
     public ItemId ItemId { get; }
     
     public WarehouseId WarehouseId { get; private set; }

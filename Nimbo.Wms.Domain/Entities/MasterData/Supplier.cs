@@ -36,9 +36,7 @@ public class Supplier : BaseEntity<SupplierId>
 
         IsActive = isActive;
     }
-    
-    public new SupplierId Id { get; }
-    
+
     public string Code { get; private set; }
     
     public string Name { get; private set; }

@@ -58,8 +58,6 @@ public sealed class Location : BaseEntity<LocationId>
         Position = TrimOrNull(position);
     }
 
-    public new LocationId Id { get; }
-
     public WarehouseId WarehouseId { get; }
 
     public ZoneId ZoneId { get; }

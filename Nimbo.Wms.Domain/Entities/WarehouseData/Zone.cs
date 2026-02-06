@@ -38,8 +38,6 @@ public sealed class Zone : BaseEntity<ZoneId>
         IsDamagedArea = isDamagedArea;
     }
     
-    public new ZoneId Id { get; }
-
     public WarehouseId WarehouseId { get; }
 
     public string Code { get; private set; }

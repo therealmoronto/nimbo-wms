@@ -18,5 +18,5 @@ public abstract class BaseEntity<TId> : IEntity<TId>
 {
     IEntityId IEntity.Id => Id;
 
-    public TId Id { get; } = default!;
+    public TId Id { get; protected set; }
 }
