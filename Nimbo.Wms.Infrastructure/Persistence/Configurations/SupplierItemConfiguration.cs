@@ -38,13 +38,11 @@ public class SupplierItemConfiguration : IEntityTypeConfiguration<SupplierItem>
 
         builder.Property(x => x.IsPreferred)
             .IsRequired();
-        
-        builder.HasOne<Supplier>()
-            .WithMany()
-            .HasForeignKey(x => x.SupplierId);
 
         builder.HasOne<Item>()
             .WithMany()
-            .HasForeignKey(x => x.ItemId);       
+            .HasForeignKey(x => x.ItemId);
+
+        builder.HasIndex(x => new { x.SupplierId, x.ItemId });
     }
 }

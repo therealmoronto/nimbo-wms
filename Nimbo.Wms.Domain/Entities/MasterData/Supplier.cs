@@ -1,9 +1,12 @@
-﻿using Nimbo.Wms.Domain.Identification;
+﻿using Nimbo.Wms.Domain.Common;
+using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Domain.Entities.MasterData;
 
-public class Supplier : IEntity<SupplierId>
+public class Supplier : BaseEntity<SupplierId>
 {
+    private readonly List<SupplierItem> _items = new();
+
     // ReSharper disable once UnusedMember.Global
     public Supplier()
     {
@@ -36,9 +39,7 @@ public class Supplier : IEntity<SupplierId>
 
         IsActive = isActive;
     }
-    
-    public SupplierId Id { get; }
-    
+
     public string Code { get; private set; }
     
     public string Name { get; private set; }
@@ -54,6 +55,8 @@ public class Supplier : IEntity<SupplierId>
     public string? Email { get; private set; }
 
     public bool IsActive { get; private set; }
+    
+    public IReadOnlyCollection<SupplierItem> Items => _items.AsReadOnly();
     
     public void Rename(string name) => Name = RequireNonEmpty(name, nameof(name));
 
@@ -74,6 +77,47 @@ public class Supplier : IEntity<SupplierId>
 
     public void Deactivate() => IsActive = false;
 
+    public SupplierItem AddItem(
+        SupplierItemId supplierItemId,
+        ItemId itemId,
+        string? supplierSku,
+        string? supplierBarcode,
+        decimal? defaultPurchasePrice,
+        string? purchaseUomCode,
+        int? unitsPerPurchaseUom,
+        int? leadTimeDays,
+        int? minOrderQty,
+        bool isPreferred)
+    {
+        if (_items.Any(x => x.ItemId.Equals(itemId)))
+            throw new DomainException("Item is already linked to this supplier.");
+
+        var supplierItem = new SupplierItem(
+            supplierItemId,
+            Id,
+            itemId,
+            supplierSku,
+            supplierBarcode,
+            defaultPurchasePrice,
+            purchaseUomCode,
+            unitsPerPurchaseUom,
+            leadTimeDays,
+            minOrderQty,
+            isPreferred);
+
+        _items.Add(supplierItem);
+        return supplierItem;
+    }
+
+    public bool RemoveItem(ItemId itemId)
+    {
+        var link = _items.SingleOrDefault(x => x.ItemId.Equals(itemId));
+        if (link is null)
+            return false;
+
+        return _items.Remove(link);
+    }
+    
     private static string RequireNonEmpty(string value, string paramName)
     {
         if (string.IsNullOrWhiteSpace(value))

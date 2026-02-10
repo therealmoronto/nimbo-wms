@@ -3,7 +3,7 @@ using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Domain.Entities.MasterData;
 
-public class Item : IEntity<ItemId>
+public class Item : BaseEntity<ItemId>
 {
     // ReSharper disable once UnusedMember.Global
     public Item()
@@ -34,9 +34,7 @@ public class Item : IEntity<ItemId>
         WeightKg = RequirePositiveOrNull(weightKg, nameof(weightKg));
         VolumeM3 = RequirePositiveOrNull(volumeM3, nameof(volumeM3));
     }
-    
-    public ItemId Id { get; }
-    
+
     public string Name { get; private set; }
     
     public string InternalSku { get; private set; }

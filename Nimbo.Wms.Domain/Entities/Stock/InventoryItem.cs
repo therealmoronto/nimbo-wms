@@ -4,7 +4,7 @@ using Nimbo.Wms.Domain.ValueObject;
 
 namespace Nimbo.Wms.Domain.Entities.Stock;
 
-public class InventoryItem : IEntity<InventoryItemId>
+public class InventoryItem : BaseEntity<InventoryItemId>
 {
     // ReSharper disable once UnusedMember.Local
     private InventoryItem()
@@ -40,9 +40,6 @@ public class InventoryItem : IEntity<InventoryItemId>
 
         UnitCost = RequireNonNegativeOrNull(unitCost, nameof(unitCost));
     }
-
-    
-    public InventoryItemId Id { get; }
 
     public ItemId ItemId { get; }
     

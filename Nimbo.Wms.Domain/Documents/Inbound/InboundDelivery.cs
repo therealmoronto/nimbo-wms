@@ -34,7 +34,7 @@ public class InboundDelivery : Document<InboundDeliveryId, InboundDeliveryStatus
 
     public DateTime? ReceivedAt { get; private set; }
 
-    public IReadOnlyCollection<InboundDeliveryLine> Lines => _lines;
+    public IReadOnlyCollection<InboundDeliveryLine> Lines => _lines.AsReadOnly();
 
     public InboundDeliveryLine AddLine(ItemId itemId, decimal expectedQuantity, UnitOfMeasure uom, string? batchNumber = null, DateTime? expiryDate = null)
     {

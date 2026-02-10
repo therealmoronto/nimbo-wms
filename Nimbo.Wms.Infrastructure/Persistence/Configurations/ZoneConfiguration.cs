@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Nimbo.Wms.Domain.Entities.WarehouseData;
+using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Configurations;
@@ -37,14 +37,6 @@ public class ZoneConfiguration : IEntityTypeConfiguration<Zone>
 
         builder.Property(x => x.IsQuarantine)
             .HasDefaultValue(false);
-
-        builder.Property(x => x.MaxVolumeM3);
-        builder.Property(x => x.MaxWeightKg);
-        
-        builder.HasOne<Warehouse>()
-            .WithMany()
-            .HasForeignKey(x => x.WarehouseId)
-            .OnDelete(DeleteBehavior.Restrict);
 
         // Uniqueness: zone codes unique per warehouse
         builder.HasIndex(x => new { x.WarehouseId, x.Code }).IsUnique();

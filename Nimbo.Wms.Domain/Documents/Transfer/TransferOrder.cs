@@ -33,7 +33,7 @@ public class TransferOrder : Document<TransferOrderId, TransferOrderStatus>
     public WarehouseId FromWarehouseId { get; }
     public WarehouseId ToWarehouseId { get; }
 
-    public IReadOnlyCollection<TransferOrderLine> Lines => _lines;
+    public IReadOnlyCollection<TransferOrderLine> Lines => _lines.AsReadOnly();
 
     public DateTime? PickingStartedAt { get; private set; }
     public DateTime? ShippedAt { get; private set; }

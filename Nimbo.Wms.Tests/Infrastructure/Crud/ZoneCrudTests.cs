@@ -1,6 +1,6 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Domain.Entities.WarehouseData;
+using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Tests.Common;

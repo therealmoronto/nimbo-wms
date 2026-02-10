@@ -2,7 +2,7 @@
 
 namespace Nimbo.Wms.Domain.Entities.Stock;
 
-public class Batch : IEntity<BatchId>
+public class Batch : BaseEntity<BatchId>
 {
     // ReSharper disable once UnusedMember.Global
     public Batch()
@@ -38,8 +38,6 @@ public class Batch : IEntity<BatchId>
         Notes = TrimOrNull(notes);
     }
     
-    public BatchId Id { get; }
-
     public ItemId ItemId { get; }
 
     public string BatchNumber { get; private set; }
