@@ -38,7 +38,7 @@ public class ShipmentOrderSmokeTests
             itemId,
             name: "Ship Item",
             internalSku: $"SKU-{Guid.NewGuid():N}".Substring(0, 32),
-            barcode: null,
+            barcode: string.Empty,
             baseUomCode: UnitOfMeasure.Piece,
             manufacturer: null,
             weightKg: null,

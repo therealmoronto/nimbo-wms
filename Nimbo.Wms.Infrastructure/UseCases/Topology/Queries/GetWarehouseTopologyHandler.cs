@@ -2,13 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
 using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts.Topology;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Infrastructure.Persistence;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Queries;
 
-public sealed class GetWarehouseTopologyHandler : IQueryHandler<GetWarehouseTopologyQuery, WarehouseTopologyDto>
+internal sealed class GetWarehouseTopologyHandler : IQueryHandler<GetWarehouseTopologyQuery, WarehouseTopologyDto>
 {
     private readonly NimboWmsDbContext _db;
 
@@ -30,14 +31,34 @@ public sealed class GetWarehouseTopologyHandler : IQueryHandler<GetWarehouseTopo
                 x.Code,
                 x.Name,
                 Zones = x.Zones.Select(z => new ZoneDto(
+                    z.WarehouseId,
                     z.Id,
                     z.Code,
-                    z.Name
+                    z.Name,
+                    z.Type,
+                    z.MaxWeightKg,
+                    z.MaxVolumeM3,
+                    z.IsQuarantine,
+                    z.IsDamagedArea
                 )),
                 Locations = x.Locations.Select(l => new LocationDto(
-                    l.Id,
+                    l.WarehouseId,
                     l.ZoneId,
-                    l.Code
+                    l.Id,
+                    l.Code,
+                    l.Type,
+                    l.MaxWeightKg,
+                    l.MaxVolumeM3,
+                    l.IsSingleItemOnly,
+                    l.IsPickingLocation,
+                    l.IsReceivingLocation,
+                    l.IsShippingLocation,
+                    l.IsActive,
+                    l.IsBlocked,
+                    l.Aisle,
+                    l.Rack,
+                    l.Level,
+                    l.Position
                 ))
             })
             .SingleOrDefaultAsync(ct);
