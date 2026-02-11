@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using Nimbo.Wms.Http;
 using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
 
@@ -40,6 +41,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseMiddleware<ProblemDetailsExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 
