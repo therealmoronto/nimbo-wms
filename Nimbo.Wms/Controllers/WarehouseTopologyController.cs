@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
-using Nimbo.Wms.Contracts.Topology;
+using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers;

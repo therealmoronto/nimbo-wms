@@ -2,8 +2,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Nimbo.Wms.Contracts.Topology;
 using Nimbo.Wms.Contracts.Topology.Dtos;
+using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Tests.Common.Database;
 
