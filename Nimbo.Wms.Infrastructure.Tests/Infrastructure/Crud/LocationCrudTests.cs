@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Domain.Entities.Topology;
@@ -11,6 +12,7 @@ namespace Nimbo.Wms.Infrastructure.Tests.Infrastructure.Crud;
 
 [IntegrationTest]
 [Collection(PostgresCollection.Name)]
+[SuppressMessage("Usage", "xUnit1041:Fixture arguments to test classes must have fixture sources")]
 public class LocationCrudTests
 {
     private readonly PostgresFixture _fixture;

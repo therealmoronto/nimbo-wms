@@ -1,6 +1,6 @@
-﻿using Xunit;
+﻿using Nimbo.Wms.Tests.Common.Database;
 
-namespace Nimbo.Wms.Tests.Common.Database;
+namespace Nimbo.Wms.Infrastructure.Tests;
 
 [CollectionDefinition(Name)]
 public class PostgresCollection : ICollectionFixture<PostgresFixture>
