@@ -26,6 +26,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Nimbo.Wms.Infrastructure\Nimbo.Wms.Infrastructure.csproj" />
+      <ProjectReference Include="..\Nimbo.Wms.Tests.Common\Nimbo.Wms.Tests.Common.csproj" />
     </ItemGroup>
 
 </Project>

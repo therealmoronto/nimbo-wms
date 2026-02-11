@@ -4,6 +4,8 @@ using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Tests.Common;
+using Nimbo.Wms.Tests.Common.Attributes;
+using Nimbo.Wms.Tests.Common.Database;
 
 namespace Nimbo.Wms.Tests.Infrastructure.Crud;
 

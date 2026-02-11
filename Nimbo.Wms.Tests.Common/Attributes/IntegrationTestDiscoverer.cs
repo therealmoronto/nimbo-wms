@@ -1,7 +1,7 @@
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Nimbo.Wms.Tests.Common;
+namespace Nimbo.Wms.Tests.Common.Attributes;
 
 public class IntegrationTestDiscoverer : ITraitDiscoverer
 {

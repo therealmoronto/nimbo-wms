@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
+using Xunit;
 
-namespace Nimbo.Wms.Tests.Infrastructure;
+namespace Nimbo.Wms.Tests.Common.Database;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class PostgresFixture : IAsyncLifetime

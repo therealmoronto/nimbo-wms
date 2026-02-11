@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Infrastructure.Persistence;
 
-namespace Nimbo.Wms.Tests.Infrastructure;
+namespace Nimbo.Wms.Tests.Common.Database;
 
 public static class DbContextFactory
 {

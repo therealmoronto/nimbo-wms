@@ -12,6 +12,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Contracts", "Nimb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Tests", "Nimbo.Wms.Tests\Nimbo.Wms.Tests.csproj", "{313420E4-FF6C-4D71-A629-0ADA0A6996F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Tests.Common", "Nimbo.Wms.Tests.Common\Nimbo.Wms.Tests.Common.csproj", "{E268D570-87C9-42F7-A6FD-670AE1B19AF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Api.Tests", "Nimbo.Wms.Api.Tests\Nimbo.Wms.Api.Tests.csproj", "{697828D8-5089-44D1-869B-26C083900256}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +46,13 @@ Global
 		{313420E4-FF6C-4D71-A629-0ADA0A6996F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{313420E4-FF6C-4D71-A629-0ADA0A6996F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{313420E4-FF6C-4D71-A629-0ADA0A6996F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E268D570-87C9-42F7-A6FD-670AE1B19AF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E268D570-87C9-42F7-A6FD-670AE1B19AF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E268D570-87C9-42F7-A6FD-670AE1B19AF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E268D570-87C9-42F7-A6FD-670AE1B19AF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{697828D8-5089-44D1-869B-26C083900256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{697828D8-5089-44D1-869B-26C083900256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{697828D8-5089-44D1-869B-26C083900256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{697828D8-5089-44D1-869B-26C083900256}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

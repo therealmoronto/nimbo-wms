@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Docker.DotNet;
 
-namespace Nimbo.Wms.Tests.Infrastructure;
+namespace Nimbo.Wms.Tests.Common.Database;
 
 public static class DockerHelper
 {
