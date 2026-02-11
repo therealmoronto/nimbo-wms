@@ -23,7 +23,11 @@ internal sealed class GetWarehousesHandler : IQueryHandler<GetWarehousesQuery, I
     {
         return await _db.Set<Warehouse>()
             .AsNoTracking()
-            .Select(x => x.ToListItemDto())
+            .Select(x => new WarehouseListItemDto(
+                x.Id,
+                x.Code,
+                x.Name
+            ))
             .ToListAsync(ct);
     }
 }
