@@ -7,7 +7,7 @@ using Nimbo.Wms.Tests.Common;
 using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
 
-namespace Nimbo.Wms.Tests.Infrastructure.Crud;
+namespace Nimbo.Wms.Infrastructure.Tests.Infrastructure.Crud;
 
 [IntegrationTest]
 [Collection(PostgresCollection.Name)]

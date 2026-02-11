@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Application", "Ni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Contracts", "Nimbo.Wms.Contracts\Nimbo.Wms.Contracts.csproj", "{67E1596F-4566-4D1D-BD62-083A04CDFA45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Tests", "Nimbo.Wms.Tests\Nimbo.Wms.Tests.csproj", "{313420E4-FF6C-4D71-A629-0ADA0A6996F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Infrastructure.Tests", "Nimbo.Wms.Infrastructure.Tests\Nimbo.Wms.Infrastructure.Tests.csproj", "{313420E4-FF6C-4D71-A629-0ADA0A6996F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Tests.Common", "Nimbo.Wms.Tests.Common\Nimbo.Wms.Tests.Common.csproj", "{E268D570-87C9-42F7-A6FD-670AE1B19AF1}"
 EndProject

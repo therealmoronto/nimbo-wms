@@ -3,10 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
-using Nimbo.Wms.Tests.Common;
 using Nimbo.Wms.Tests.Common.Database;
 
-namespace Nimbo.Wms.Tests.Infrastructure;
+namespace Nimbo.Wms.Infrastructure.Tests.Infrastructure;
 
 public abstract class BaseIntegrationTests : IClassFixture<PostgresFixture>
 {
