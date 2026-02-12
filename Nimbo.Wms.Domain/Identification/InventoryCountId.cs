@@ -23,4 +23,8 @@ public readonly struct InventoryCountId : IEntityId
     public bool Equals(InventoryCountId other) => Value.Equals(other.Value);
     
     public override int GetHashCode() => Value.GetHashCode();
+    
+    public static bool operator ==(InventoryCountId left, InventoryCountId right) => left.Value == right.Value;
+    
+    public static bool operator !=(InventoryCountId left, InventoryCountId right) => left.Value != right.Value;
 }

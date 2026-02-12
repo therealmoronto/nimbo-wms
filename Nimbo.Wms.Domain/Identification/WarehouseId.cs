@@ -27,4 +27,8 @@ public readonly struct WarehouseId : IEntityId, IEquatable<WarehouseId>
     public bool Equals(WarehouseId other) => Value.Equals(other.Value);
 
     public override int GetHashCode() => Value.GetHashCode();
+    
+    public static bool operator ==(WarehouseId left, WarehouseId right) => left.Value == right.Value;
+
+    public static bool operator !=(WarehouseId left, WarehouseId right) => left.Value != right.Value;
 }

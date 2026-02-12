@@ -27,4 +27,8 @@ public readonly struct ItemId : IEntityId
     public bool Equals(ItemId other) => Value.Equals(other.Value);
     
     public override int GetHashCode() => Value.GetHashCode();
+    
+    public static bool operator ==(ItemId left, ItemId right) => left.Value == right.Value;
+    
+    public static bool operator !=(ItemId left, ItemId right) => left.Value != right.Value;
 }

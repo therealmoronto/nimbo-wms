@@ -8,9 +8,7 @@ public readonly struct InboundDeliveryId : IEntityId
 {
     public InboundDeliveryId(Guid value)
     {
-        if (value == Guid.Empty)
-            throw new ArgumentException("InboundDeliveryId cannot be empty.", nameof(value));
-
+        EntityIdExtensions.EnsureNotEmpty<InboundDeliveryId>(value);
         Value = value;
     }
 
@@ -29,4 +27,8 @@ public readonly struct InboundDeliveryId : IEntityId
     public bool Equals(InboundDeliveryId other) => Value.Equals(other.Value);
     
     public override int GetHashCode() => Value.GetHashCode();
+    
+    public static bool operator ==(InboundDeliveryId left, InboundDeliveryId right) => left.Value == right.Value;
+    
+    public static bool operator !=(InboundDeliveryId left, InboundDeliveryId right) => left.Value != right.Value;
 }

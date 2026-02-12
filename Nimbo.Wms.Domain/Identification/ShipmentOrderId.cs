@@ -8,9 +8,7 @@ public readonly struct ShipmentOrderId : IEntityId, IEquatable<ShipmentOrderId>
 {
     public ShipmentOrderId(Guid value)
     {
-        if (value == Guid.Empty)
-            throw new ArgumentException("ShipmentOrderId cannot be empty.", nameof(value));
-
+        EntityIdExtensions.EnsureNotEmpty<ShipmentOrderId>(value);
         Value = value;
     }
 
@@ -29,4 +27,8 @@ public readonly struct ShipmentOrderId : IEntityId, IEquatable<ShipmentOrderId>
     public bool Equals(ShipmentOrderId other) => Value.Equals(other.Value);
 
     public override int GetHashCode() => Value.GetHashCode();
+
+    public static bool operator ==(ShipmentOrderId left, ShipmentOrderId right) => left.Value == right.Value;
+
+    public static bool operator !=(ShipmentOrderId left, ShipmentOrderId right) => left.Value != right.Value;
 }

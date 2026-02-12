@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Domain.Identification;
@@ -8,4 +9,11 @@ internal sealed class EfWarehouseRepository : EfRepository<Warehouse, WarehouseI
 {
     public EfWarehouseRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
+    
+    public override Task<Warehouse?> GetByIdAsync(WarehouseId id, CancellationToken ct = default)
+    {
+        return Set.Include(w => w.Zones)
+            .Include(w => w.Locations)
+            .FirstOrDefaultAsync(w => w.Id.Equals(id), ct);
+    }
 }
