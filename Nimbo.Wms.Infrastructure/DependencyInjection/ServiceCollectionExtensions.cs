@@ -50,6 +50,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<ICommandHandler<PatchLocationCommand>, PatchLocationHandler>();
         services.AddScoped<ICommandHandler<PatchZoneCommand>, PatchZoneHandler>();
+        services.AddScoped<ICommandHandler<PatchWarehouseCommand>, PatchWarehouseHandler>();
 
         return services;
     }

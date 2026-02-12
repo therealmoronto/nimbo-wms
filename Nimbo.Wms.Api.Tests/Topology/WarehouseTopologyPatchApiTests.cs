@@ -17,6 +17,36 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         : base(postgres) { }
 
     [Fact]
+    public async Task UpdateWarehouse_ChangesAreVisibleInTopology()
+    {
+        // create warehouse
+        var createRes = await Client.PostAsJsonAsync(
+            "/api/topology/warehouses",
+            new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main"));
+
+        createRes.StatusCode.Should().Be(HttpStatusCode.Created);
+        var created = (await createRes.Content.ReadFromJsonAsync<CreateWarehouseResponse>())!;
+        var warehouseId = created.Id;
+
+        // update
+        var updateRes = await Client.PatchAsJsonAsync(
+            $"/api/topology/warehouses/{warehouseId}",
+            new PatchWarehouseRequest("WH-UPDATED", "Main Updated", "Address lane 1, 0015", "Test warehouse to test patch API"));
+
+        updateRes.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        // read topology
+        var topology = await Client.GetFromJsonAsync<WarehouseTopologyDto>(
+            $"/api/topology/warehouses/{warehouseId}");
+
+        topology.Should().NotBeNull();
+        topology.Code.Should().Be("WH-UPDATED");
+        topology.Name.Should().Be("Main Updated");
+        topology.Address.Should().Be("Address lane 1, 0015");
+        topology.Description.Should().Be("Test warehouse to test patch API");
+    }
+
+    [Fact]
     public async Task PatchZone_UpdatesFields_VisibleInTopology()
     {
         // create warehouse

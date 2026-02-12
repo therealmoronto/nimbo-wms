@@ -50,9 +50,9 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
 
     public void ChangeCode(string code) => Code = RequireNonEmpty(code, nameof(code));
 
-    public void SetAddress(string? address) => Address = address;
+    public void ChangeAddress(string? address) => Address = address;
 
-    public void SetDescription(string? description) => Description = description;
+    public void ChangeDescription(string? description) => Description = description;
 
     public void Deactivate() => IsActive = false;
 
