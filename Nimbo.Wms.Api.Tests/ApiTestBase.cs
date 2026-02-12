@@ -3,6 +3,7 @@ using Nimbo.Wms.Tests.Common.Database;
 
 namespace Nimbo.Wms.Api.Tests;
 
+[Collection(PostgresCollection.Name)]
 public abstract class ApiTestBase: IAsyncLifetime
 {
     private readonly PostgresFixture _postgres;

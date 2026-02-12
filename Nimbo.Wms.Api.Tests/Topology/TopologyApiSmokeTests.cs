@@ -5,10 +5,12 @@ using FluentAssertions;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.References;
+using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
 
-namespace Nimbo.Wms.Api.Tests.Smoke;
+namespace Nimbo.Wms.Api.Tests.Topology;
 
+[IntegrationTest]
 [SuppressMessage("Usage", "xUnit1041:Fixture arguments to test classes must have fixture sources")]
 public class TopologyApiSmokeTests : ApiTestBase
 {
@@ -73,7 +75,7 @@ public class TopologyApiSmokeTests : ApiTestBase
         topology.Should().NotBeNull();
         topology.Id.Should().Be(warehouseGuid);
 
-        topology.Zones.Should().ContainSingle(z => z.Id.Value == zoneGuid);
-        topology.Locations.Should().ContainSingle(l => l.ZoneId.Value == zoneGuid && l.Code == "A-01-01-01");
+        topology.Zones.Should().ContainSingle(z => z.Id == zoneGuid);
+        topology.Locations.Should().ContainSingle(l => l.ZoneId == zoneGuid && l.Code == "A-01-01-01");
     }
 }

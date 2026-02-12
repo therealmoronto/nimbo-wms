@@ -24,8 +24,8 @@ internal sealed class GetWarehouseTopologyHandler : IQueryHandler<GetWarehouseTo
     {
         var warehouse = await _db.Set<Warehouse>()
             .AsNoTracking()
-            .Where(x => x.Id.Equals(query.WarehouseId))
-            .Select(x => new
+            .Where(w => w.Id == query.WarehouseId)
+            .Select(w => new
             {
                 w.Id,
                 w.Code,
