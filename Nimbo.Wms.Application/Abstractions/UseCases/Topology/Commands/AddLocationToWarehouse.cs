@@ -27,7 +27,6 @@ public sealed class AddLocationToWarehouseHandler : ICommandHandler<AddLocationT
 
     public async Task<LocationId> HandleAsync(AddLocationToWarehouseCommand command, CancellationToken ct = default)
     {
-        
         var warehouse = await _repository.GetByIdAsync(command.WarehouseId);
         if (warehouse is null)
             throw new NotFoundException("Warehouse not found");

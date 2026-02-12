@@ -8,7 +8,7 @@ public readonly struct ZoneId : IEntityId
 {
     public ZoneId(Guid value)
     {
-        EntityIdExtensions.EnsureNotEmpty<WarehouseId>(value);
+        EntityIdExtensions.EnsureNotEmpty<ZoneId>(value);
         Value = value;
     }
     
@@ -23,4 +23,8 @@ public readonly struct ZoneId : IEntityId
     public bool Equals(ZoneId other) => Value.Equals(other.Value);
     
     public override int GetHashCode() => Value.GetHashCode();
+
+    public static bool operator ==(ZoneId left, ZoneId right) => left.Value == right.Value;
+
+    public static bool operator !=(ZoneId left, ZoneId right) => left.Value != right.Value;
 }

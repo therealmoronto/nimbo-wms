@@ -27,4 +27,8 @@ public readonly struct BatchId : IEntityId
     public bool Equals(BatchId other) => Value.Equals(other.Value);
     
     public override int GetHashCode() => Value.GetHashCode();
+    
+    public static bool operator ==(BatchId left, BatchId right) => left.Value == right.Value;
+    
+    public static bool operator !=(BatchId left, BatchId right) => left.Value != right.Value;
 }

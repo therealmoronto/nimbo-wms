@@ -27,8 +27,8 @@ public static class TopologyExtensions
         ArgumentNullException.ThrowIfNull(zone);
 
         return new ZoneDto(
-            zone.WarehouseId,
-            zone.Id,
+            zone.WarehouseId.Value,
+            zone.Id.Value,
             zone.Code,
             zone.Name,
             zone.Type,
@@ -44,9 +44,9 @@ public static class TopologyExtensions
         ArgumentNullException.ThrowIfNull(location);
 
         return new LocationDto(
-            location.WarehouseId,
-            location.ZoneId,
-            location.Id,
+            location.WarehouseId.Value,
+            location.ZoneId.Value,
+            location.Id.Value,
             location.Code,
             location.Type,
             location.MaxWeightKg,

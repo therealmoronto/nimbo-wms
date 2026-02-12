@@ -3,7 +3,7 @@ using Nimbo.Wms.Domain.Identification;
 namespace Nimbo.Wms.Contracts.Topology.Dtos;
 
 public sealed record WarehouseListItemDto(
-    WarehouseId Id,
+    Guid Id,
     string Code,
     string Name
 );

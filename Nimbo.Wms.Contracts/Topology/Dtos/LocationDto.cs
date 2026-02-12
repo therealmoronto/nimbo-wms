@@ -4,9 +4,9 @@ using Nimbo.Wms.Domain.References;
 namespace Nimbo.Wms.Contracts.Topology.Dtos;
 
 public sealed record LocationDto(
-    WarehouseId WarehouseId,
-    ZoneId ZoneId,
-    LocationId Id,
+    Guid WarehouseId,
+    Guid ZoneId,
+    Guid Id,
     string Code,
     LocationType Type,
     decimal? MaxWeightKg,

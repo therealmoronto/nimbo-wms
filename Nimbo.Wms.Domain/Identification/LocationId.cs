@@ -27,4 +27,8 @@ public readonly struct LocationId : IEntityId
     public bool Equals(LocationId other) => Value.Equals(other.Value);
     
     public override int GetHashCode() => Value.GetHashCode();
+    
+    public static bool operator ==(LocationId left, LocationId right) => left.Value == right.Value;
+    
+    public static bool operator !=(LocationId left, LocationId right) => left.Value != right.Value;
 }

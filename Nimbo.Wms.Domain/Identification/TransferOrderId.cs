@@ -8,9 +8,7 @@ public readonly struct TransferOrderId : IEntityId, IEquatable<TransferOrderId>
 {
     public TransferOrderId(Guid value)
     {
-        if (value == Guid.Empty)
-            throw new ArgumentException("TransferOrderId cannot be empty.", nameof(value));
-
+        EntityIdExtensions.EnsureNotEmpty<TransferOrderId>(value);
         Value = value;
     }
 
@@ -29,4 +27,8 @@ public readonly struct TransferOrderId : IEntityId, IEquatable<TransferOrderId>
     public bool Equals(TransferOrderId other) => Value.Equals(other.Value);
 
     public override int GetHashCode() => Value.GetHashCode();
+
+    public static bool operator ==(TransferOrderId left, TransferOrderId right) => left.Value == right.Value;
+
+    public static bool operator !=(TransferOrderId left, TransferOrderId right) => left.Value != right.Value;
 }

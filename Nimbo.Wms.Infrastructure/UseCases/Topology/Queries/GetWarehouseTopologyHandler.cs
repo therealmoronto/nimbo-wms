@@ -27,12 +27,12 @@ internal sealed class GetWarehouseTopologyHandler : IQueryHandler<GetWarehouseTo
             .Where(x => x.Id.Equals(query.WarehouseId))
             .Select(x => new
             {
-                x.Id,
-                x.Code,
-                x.Name,
-                Zones = x.Zones.Select(z => new ZoneDto(
-                    z.WarehouseId,
-                    z.Id,
+                w.Id,
+                w.Code,
+                w.Name,
+                Zones = w.Zones.Select(z => new ZoneDto(
+                    z.WarehouseId.Value,
+                    z.Id.Value,
                     z.Code,
                     z.Name,
                     z.Type,
@@ -41,10 +41,10 @@ internal sealed class GetWarehouseTopologyHandler : IQueryHandler<GetWarehouseTo
                     z.IsQuarantine,
                     z.IsDamagedArea
                 )),
-                Locations = x.Locations.Select(l => new LocationDto(
-                    l.WarehouseId,
-                    l.ZoneId,
-                    l.Id,
+                Locations = w.Locations.Select(l => new LocationDto(
+                    l.WarehouseId.Value,
+                    l.ZoneId.Value,
+                    l.Id.Value,
                     l.Code,
                     l.Type,
                     l.MaxWeightKg,
