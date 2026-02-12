@@ -48,6 +48,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IQueryHandler<GetWarehousesQuery, IReadOnlyList<WarehouseListItemDto>>, GetWarehousesHandler>();
         services.AddScoped<IQueryHandler<GetWarehouseTopologyQuery, WarehouseTopologyDto>, GetWarehouseTopologyHandler>();
 
+        services.AddScoped<ICommandHandler<PatchLocationCommand>, PatchLocationHandler>();
+
         return services;
     }
 }
