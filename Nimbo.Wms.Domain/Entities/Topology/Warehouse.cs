@@ -83,6 +83,12 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
         return location;
     }
 
+    public Location GetLocation(LocationId locationId)
+    {
+        var location = _locations.SingleOrDefault(l => l.Id.Equals(locationId));
+        return location ?? throw new DomainException("Location does not belong to warehouse");
+    }
+
     /// <summary>
     /// Checks if the provided string is non-empty and trims it.
     /// </summary>

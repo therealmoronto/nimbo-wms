@@ -16,4 +16,11 @@ internal sealed class EfWarehouseRepository : EfRepository<Warehouse, WarehouseI
             .Include(w => w.Locations)
             .FirstOrDefaultAsync(w => w.Id.Equals(id), ct);
     }
+
+    public Task<Warehouse?> GetByLocationIdAsync(LocationId locationId, CancellationToken ct = default)
+    {
+        return Set.Include(w => w.Zones)
+            .Include(w => w.Locations)
+            .FirstOrDefaultAsync(w => w.Locations.Any(l => l.Id == locationId), ct);
+    }
 }

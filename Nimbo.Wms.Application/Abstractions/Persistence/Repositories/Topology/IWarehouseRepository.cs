@@ -5,5 +5,5 @@ namespace Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 
 public interface IWarehouseRepository : IRepository<Warehouse, WarehouseId>
 {
-    
+    Task<Warehouse?> GetByLocationIdAsync(LocationId locationId, CancellationToken ct = default);
 }
