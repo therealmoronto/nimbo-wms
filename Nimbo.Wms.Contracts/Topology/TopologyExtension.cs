@@ -19,7 +19,7 @@ public static class TopologyExtensions
         var zones = warehouse.Zones.Select(z => z.ToDto()).ToList();
         var locations = warehouse.Locations.Select(l => l.ToDto()).ToList();
 
-        return new WarehouseTopologyDto(warehouse.Id, warehouse.Code, warehouse.Name, zones, locations);
+        return new WarehouseTopologyDto(warehouse.Id, warehouse.Code, warehouse.Name, warehouse.Address, warehouse.Description, zones, locations);
     }
 
     public static ZoneDto ToDto(this Zone zone)

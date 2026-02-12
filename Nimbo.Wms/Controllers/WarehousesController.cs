@@ -52,4 +52,19 @@ public sealed class WarehousesController : ControllerBase
             routeValues: new { warehouseId = warehouseId.Value },
             value: new CreateWarehouseResponse(warehouseId.Value));
     }
+    
+    [HttpPatch("{warehouseGuid:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateWarehouse(
+        [FromRoute] Guid warehouseGuid,
+        [FromBody] PatchWarehouseRequest request,
+        [FromServices] ICommandHandler<PatchWarehouseCommand> handler,
+        CancellationToken ct)
+    {
+        var warehouseId = WarehouseId.From(warehouseGuid);
+        await handler.HandleAsync(new PatchWarehouseCommand(warehouseId, request), ct);
+        return NoContent();
+    }
 }

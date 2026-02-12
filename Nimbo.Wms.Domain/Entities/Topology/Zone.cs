@@ -66,9 +66,11 @@ public sealed class Zone : BaseEntity<ZoneId>
         MaxVolumeM3 = RequireNonNegativeOrNull(maxVolumeM3, nameof(maxVolumeM3));
     }
 
-    public void SetQuarantine(bool value) => IsQuarantine = value;
-
-    public void SetDamagedArea(bool value) => IsDamagedArea = value;
+    public void SetAreaFlags(bool isQuarantine, bool isDamagedArea)
+    {
+        IsQuarantine = isQuarantine;
+        IsDamagedArea = isDamagedArea;
+    }
 
     /// <summary>
     /// Checks if the provided string is non-empty and trims it.

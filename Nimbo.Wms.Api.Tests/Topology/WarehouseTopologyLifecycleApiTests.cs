@@ -12,9 +12,9 @@ namespace Nimbo.Wms.Api.Tests.Topology;
 
 [IntegrationTest]
 [SuppressMessage("Usage", "xUnit1041:Fixture arguments to test classes must have fixture sources")]
-public class TopologyApiSmokeTests : ApiTestBase
+public class WarehouseTopologyLifecycleApiTests : ApiTestBase
 {
-    public TopologyApiSmokeTests(PostgresFixture postgres)
+    public WarehouseTopologyLifecycleApiTests(PostgresFixture postgres)
         : base(postgres) { }
     
     [Fact]
