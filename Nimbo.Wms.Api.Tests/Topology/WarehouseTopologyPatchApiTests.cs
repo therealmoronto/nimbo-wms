@@ -11,10 +11,49 @@ namespace Nimbo.Wms.Api.Tests.Topology;
 
 [IntegrationTest]
 [Collection(PostgresCollection.Name)]
-public class LocationPatchTests : ApiTestBase
+public class WarehouseTopologyPatchApiTests : ApiTestBase
 {
-    public LocationPatchTests(PostgresFixture postgres)
+    public WarehouseTopologyPatchApiTests(PostgresFixture postgres)
         : base(postgres) { }
+
+    [Fact]
+    public async Task PatchZone_UpdatesFields_VisibleInTopology()
+    {
+        // create warehouse
+        var whRes = await Client.PostAsJsonAsync("/api/topology/warehouses",
+            new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main"));
+
+        whRes.StatusCode.Should().Be(HttpStatusCode.Created);
+        var wh = (await whRes.Content.ReadFromJsonAsync<CreateWarehouseResponse>())!;
+        var warehouseId = wh.Id;
+
+        // add zone
+        var zRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/zones",
+            new AddZoneRequest("Z-A", "Zone A", ZoneType.Storage));
+
+        zRes.StatusCode.Should().Be(HttpStatusCode.Created);
+        var zone = (await zRes.Content.ReadFromJsonAsync<AddZoneResponse>())!;
+        var zoneId = zone.ZoneId;
+
+        // patch zone
+        var patch = new PatchZoneRequest(
+            Name: "Zone A (Updated)",
+            IsQuarantine: true,
+            MaxWeightKg: 1234m
+        );
+
+        var patchRes = await Client.PatchAsJsonAsync($"/api/topology/zones/{zoneId}", patch);
+        patchRes.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        // read topology
+        var topology = await Client.GetFromJsonAsync<WarehouseTopologyDto>($"/api/topology/warehouses/{warehouseId}");
+        topology.Should().NotBeNull();
+
+        var updated = topology.Zones.Single(x => x.Id == zoneId);
+        updated.Name.Should().Be("Zone A (Updated)");
+        updated.IsQuarantine.Should().BeTrue();
+        updated.MaxWeightKg.Should().Be(1234m);
+    }
 
     [Fact]
     public async Task PatchLocation_UpdatesFields_VisibleInTopology()
@@ -60,7 +99,7 @@ public class LocationPatchTests : ApiTestBase
         var topology = await Client.GetFromJsonAsync<WarehouseTopologyDto>($"/api/topology/warehouses/{warehouseId}");
         topology.Should().NotBeNull();
 
-        var updated = topology!.Locations.Single(x => x.Id == locationId);
+        var updated = topology.Locations.Single(x => x.Id == locationId);
         updated.IsPickingLocation.Should().BeTrue();
         updated.IsBlocked.Should().BeTrue();
         updated.Aisle.Should().Be("A");

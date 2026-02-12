@@ -83,6 +83,12 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
         return location;
     }
 
+    public Zone GetZone(ZoneId zoneId)
+    {
+        var zone = _zones.SingleOrDefault(z => z.Id.Equals(zoneId));
+        return zone ?? throw new DomainException("Zone does not belong to warehouse");
+    }
+
     public Location GetLocation(LocationId locationId)
     {
         var location = _locations.SingleOrDefault(l => l.Id.Equals(locationId));
