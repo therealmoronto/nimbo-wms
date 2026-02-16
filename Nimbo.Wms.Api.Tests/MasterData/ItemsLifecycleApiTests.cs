@@ -16,7 +16,7 @@ public class ItemsLifecycleApiTests : ApiTestBase
         : base(postgres) { }
 
     [Fact]
-    public async Task CreateItem_Patch_ThenGetList()
+    public async Task CreateItem_AndWholeLifecycle_Succeeds()
     {
         // 1) Create item
         var createItemRequest = new CreateItemRequest(
@@ -69,5 +69,22 @@ public class ItemsLifecycleApiTests : ApiTestBase
         updated.Manufacturer.Should().Be("MF-17");
         updated.WeightKg.Should().Be(1234.56m);
         updated.VolumeM3.Should().Be(78.9m);
+        
+        // 5) Delete item
+        var deleteResponse = await Client.DeleteAsync($"/api/items/{itemId}");
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        
+        // 6) Get list of items
+        items = await Client.GetFromJsonAsync<List<ItemDto>>("/api/items");
+        items.Should().NotBeNull();
+        items.Count.Should().Be(0);
+    }
+
+    [Fact]
+    private async Task DeleteItem_Returns404_WhenItemDoesNotExist()
+    {
+        var itemId = Guid.NewGuid();
+        var response = await Client.DeleteAsync($"/api/items/{itemId}");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }

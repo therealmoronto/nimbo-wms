@@ -24,9 +24,8 @@ public class ItemsController : ControllerBase
         var itemId = await handler.HandleAsync(command, ct);
         
         return CreatedAtAction(
-            actionName: nameof(Createitem),
-            controllerName: "Items",
-            new { itemsId = itemId.Value },
+            actionName: nameof(GetItem),
+            new { itemGuid = itemId.Value },
             new CreateItemResponse(itemId.Value));
     }
 
