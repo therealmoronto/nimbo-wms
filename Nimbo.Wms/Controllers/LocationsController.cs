@@ -25,4 +25,17 @@ public class LocationsController : ControllerBase
         await handler.HandleAsync(new PatchLocationCommand(locationId, request), ct);
         return NoContent();
     }
+
+    [HttpDelete("{locationGuid:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteLocation(
+        [FromRoute] Guid locationGuid,
+        [FromServices] ICommandHandler<DeleteLocationCommand> handler,
+        CancellationToken ct)
+    {
+        var locationId = LocationId.From(locationGuid);
+        await handler.HandleAsync(new DeleteLocationCommand(locationId), ct);
+        return NoContent();
+    }
 }

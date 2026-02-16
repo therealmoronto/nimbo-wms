@@ -67,4 +67,18 @@ public sealed class WarehousesController : ControllerBase
         await handler.HandleAsync(new PatchWarehouseCommand(warehouseId, request), ct);
         return NoContent();
     }
+
+    [HttpDelete("{warehouseGuid:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeleteWarehouse(
+        [FromRoute] Guid warehouseGuid,
+        [FromServices] ICommandHandler<DeleteWarehouseCommand> handler,
+        CancellationToken ct)
+    {
+        var warehouseId = WarehouseId.From(warehouseGuid);
+        await handler.HandleAsync(new DeleteWarehouseCommand(warehouseId), ct);
+        return NoContent();
+    }
 }

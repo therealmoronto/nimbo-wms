@@ -9,6 +9,7 @@ using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
 using Nimbo.Wms.Contracts.Topology.Dtos;
+using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Documents;
@@ -51,6 +52,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICommandHandler<PatchLocationCommand>, PatchLocationHandler>();
         services.AddScoped<ICommandHandler<PatchZoneCommand>, PatchZoneHandler>();
         services.AddScoped<ICommandHandler<PatchWarehouseCommand>, PatchWarehouseHandler>();
+
+        services.AddScoped<ICommandHandler<DeleteLocationCommand>, DeleteLocationHandler>();
+        services.AddScoped<ICommandHandler<DeleteZoneCommand>, DeleteZoneHandler>();
+        services.AddScoped<ICommandHandler<DeleteWarehouseCommand>, DeleteWarehouseHandler>();
 
         return services;
     }
