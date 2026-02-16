@@ -10,7 +10,6 @@ using Nimbo.Wms.Tests.Common.Database;
 namespace Nimbo.Wms.Api.Tests.Topology;
 
 [IntegrationTest]
-[Collection(PostgresCollection.Name)]
 public class WarehouseTopologyPatchApiTests : ApiTestBase
 {
     public WarehouseTopologyPatchApiTests(PostgresFixture postgres)

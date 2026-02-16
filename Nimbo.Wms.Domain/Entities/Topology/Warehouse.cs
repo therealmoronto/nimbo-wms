@@ -94,6 +94,33 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
         var location = _locations.SingleOrDefault(l => l.Id.Equals(locationId));
         return location ?? throw new DomainException("Location does not belong to warehouse");
     }
+    
+    public void RemoveLocation(LocationId locationId)
+    {
+        var location = _locations.SingleOrDefault(x => x.Id.Equals(locationId));
+        if (location is null)
+            throw new DomainException("Location does not belong to warehouse");
+
+        _locations.Remove(location);
+    }
+
+    public void RemoveZone(ZoneId zoneId)
+    {
+        if (_locations.Any(l => l.ZoneId.Equals(zoneId)))
+            throw new DomainException("Cannot delete zone with locations");
+
+        var zone = _zones.SingleOrDefault(x => x.Id.Equals(zoneId));
+        if (zone is null)
+            throw new DomainException("Zone does not belong to warehouse");
+
+        _zones.Remove(zone);
+    }
+
+    public void EnsureCanBeDeleted()
+    {
+        if (_zones.Count != 0 || _locations.Count != 0)
+            throw new DomainException("Cannot delete non-empty warehouse");
+    }
 
     /// <summary>
     /// Checks if the provided string is non-empty and trims it.
