@@ -19,24 +19,21 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
     public async Task UpdateWarehouse_ChangesAreVisibleInTopology()
     {
         // create warehouse
-        var createRes = await Client.PostAsJsonAsync(
-            "/api/topology/warehouses",
-            new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main"));
+        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         createRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var created = (await createRes.Content.ReadFromJsonAsync<CreateWarehouseResponse>())!;
         var warehouseId = created.Id;
 
         // update
-        var updateRes = await Client.PatchAsJsonAsync(
-            $"/api/topology/warehouses/{warehouseId}",
-            new PatchWarehouseRequest("WH-UPDATED", "Main Updated", "Address lane 1, 0015", "Test warehouse to test patch API"));
+        var patchWarehouseRequest = new PatchWarehouseRequest("WH-UPDATED", "Main Updated", "Address lane 1, 0015", "Test warehouse to test patch API");
+        var updateRes = await Client.PatchAsJsonAsync($"/api/topology/warehouses/{warehouseId}", patchWarehouseRequest);
 
         updateRes.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // read topology
-        var topology = await Client.GetFromJsonAsync<WarehouseTopologyDto>(
-            $"/api/topology/warehouses/{warehouseId}");
+        var topology = await Client.GetFromJsonAsync<WarehouseTopologyDto>($"/api/topology/warehouses/{warehouseId}");
 
         topology.Should().NotBeNull();
         topology.Code.Should().Be("WH-UPDATED");
@@ -49,16 +46,16 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
     public async Task PatchZone_UpdatesFields_VisibleInTopology()
     {
         // create warehouse
-        var whRes = await Client.PostAsJsonAsync("/api/topology/warehouses",
-            new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main"));
+        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var whRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         whRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var wh = (await whRes.Content.ReadFromJsonAsync<CreateWarehouseResponse>())!;
         var warehouseId = wh.Id;
 
         // add zone
-        var zRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/zones",
-            new AddZoneRequest("Z-A", "Zone A", ZoneType.Storage));
+        var addZoneRequest = new AddZoneRequest("Z-A", "Zone A", ZoneType.Storage);
+        var zRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/zones", addZoneRequest);
 
         zRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var zone = (await zRes.Content.ReadFromJsonAsync<AddZoneResponse>())!;
@@ -88,24 +85,24 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
     public async Task PatchLocation_UpdatesFields_VisibleInTopology()
     {
         // create warehouse
-        var whRes = await Client.PostAsJsonAsync("/api/topology/warehouses",
-            new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main"));
+        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var whRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         whRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var wh = (await whRes.Content.ReadFromJsonAsync<CreateWarehouseResponse>())!;
         var warehouseId = wh.Id;
 
         // add zone
-        var zRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/zones",
-            new AddZoneRequest("Z-A", "Zone A", ZoneType.Storage));
+        var addZoneRequest = new AddZoneRequest("Z-A", "Zone A", ZoneType.Storage);
+        var zRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/zones", addZoneRequest);
 
         zRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var zone = (await zRes.Content.ReadFromJsonAsync<AddZoneResponse>())!;
         var zoneId = zone.ZoneId;
 
         // add location
-        var lRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/locations",
-            new AddLocationRequest(zoneId, "A-01-01-01", LocationType.Shelf));
+        var addLocationRequest = new AddLocationRequest(zoneId, "A-01-01-01", LocationType.Shelf);
+        var lRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/locations", addLocationRequest);
 
         lRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var loc = (await lRes.Content.ReadFromJsonAsync<AddLocationResponse>())!;

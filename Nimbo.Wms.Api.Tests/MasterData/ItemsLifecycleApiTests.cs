@@ -31,14 +31,14 @@ public class ItemsLifecycleApiTests : ApiTestBase
         var itemId = createItemResponse.Id;
 
         // 2) Get item by id
-        var item = await Client.GetFromJsonAsync<ItemDto>($"/api/items/{itemId}");
+        var created = await Client.GetFromJsonAsync<ItemDto>($"/api/items/{itemId}");
 
-        item.Should().NotBeNull();
-        item.Id.Should().Be(itemId);
-        item.Name.Should().Be("ITEM-001");
-        item.InternalSku.Should().Be("I-001");
-        item.Barcode.Should().Be("00100245");
-        item.BaseUom.Should().Be(UnitOfMeasure.Kilogram);
+        created.Should().NotBeNull();
+        created.Id.Should().Be(itemId);
+        created.Name.Should().Be("ITEM-001");
+        created.InternalSku.Should().Be("I-001");
+        created.Barcode.Should().Be("00100245");
+        created.BaseUom.Should().Be(UnitOfMeasure.Kilogram);
         
         // 3) Patch item
         var patchItemRequest = new PatchItemRequest()
@@ -60,14 +60,14 @@ public class ItemsLifecycleApiTests : ApiTestBase
         items.Should().NotBeNullOrEmpty();
         items.Count.Should().Be(1);
         
-        var updatedItem = items.Single();
-        updatedItem.Id.Should().Be(itemId);
-        updatedItem.Name.Should().Be("ITEM-003");
-        updatedItem.InternalSku.Should().Be("I-003");
-        updatedItem.Barcode.Should().Be("00100147");
-        updatedItem.BaseUom.Should().Be(UnitOfMeasure.Gram);
-        updatedItem.Manufacturer.Should().Be("MF-17");
-        updatedItem.WeightKg.Should().Be(1234.56m);
-        updatedItem.VolumeM3.Should().Be(78.9m);
+        var updated = items.Single();
+        updated.Id.Should().Be(itemId);
+        updated.Name.Should().Be("ITEM-003");
+        updated.InternalSku.Should().Be("I-003");
+        updated.Barcode.Should().Be("00100147");
+        updated.BaseUom.Should().Be(UnitOfMeasure.Gram);
+        updated.Manufacturer.Should().Be("MF-17");
+        updated.WeightKg.Should().Be(1234.56m);
+        updated.VolumeM3.Should().Be(78.9m);
     }
 }

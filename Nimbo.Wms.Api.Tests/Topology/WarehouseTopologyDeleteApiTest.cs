@@ -19,9 +19,8 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
     [Fact]
     public async Task DeleteWarehouse_WhenEmpty_Returns204_AndGetReturns404()
     {
-        var createRes = await Client.PostAsJsonAsync(
-            "/api/topology/warehouses",
-            new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main"));
+        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         createRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var created = (await createRes.Content.ReadFromJsonAsync<CreateWarehouseResponse>())!;
@@ -38,18 +37,16 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
     public async Task DeleteWarehouse_WhenNotEmpty_Returns400()
     {
         // Create warehouse
-        var createRes = await Client.PostAsJsonAsync(
-            "/api/topology/warehouses",
-            new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main"));
+        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         createRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var created = (await createRes.Content.ReadFromJsonAsync<CreateWarehouseResponse>())!;
         var warehouseId = created.Id;
 
         // Add zone -> warehouse becomes non-empty
-        var zoneRes = await Client.PostAsJsonAsync(
-            $"/api/topology/warehouses/{warehouseId}/zones",
-            new AddZoneRequest("Z-A", "Zone A", ZoneType.Storage));
+        var addZoneRequest = new AddZoneRequest("Z-A", "Zone A", ZoneType.Storage);
+        var zoneRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/zones", addZoneRequest);
 
         zoneRes.StatusCode.Should().Be(HttpStatusCode.Created);
 
