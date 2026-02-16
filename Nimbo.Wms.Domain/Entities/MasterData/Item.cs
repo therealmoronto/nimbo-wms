@@ -28,7 +28,7 @@ public class Item : BaseEntity<ItemId>
 
         BaseUomCode = baseUomCode;
 
-        Barcode = TrimOrNull(barcode);
+        Barcode = RequireNonEmpty(barcode, nameof(barcode));
         Manufacturer = TrimOrNull(manufacturer);
 
         WeightKg = RequirePositiveOrNull(weightKg, nameof(weightKg));
