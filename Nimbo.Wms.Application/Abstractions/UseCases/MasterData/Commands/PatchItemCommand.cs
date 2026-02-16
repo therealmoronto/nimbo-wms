@@ -3,10 +3,11 @@ using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
 
-public sealed record PatchItemCommand(PatchItemRequest Request) : ICommand;
+public sealed record PatchItemCommand(ItemId ItemId, PatchItemRequest Request) : ICommand;
 
 public sealed class PatchItemHandler : ICommandHandler<PatchItemCommand>
 {
@@ -23,9 +24,9 @@ public sealed class PatchItemHandler : ICommandHandler<PatchItemCommand>
     {
         var request = command.Request;
         
-        var item = await _repository.GetByIdAsync(request.ItemId, ct);
+        var item = await _repository.GetByIdAsync(command.ItemId, ct);
         if (item is null)
-            throw new NotFoundException($"Item with id {request.ItemId} not found");
+            throw new NotFoundException($"Item with id {command.ItemId} not found");
         
         if (!string.IsNullOrWhiteSpace(request.Name))
             item.Rename(request.Name);

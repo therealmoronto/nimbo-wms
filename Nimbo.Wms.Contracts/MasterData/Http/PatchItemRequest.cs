@@ -4,7 +4,6 @@ using Nimbo.Wms.Domain.References;
 namespace Nimbo.Wms.Contracts.MasterData.Http;
 
 public sealed record PatchItemRequest(
-    ItemId ItemId,
     string? Name = null,
     string? InternalSku = null,
     string? Barcode = null,
