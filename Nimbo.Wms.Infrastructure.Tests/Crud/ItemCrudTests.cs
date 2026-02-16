@@ -69,7 +69,7 @@ public class ItemCrudTests
 
             loaded.Rename("Renamed Item");
             loaded.ChangeBaseUom(UnitOfMeasure.Kilogram);
-            loaded.ChangeBarcode(null);
+            loaded.ChangeBarcode("BAR-00992");
             loaded.ChangeManufacturer("New Manufacturer");
             loaded.SetPhysical(2.0m, 0.02m);
 
@@ -85,7 +85,7 @@ public class ItemCrudTests
 
             loaded.Name.Should().Be("Renamed Item");
             loaded.BaseUomCode.Should().Be(UnitOfMeasure.Kilogram);
-            loaded.Barcode.Should().BeNull();
+            loaded.Barcode.Should().Be("BAR-00992");
             loaded.Manufacturer.Should().Be("New Manufacturer");
             loaded.WeightKg.Should().Be(2.0m);
             loaded.VolumeM3.Should().Be(0.02m);
