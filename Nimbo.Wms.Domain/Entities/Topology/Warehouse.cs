@@ -50,9 +50,9 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
 
     public void ChangeCode(string code) => Code = RequireNonEmpty(code, nameof(code));
 
-    public void SetAddress(string? address) => Address = address;
+    public void ChangeAddress(string? address) => Address = address;
 
-    public void SetDescription(string? description) => Description = description;
+    public void ChangeDescription(string? description) => Description = description;
 
     public void Deactivate() => IsActive = false;
 
@@ -81,6 +81,18 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
         _locations.Add(location);
 
         return location;
+    }
+
+    public Zone GetZone(ZoneId zoneId)
+    {
+        var zone = _zones.SingleOrDefault(z => z.Id.Equals(zoneId));
+        return zone ?? throw new DomainException("Zone does not belong to warehouse");
+    }
+
+    public Location GetLocation(LocationId locationId)
+    {
+        var location = _locations.SingleOrDefault(l => l.Id.Equals(locationId));
+        return location ?? throw new DomainException("Location does not belong to warehouse");
     }
 
     /// <summary>

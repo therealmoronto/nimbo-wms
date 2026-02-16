@@ -30,6 +30,8 @@ internal sealed class GetWarehouseTopologyHandler : IQueryHandler<GetWarehouseTo
                 w.Id,
                 w.Code,
                 w.Name,
+                w.Address,
+                w.Description,
                 Zones = w.Zones.Select(z => new ZoneDto(
                     z.WarehouseId.Value,
                     z.Id.Value,
@@ -70,6 +72,8 @@ internal sealed class GetWarehouseTopologyHandler : IQueryHandler<GetWarehouseTo
             warehouse.Id,
             warehouse.Code,
             warehouse.Name,
+            warehouse.Address,
+            warehouse.Description,
             warehouse.Zones.ToList(),
             warehouse.Locations.ToList()
         );
