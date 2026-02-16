@@ -410,6 +410,7 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Barcode")
+                        .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 

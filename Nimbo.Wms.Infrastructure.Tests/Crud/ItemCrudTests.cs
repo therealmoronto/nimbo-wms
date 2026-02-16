@@ -69,8 +69,8 @@ public class ItemCrudTests
 
             loaded.Rename("Renamed Item");
             loaded.ChangeBaseUom(UnitOfMeasure.Kilogram);
-            loaded.SetBarcode(null);
-            loaded.SetManufacturer("New Manufacturer");
+            loaded.ChangeBarcode(null);
+            loaded.ChangeManufacturer("New Manufacturer");
             loaded.SetPhysical(2.0m, 0.02m);
 
             await db.SaveChangesAsync();

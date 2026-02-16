@@ -39,7 +39,7 @@ public class Item : BaseEntity<ItemId>
     
     public string InternalSku { get; private set; }
     
-    public string? Barcode { get; private set; }
+    public string Barcode { get; private set; }
     
     public UnitOfMeasure BaseUomCode { get; private set; }
     
@@ -57,9 +57,9 @@ public class Item : BaseEntity<ItemId>
     public void ChangeBaseUom(UnitOfMeasure baseUomCode)
         => BaseUomCode = baseUomCode;
 
-    public void SetBarcode(string? barcode) => Barcode = TrimOrNull(barcode);
+    public void ChangeBarcode(string? barcode) => Barcode = TrimOrNull(barcode);
 
-    public void SetManufacturer(string? manufacturer) => Manufacturer = TrimOrNull(manufacturer);
+    public void ChangeManufacturer(string? manufacturer) => Manufacturer = TrimOrNull(manufacturer);
 
     public void SetPhysical(decimal? weightKg, decimal? volumeM3)
     {

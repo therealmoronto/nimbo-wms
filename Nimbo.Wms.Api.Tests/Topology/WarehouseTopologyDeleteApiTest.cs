@@ -98,7 +98,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
             $"/api/topology/warehouses/{warehouseId}");
 
         topology.Should().NotBeNull();
-        topology!.Zones.Should().NotContain(z => z.Id == zoneId);
+        topology.Zones.Should().NotContain(z => z.Id == zoneId);
     }
 
     [Fact]
@@ -183,7 +183,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
             $"/api/topology/warehouses/{warehouseId}");
 
         topology.Should().NotBeNull();
-        topology!.Locations.Should().NotContain(l => l.Id == locationId);
+        topology.Locations.Should().NotContain(l => l.Id == locationId);
     }
 
     [Fact]

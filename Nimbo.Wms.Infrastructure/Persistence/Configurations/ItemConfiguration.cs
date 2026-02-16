@@ -25,7 +25,8 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
             .IsRequired();
 
         builder.Property(x => x.Barcode)
-            .HasMaxLength(64);
+            .HasMaxLength(64)
+            .IsRequired();
         
         builder.Property(x => x.BaseUomCode)
             .IsRequired();
