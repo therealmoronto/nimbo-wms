@@ -12,6 +12,11 @@ namespace Nimbo.Wms.Controllers;
 [Route("api/items")]
 public class ItemsController : ControllerBase
 {
+    /// <summary>
+    /// Create item
+    /// </summary>
+    /// <response code="201">Created</response>
+    /// <response code="400">Bad request</response>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [Produces("application/json")]
@@ -29,6 +34,10 @@ public class ItemsController : ControllerBase
             new CreateItemResponse(itemId.Value));
     }
 
+    /// <summary>
+    /// Get all items
+    /// </summary>
+    /// <response code="200">OK</response>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
@@ -39,6 +48,11 @@ public class ItemsController : ControllerBase
         return await handler.HandleAsync(new GetItemsQuery(), ct);
     }
 
+    /// <summary>
+    /// Get item by itemGuid
+    /// </summary>
+    /// <response code="200">OK</response>
+    /// <response code="404">Not found</response>
     [HttpGet]
     [Route("{itemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -53,6 +67,12 @@ public class ItemsController : ControllerBase
         return await handler.HandleAsync(query, ct);
     }
 
+    /// <summary>
+    /// Patch item
+    /// </summary>
+    /// <response code="204">No content</response>
+    /// <response code="404">Not found</response>
+    /// <response code="400">Bad request</response>
     [HttpPatch("{itemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -67,6 +87,11 @@ public class ItemsController : ControllerBase
         return NoContent();
     }
     
+    /// <summary>
+    /// Delete item
+    /// </summary>
+    /// <response code="204">No content</response>
+    /// <response code="404">Not found</response>
     [HttpDelete("{itemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -23,7 +23,7 @@ public sealed class DeleteLocationHandler : ICommandHandler<DeleteLocationComman
     {
         var warehouse = await _repository.GetByLocationIdAsync(command.LocationId, ct);
         if (warehouse == null)
-            throw new NotFoundException($"Warehouse with zone id {command.LocationId} does not exist");
+            throw new NotFoundException($"Warehouse with location id {command.LocationId} does not exist");
 
         warehouse.RemoveLocation(command.LocationId);
 

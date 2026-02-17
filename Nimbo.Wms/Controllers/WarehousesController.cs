@@ -12,6 +12,11 @@ namespace Nimbo.Wms.Controllers;
 [Route("api/topology/warehouses")]
 public sealed class WarehousesController : ControllerBase
 {
+    /// <summary>
+    /// Get warehouses flat list without zones and locations.
+    /// Returns empty list if no warehouses exist.
+    /// </summary>
+    /// <response code="200">OK</response>
     [HttpGet]
     [ProducesResponseType(typeof(IReadOnlyList<WarehouseListItemDto>), StatusCodes.Status200OK)]
     [Produces("application/json")]
@@ -22,6 +27,12 @@ public sealed class WarehousesController : ControllerBase
         return await handler.HandleAsync(new GetWarehousesQuery(), ct);
     }
 
+    /// <summary>
+    /// Get warehouse topology by warehouseGuid.
+    /// </summary>
+    /// <response code="200">OK</response>
+    /// <response code="404">Not found</response>
+    /// <response code="400">Bad request</response>
     [HttpGet("{warehouseGuid:guid}")]
     [ProducesResponseType(typeof(WarehouseTopologyDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -35,6 +46,11 @@ public sealed class WarehousesController : ControllerBase
         return await handler.HandleAsync(new GetWarehouseTopologyQuery(warehouseId), ct);
     }
 
+    /// <summary>
+    /// Create warehouse
+    /// </summary>
+    /// <response code="201">Created</response>
+    /// <response code="400">Bad request</response>
     [HttpPost]
     [ProducesResponseType(typeof(CreateWarehouseResponse), StatusCodes.Status201Created)]
     [Produces("application/json")]
@@ -53,6 +69,12 @@ public sealed class WarehousesController : ControllerBase
             value: new CreateWarehouseResponse(warehouseId.Value));
     }
     
+    /// <summary>
+    /// Update warehouse
+    /// </summary>
+    /// <response code="204">No content</response>
+    /// <response code="404">Not found</response>
+    /// <response code="400">Bad request</response>
     [HttpPatch("{warehouseGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -68,6 +90,12 @@ public sealed class WarehousesController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Delete warehouse
+    /// </summary>
+    /// <response code="204">No content</response>
+    /// <response code="404">Not found</response>
+    /// <response code="400">Bad request</response>
     [HttpDelete("{warehouseGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
