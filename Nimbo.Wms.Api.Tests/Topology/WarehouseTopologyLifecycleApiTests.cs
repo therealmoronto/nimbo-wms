@@ -25,14 +25,11 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
             Code: $"WH-{Guid.NewGuid():N}".Substring(0, 10),
             Name: "Main Warehouse");
 
-        var createWarehouseResponse = await Client.PostAsJsonAsync(
-            "/api/topology/warehouses",
-            createWarehouse);
+        var createWarehouseResponse = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouse);
 
         createWarehouseResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
-        var createdWarehouse = await createWarehouseResponse.Content
-            .ReadFromJsonAsync<CreateWarehouseResponse>();
+        var createdWarehouse = await createWarehouseResponse.Content.ReadFromJsonAsync<CreateWarehouseResponse>();
 
         createdWarehouse.Should().NotBeNull();
         var warehouseGuid = createdWarehouse.Id;
@@ -43,9 +40,7 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
             Name: "Zone A",
             Type: ZoneType.Storage);
 
-        var addZoneResponse = await Client.PostAsJsonAsync(
-            $"/api/topology/warehouses/{warehouseGuid}/zones",
-            addZone);
+        var addZoneResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZone);
 
         addZoneResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
@@ -59,9 +54,7 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
             Code: "A-01-01-01",
             Type: LocationType.Shelf);
 
-        var addLocationResponse = await Client.PostAsJsonAsync(
-            $"/api/topology/warehouses/{warehouseGuid}/locations",
-            addLocation);
+        var addLocationResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/locations", addLocation);
 
         addLocationResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
@@ -69,8 +62,7 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
         createdLocation.Should().NotBeNull();
 
         // 4) Get topology
-        var topology = await Client.GetFromJsonAsync<WarehouseTopologyDto>(
-            $"/api/topology/warehouses/{warehouseGuid}");
+        var topology = await Client.GetFromJsonAsync<WarehouseTopologyDto>($"/api/topology/warehouses/{warehouseGuid}");
 
         topology.Should().NotBeNull();
         topology.Id.Should().Be(warehouseGuid);

@@ -6,10 +6,12 @@ using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Movements;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
+using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
+using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Queries;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
+using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.Topology.Dtos;
-using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Documents;
@@ -17,6 +19,7 @@ using Nimbo.Wms.Infrastructure.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Movements;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Stock;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Topology;
+using Nimbo.Wms.Infrastructure.UseCases.MasterData.Queries;
 using Nimbo.Wms.Infrastructure.UseCases.Topology.Queries;
 
 namespace Nimbo.Wms.Infrastructure.DependencyInjection;
@@ -26,11 +29,9 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
-        services.AddScoped<IWarehouseRepository, EfWarehouseRepository>();
-        
-        services.AddScoped<IItemRepository, EfItemRepository>();
-        services.AddScoped<ICustomerRepository, EfCustomerRepository>();
-        services.AddScoped<ISupplierRepository, EfSupplierRepository>();
+
+        services.AddTopology();
+        services.AddMasterData();
 
         services.AddScoped<IBatchRepository, EfBatchRepository>();
         services.AddScoped<IInventoryItemRepository, EfInventoryItemRepository>();
@@ -41,6 +42,13 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IShipmentOrderRepository, EfShipmentOrderRepository>();
         services.AddScoped<ITransferOrderRepository, EfTransferOrderRepository>();
         services.AddScoped<IInventoryCountRepository, EfInventoryCountRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddTopology(this IServiceCollection services)
+    {
+        services.AddScoped<IWarehouseRepository, EfWarehouseRepository>();
         
         services.AddScoped<ICommandHandler<CreateWarehouseCommand, WarehouseId>, CreateWarehouseHandler>();
         services.AddScoped<ICommandHandler<AddZoneToWarehouseCommand, ZoneId>, AddZoneToWarehouseHandler>();
@@ -56,6 +64,22 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICommandHandler<DeleteLocationCommand>, DeleteLocationHandler>();
         services.AddScoped<ICommandHandler<DeleteZoneCommand>, DeleteZoneHandler>();
         services.AddScoped<ICommandHandler<DeleteWarehouseCommand>, DeleteWarehouseHandler>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddMasterData(this IServiceCollection services)
+    {
+        services.AddScoped<IItemRepository, EfItemRepository>();
+        services.AddScoped<ICustomerRepository, EfCustomerRepository>();
+        services.AddScoped<ISupplierRepository, EfSupplierRepository>();
+
+        services.AddScoped<ICommandHandler<CreateItemCommand, ItemId>, CreateItemHandler>();
+        services.AddScoped<ICommandHandler<PatchItemCommand>, PatchItemHandler>();
+        services.AddScoped<ICommandHandler<DeleteItemCommand>, DeleteItemHandler>();
+
+        services.AddScoped<IQueryHandler<GetItemQuery, ItemDto>, GetItemHandler>();
+        services.AddScoped<IQueryHandler<GetItemsQuery, IReadOnlyList<ItemDto>>, GetItemsHandler>();
 
         return services;
     }

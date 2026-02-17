@@ -10,6 +10,13 @@ namespace Nimbo.Wms.Controllers;
 [Route("api/topology/zones")]
 public class ZonesController : ControllerBase
 {
+    /// <summary>
+    /// Patches zone.
+    /// Returns 404 if warehouse does not exist.
+    /// </summary>
+    /// <response code="204">No content</response>
+    /// <response code="404">Not found</response>
+    /// <response code="400">Bad request</response>
     [HttpPatch("{zoneGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -25,6 +32,12 @@ public class ZonesController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Deletes zone.
+    /// Returns 404 if warehouse does not exist.
+    /// </summary>
+    /// <response code="204">No content</response>
+    /// <response code="404">Not found</response>
     [HttpDelete("{zoneGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

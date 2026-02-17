@@ -10,9 +10,9 @@ internal sealed class EfSupplierRepository : EfRepository<Supplier, SupplierId>,
     public EfSupplierRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
 
-    public override Task<Supplier?> GetByIdAsync(SupplierId id, CancellationToken ct = default)
+    public async Task<Supplier?> GetByIdWithItemsAsync(SupplierId id, CancellationToken ct = default)
     {
-        return Set.Include(x => x.Items)
-            .FirstOrDefaultAsync(x => x.Id.Equals(id), ct);
+        return await Set.Include(s => s.Items)
+            .SingleOrDefaultAsync(s => s.Id == id, ct);
     }
 }

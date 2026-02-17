@@ -59,7 +59,7 @@ public class InventoryCountSmokeTests
             itemId,
             name: "Counted Item",
             internalSku: $"SKU-{Guid.NewGuid():N}".Substring(0, 32),
-            barcode: string.Empty,
+            barcode: "BAR-001",
             baseUomCode: UnitOfMeasure.Piece,
             manufacturer: null,
             weightKg: null,

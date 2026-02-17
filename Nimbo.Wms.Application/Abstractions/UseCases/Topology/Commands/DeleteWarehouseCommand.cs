@@ -1,13 +1,12 @@
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.Persistence;
-using Nimbo.Wms.Application.Abstractions.Persistence.Repositories;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Contracts.Topology.Http;
+namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 
-public sealed record DeleteWarehouseCommand(WarehouseId warehouseId) : ICommand;
+public sealed record DeleteWarehouseCommand(WarehouseId WarehouseId) : ICommand;
 
 public sealed class DeleteWarehouseHandler : ICommandHandler<DeleteWarehouseCommand>
 {
@@ -22,7 +21,7 @@ public sealed class DeleteWarehouseHandler : ICommandHandler<DeleteWarehouseComm
 
     public async Task HandleAsync(DeleteWarehouseCommand command, CancellationToken ct = default)
     {
-        var warehouse = await _repository.GetByIdAsync(command.warehouseId, ct);
+        var warehouse = await _repository.GetByIdAsync(command.WarehouseId, ct);
         if (warehouse == null)
             throw new NotFoundException("Warehouse not found");
         
