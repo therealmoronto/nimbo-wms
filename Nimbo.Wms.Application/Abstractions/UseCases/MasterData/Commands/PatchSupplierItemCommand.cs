@@ -8,6 +8,7 @@ using Nimbo.Wms.Domain.Identification;
 namespace Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
 
 public sealed record PatchSupplierItemCommand(
+    SupplierId SupplierId,
     SupplierItemId SupplierItemId,
     PatchSupplierItemRequest Request
 ) : ICommand;
@@ -25,12 +26,11 @@ public sealed class PatchSupplierItemHandler : ICommandHandler<PatchSupplierItem
     
     public async Task HandleAsync(PatchSupplierItemCommand command, CancellationToken ct = default)
     {
-        var supplierItemId = SupplierItemId.From(command.SupplierItemId);
-        var supplier = await _repository.GetByItemIdAsync(supplierItemId, ct);
+        var supplier = await _repository.GetByIdAsync(command.SupplierId, ct);
         if (supplier is null)
             throw new NotFoundException("Supplier not found");
         
-        var item = supplier.Items.SingleOrDefault(i => i.Id == supplierItemId);
+        var item = supplier.Items.SingleOrDefault(i => i.Id == command.SupplierItemId);
         if (item is null)
             throw new NotFoundException("Supplier item not found");
 

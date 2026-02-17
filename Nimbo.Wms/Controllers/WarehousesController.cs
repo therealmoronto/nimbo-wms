@@ -63,7 +63,7 @@ public sealed class WarehousesController : ControllerBase
         var warehouseId = await handler.HandleAsync(command, ct);
 
         return CreatedAtAction(
-            actionName: nameof(CreateWarehouse),
+            actionName: nameof(GetWarehouseTopology),
             controllerName: "Warehouses",
             routeValues: new { warehouseId = warehouseId.Value },
             value: new CreateWarehouseResponse(warehouseId.Value));

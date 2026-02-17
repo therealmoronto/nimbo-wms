@@ -6,7 +6,7 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
 
-public sealed record DeleteSupplierItemCommand(SupplierItemId SupplierItemId) : ICommand;
+public sealed record DeleteSupplierItemCommand(SupplierId SupplierId, SupplierItemId SupplierItemId) : ICommand;
 
 public sealed class DeleteSupplierItemHandler : ICommandHandler<DeleteSupplierItemCommand>
 {
@@ -21,12 +21,11 @@ public sealed class DeleteSupplierItemHandler : ICommandHandler<DeleteSupplierIt
 
     public async Task HandleAsync(DeleteSupplierItemCommand command, CancellationToken ct = default)
     {
-        var supplierItemId = SupplierItemId.From(command.SupplierItemId);
-        var supplier = await _repository.GetByItemIdAsync(supplierItemId, ct);
+        var supplier = await _repository.GetByIdAsync(command.SupplierId, ct);
         if (supplier is null)
             throw new NotFoundException("Supplier not found");
 
-        if (!supplier.RemoveItem(supplierItemId))
+        if (!supplier.RemoveItem(command.SupplierItemId))
             throw new NotFoundException("Supplier item not found");
 
         await _uow.SaveChangesAsync(ct);
