@@ -2,6 +2,7 @@ using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 
@@ -9,9 +10,7 @@ namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 
 public sealed record AddZoneToWarehouseCommand(
     WarehouseId WarehouseId,
-    string Code,
-    string Name,
-    ZoneType Type
+    AddZoneRequest Request
 ) : ICommand<ZoneId>;
 
 public sealed class AddZoneToWarehouseHandler : ICommandHandler<AddZoneToWarehouseCommand, ZoneId>
@@ -32,7 +31,8 @@ public sealed class AddZoneToWarehouseHandler : ICommandHandler<AddZoneToWarehou
             throw new NotFoundException("Warehouse not found");
 
         var zoneId = ZoneId.New();
-        warehouse.AddZone(zoneId, command.Code, command.Name, command.Type);
+        var request = command.Request;
+        warehouse.AddZone(zoneId, request.Code, request.Name, request.Type);
 
         await _unitOfWork.SaveChangesAsync(ct);
 

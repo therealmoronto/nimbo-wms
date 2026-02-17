@@ -62,11 +62,11 @@ public class Supplier : BaseEntity<SupplierId>
 
     public void ChangeCode(string code) => Code = RequireNonEmpty(code, nameof(code));
 
-    public void SetTaxId(string? taxId) => TaxId = TrimOrNull(taxId);
+    public void ChangeTaxId(string? taxId) => TaxId = TrimOrNull(taxId);
 
-    public void SetAddress(string? address) => Address = TrimOrNull(address);
+    public void ChangeAddress(string? address) => Address = TrimOrNull(address);
 
-    public void SetContact(string? contactName, string? phone, string? email)
+    public void ChangeContact(string? contactName, string? phone, string? email)
     {
         ContactName = TrimOrNull(contactName);
         Phone = TrimOrNull(phone);
@@ -109,9 +109,9 @@ public class Supplier : BaseEntity<SupplierId>
         return supplierItem;
     }
 
-    public bool RemoveItem(ItemId itemId)
+    public bool RemoveItem(SupplierItemId supplierItemId)
     {
-        var link = _items.SingleOrDefault(x => x.ItemId.Equals(itemId));
+        var link = _items.SingleOrDefault(x => x.Id.Equals(supplierItemId));
         if (link is null)
             return false;
 

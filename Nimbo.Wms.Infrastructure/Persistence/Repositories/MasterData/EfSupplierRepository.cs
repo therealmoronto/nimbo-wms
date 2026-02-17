@@ -15,4 +15,11 @@ internal sealed class EfSupplierRepository : EfRepository<Supplier, SupplierId>,
         return await Set.Include(s => s.Items)
             .SingleOrDefaultAsync(s => s.Id == id, ct);
     }
+
+    public async Task<Supplier?> GetByItemIdAsync(SupplierItemId supplierItemId, CancellationToken ct = default)
+    {
+        return await Set.Include(s => s.Items)
+            .Where(s => s.Items.Any(i => i.Id == supplierItemId))
+            .SingleOrDefaultAsync(s => s.Items.Any(i => i.Id == supplierItemId), ct);
+    }
 }

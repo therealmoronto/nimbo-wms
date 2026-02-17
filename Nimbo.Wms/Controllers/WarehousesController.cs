@@ -59,7 +59,7 @@ public sealed class WarehousesController : ControllerBase
         [FromServices] ICommandHandler<CreateWarehouseCommand, WarehouseId> handler,
         CancellationToken ct)
     {
-        var command = new CreateWarehouseCommand(request.Code, request.Name);
+        var command = new CreateWarehouseCommand(request);
         var warehouseId = await handler.HandleAsync(command, ct);
 
         return CreatedAtAction(

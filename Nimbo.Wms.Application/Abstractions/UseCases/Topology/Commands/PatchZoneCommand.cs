@@ -9,7 +9,7 @@ namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 
 public sealed record PatchZoneCommand(
     ZoneId ZoneId,
-    PatchZoneRequest Patch
+    PatchZoneRequest Request
 ) : ICommand;
 
 public sealed class PatchZoneHandler : ICommandHandler<PatchZoneCommand>
@@ -30,7 +30,7 @@ public sealed class PatchZoneHandler : ICommandHandler<PatchZoneCommand>
             throw new NotFoundException("Zone not found");
         
         var zone = warehouse.GetZone(command.ZoneId);
-        var patch = command.Patch;
+        var patch = command.Request;
         
         if (patch.Name is not null)
             zone.Rename(patch.Name);

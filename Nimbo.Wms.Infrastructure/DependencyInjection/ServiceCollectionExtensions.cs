@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.Persistence;
@@ -24,6 +25,7 @@ using Nimbo.Wms.Infrastructure.UseCases.Topology.Queries;
 
 namespace Nimbo.Wms.Infrastructure.DependencyInjection;
 
+[PublicAPI]
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
@@ -80,6 +82,16 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IQueryHandler<GetItemQuery, ItemDto>, GetItemHandler>();
         services.AddScoped<IQueryHandler<GetItemsQuery, IReadOnlyList<ItemDto>>, GetItemsHandler>();
+
+        services.AddScoped<ICommandHandler<CreateSupplierCommand, SupplierId>, CreateSupplierHandler>();
+        services.AddScoped<ICommandHandler<PatchSupplierCommand>, PatchSupplierHandler>();
+        services.AddScoped<ICommandHandler<DeleteSupplierCommand>, DeleteSupplierHandler>();
+        services.AddScoped<ICommandHandler<AddSupplierItemCommand, SupplierItemId>, AddSupplierItemHandler>();
+        services.AddScoped<ICommandHandler<PatchSupplierItemCommand>, PatchSupplierItemHandler>();
+        services.AddScoped<ICommandHandler<DeleteSupplierItemCommand>, DeleteSupplierItemHandler>();
+
+        services.AddScoped<IQueryHandler<GetSupplierQuery, SupplierDto>, GetSupplierHandler>();
+        services.AddScoped<IQueryHandler<GetSuppliersQuery, IReadOnlyList<SupplierDto>>, GetSuppliersHandler>();
 
         return services;
     }

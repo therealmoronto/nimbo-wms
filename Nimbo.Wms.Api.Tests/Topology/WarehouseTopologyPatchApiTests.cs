@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using FluentAssertions;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Topology.Http;
+using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
@@ -101,7 +102,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         var zoneId = zone.ZoneId;
 
         // add location
-        var addLocationRequest = new AddLocationRequest(zoneId, "A-01-01-01", LocationType.Shelf);
+        var addLocationRequest = new AddLocationRequest(ZoneId.From(zoneId), "A-01-01-01", LocationType.Shelf);
         var lRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/locations", addLocationRequest);
 
         lRes.StatusCode.Should().Be(HttpStatusCode.Created);
