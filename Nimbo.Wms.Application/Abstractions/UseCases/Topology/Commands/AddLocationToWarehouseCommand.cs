@@ -4,7 +4,6 @@ using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.Identification;
-using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 
