@@ -26,7 +26,7 @@ public sealed class AddZoneToWarehouseHandler : ICommandHandler<AddZoneToWarehou
     
     public async Task<ZoneId> HandleAsync(AddZoneToWarehouseCommand command, CancellationToken ct = default)
     {
-        var warehouse = await _repository.GetByIdAsync(command.WarehouseId);
+        var warehouse = await _repository.GetByIdAsync(command.WarehouseId, ct);
         if (warehouse is null)
             throw new NotFoundException("Warehouse not found");
 
