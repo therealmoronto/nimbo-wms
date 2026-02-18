@@ -27,7 +27,7 @@ public class WarehouseTopologyController : ControllerBase
         CancellationToken ct)
     {
         var warehouseId = WarehouseId.From(warehouseGuid);
-        var command = new AddZoneToWarehouseCommand(warehouseId, request.Code, request.Name, request.Type);
+        var command = new AddZoneToWarehouseCommand(warehouseId, request);
         var zoneId = await handler.HandleAsync(command, ct);
 
         // Location header points to warehouse topology
@@ -55,8 +55,7 @@ public class WarehouseTopologyController : ControllerBase
         CancellationToken ct)
     {
         var warehouseId = WarehouseId.From(warehouseGuid);
-        var zoneId = ZoneId.From(request.ZoneId);
-        var command = new AddLocationToWarehouseCommand(warehouseId, zoneId, request.Code, request.Type);
+        var command = new AddLocationToWarehouseCommand(warehouseId, request);
         var locationId = await handler.HandleAsync(command, ct);
 
         return CreatedAtAction(

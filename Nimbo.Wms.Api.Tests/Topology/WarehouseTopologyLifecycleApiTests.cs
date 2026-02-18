@@ -50,7 +50,7 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
 
         // 3) Add location
         var addLocation = new AddLocationRequest(
-            ZoneId: zoneGuid,
+            zoneGuid,
             Code: "A-01-01-01",
             Type: LocationType.Shelf);
 

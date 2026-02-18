@@ -2,16 +2,14 @@ using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.Identification;
-using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 
 public sealed record AddLocationToWarehouseCommand(
     WarehouseId WarehouseId,
-    ZoneId ZoneId,
-    string Code,
-    LocationType Type
+    AddLocationRequest Request
 ) : ICommand<LocationId>;
 
 public sealed class AddLocationToWarehouseHandler : ICommandHandler<AddLocationToWarehouseCommand, LocationId>
@@ -32,7 +30,10 @@ public sealed class AddLocationToWarehouseHandler : ICommandHandler<AddLocationT
             throw new NotFoundException("Warehouse not found");
 
         var locationId = LocationId.New();
-        warehouse.AddLocation(locationId, command.ZoneId, command.Code, command.Type);
+
+        var request = command.Request;
+        var zoneId = ZoneId.From(request.ZoneId);
+        warehouse.AddLocation(locationId, zoneId, request.Code, request.Type);
 
         await _unitOfWork.SaveChangesAsync(ct);
 

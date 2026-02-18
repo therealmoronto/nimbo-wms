@@ -1,12 +1,13 @@
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
+using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 
-public sealed record CreateWarehouseCommand(string Code, string Name) : ICommand<WarehouseId>;
+public sealed record CreateWarehouseCommand(CreateWarehouseRequest Request) : ICommand<WarehouseId>;
 
 public sealed class CreateWarehouseHandler : ICommandHandler<CreateWarehouseCommand, WarehouseId>
 {
@@ -23,7 +24,8 @@ public sealed class CreateWarehouseHandler : ICommandHandler<CreateWarehouseComm
     {
         var id = WarehouseId.New();
 
-        var warehouse = new Warehouse(id, command.Code, command.Name);
+        var request = command.Request;
+        var warehouse = new Warehouse(id, request.Code, request.Name);
 
         await _repository.AddAsync(warehouse, ct);
         await _unitOfWork.SaveChangesAsync(ct);

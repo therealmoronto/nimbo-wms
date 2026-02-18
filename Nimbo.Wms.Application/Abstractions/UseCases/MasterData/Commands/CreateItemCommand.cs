@@ -7,9 +7,7 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
 
-public sealed record CreateItemCommand(
-    CreateItemRequest Request
-) : ICommand<ItemId>;
+public sealed record CreateItemCommand(CreateItemRequest Request) : ICommand<ItemId>;
 
 
 public sealed class CreateItemHandler : ICommandHandler<CreateItemCommand, ItemId>

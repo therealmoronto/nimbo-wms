@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
-using Nimbo.Wms.Contracts.Topology;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Infrastructure.Persistence;
