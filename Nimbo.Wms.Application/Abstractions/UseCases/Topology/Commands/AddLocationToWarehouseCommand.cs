@@ -33,7 +33,8 @@ public sealed class AddLocationToWarehouseHandler : ICommandHandler<AddLocationT
         var locationId = LocationId.New();
 
         var request = command.Request;
-        warehouse.AddLocation(locationId, request.ZoneId, request.Code, request.Type);
+        var zoneId = ZoneId.From(request.ZoneId);
+        warehouse.AddLocation(locationId, zoneId, request.Code, request.Type);
 
         await _unitOfWork.SaveChangesAsync(ct);
 

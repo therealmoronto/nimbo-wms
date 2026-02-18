@@ -4,7 +4,7 @@ using Nimbo.Wms.Domain.References;
 namespace Nimbo.Wms.Contracts.Topology.Http;
 
 public sealed record AddLocationRequest(
-    ZoneId ZoneId,
+    Guid ZoneId,
     string Code,
     LocationType Type
 );

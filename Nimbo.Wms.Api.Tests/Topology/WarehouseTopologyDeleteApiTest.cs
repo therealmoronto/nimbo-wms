@@ -116,7 +116,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
         var zoneId = zone.ZoneId;
 
         // Add location in that zone
-        var addLocationRequest = new AddLocationRequest(ZoneId.From(zoneId), "A-01-01-01", LocationType.Shelf);
+        var addLocationRequest = new AddLocationRequest(zoneId, "A-01-01-01", LocationType.Shelf);
         var locRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/locations", addLocationRequest);
 
         locRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -156,7 +156,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
         var zoneId = zone.ZoneId;
 
         // Add location
-        var addLocationRequest = new AddLocationRequest(ZoneId.From(zoneId), "A-01-01-01", LocationType.Shelf);
+        var addLocationRequest = new AddLocationRequest(zoneId, "A-01-01-01", LocationType.Shelf);
         var locRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/locations", addLocationRequest);
 
         locRes.StatusCode.Should().Be(HttpStatusCode.Created);
