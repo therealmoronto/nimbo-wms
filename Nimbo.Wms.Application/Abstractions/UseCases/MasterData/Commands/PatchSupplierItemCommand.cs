@@ -26,7 +26,7 @@ public sealed class PatchSupplierItemHandler : ICommandHandler<PatchSupplierItem
     
     public async Task HandleAsync(PatchSupplierItemCommand command, CancellationToken ct = default)
     {
-        var supplier = await _repository.GetByIdAsync(command.SupplierId, ct);
+        var supplier = await _repository.GetByIdWithItemsAsync(command.SupplierId, ct);
         if (supplier is null)
             throw new NotFoundException("Supplier not found");
         
