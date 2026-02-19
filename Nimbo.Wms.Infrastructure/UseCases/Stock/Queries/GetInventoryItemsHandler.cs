@@ -26,6 +26,9 @@ public sealed class GetInventoryItemsHandler : IQueryHandler<GetInventoryItemsQu
         if (query.ItemId is not null)
             dbQuery = dbQuery.Where(i => i.ItemId == query.ItemId);
 
+        if (query.BatchId is not null)
+            dbQuery = dbQuery.Where(i => i.BatchId == query.BatchId);
+
         var inventoryItems = await dbQuery.Select(i => new InventoryItemDto(
                 i.Id,
                 i.ItemId,
