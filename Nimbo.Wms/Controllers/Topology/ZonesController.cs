@@ -11,12 +11,14 @@ namespace Nimbo.Wms.Controllers;
 public class ZonesController : ControllerBase
 {
     /// <summary>
-    /// Patches zone.
-    /// Returns 404 if warehouse does not exist.
+    /// Updates the properties of a zone identified by the specified GUID.
     /// </summary>
-    /// <response code="204">No content</response>
-    /// <response code="404">Not found</response>
-    /// <response code="400">Bad request</response>
+    /// <returns>
+    /// A task that represents the result of the asynchronous operation.
+    /// Returns an HTTP 204 (No Content) status if the zone is successfully updated.
+    /// Returns an HTTP 404 (Not Found) status if the zone does not exist.
+    /// Returns an HTTP 400 (Bad Request) status if the input data is invalid.
+    /// </returns>
     [HttpPatch("{zoneGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -33,11 +35,14 @@ public class ZonesController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes zone.
-    /// Returns 404 if warehouse does not exist.
+    /// Deletes a zone identified by the provided GUID.
     /// </summary>
-    /// <response code="204">No content</response>
-    /// <response code="404">Not found</response>
+    /// <returns>
+    /// A task that represents the result of the asynchronous operation.
+    /// Returns an HTTP 204 (No Content) status if the zone is successfully deleted.
+    /// Returns an HTTP 404 (Not Found) status if the zone does not exist.
+    /// Returns an HTTP 400 (Bad Request) status if the input data is invalid.
+    /// </returns>
     [HttpDelete("{zoneGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

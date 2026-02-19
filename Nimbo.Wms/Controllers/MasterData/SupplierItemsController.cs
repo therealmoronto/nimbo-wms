@@ -10,6 +10,14 @@ namespace Nimbo.Wms.Controllers;
 [Route("api/suppliers/{supplierGuid:guid}/items")]
 public class SupplierItemsController : ControllerBase
 {
+    /// <summary>
+    /// Adds a new supplier item to the specified supplier.
+    /// </summary>
+    /// <returns>
+    /// An <see cref="IActionResult"/> representing the result of the operation. If successful, it
+    /// returns a 201 Created status with the newly created supplier item's details; otherwise,
+    /// it may return an error status such as 400 Bad Request or 404 Not Found.
+    /// </returns>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

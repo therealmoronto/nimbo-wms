@@ -14,8 +14,9 @@ namespace Nimbo.Wms.Controllers;
 public class SuppliersController : ControllerBase
 {
     /// <summary>
-    /// Create supplier.
+    /// Create a new supplier.
     /// </summary>
+    /// <returns>An action result containing the response of the created supplier, including its identifier.</returns>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -36,8 +37,9 @@ public class SuppliersController : ControllerBase
     }
 
     /// <summary>
-    /// Get supplier including supplier items.
+    /// Retrieves a supplier, including its associated items, based on the supplier's unique identifier.
     /// </summary>
+    /// <returns>A data transfer object representing the supplier and its associated items.</returns>
     [HttpGet("{supplierGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -51,10 +53,11 @@ public class SuppliersController : ControllerBase
         var query = new GetSupplierQuery(supplierId);
         return await handler.HandleAsync(query, ct);
     }
-    
+
     /// <summary>
-    /// Get all suppliers flat list excluding supplier items.
+    /// Retrieves a collection of all suppliers without including supplier items.
     /// </summary>
+    /// <returns>A read-only list of <see cref="SupplierDto"/> representing the suppliers.</returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
@@ -66,8 +69,9 @@ public class SuppliersController : ControllerBase
     }
 
     /// <summary>
-    /// Patch supplier with partial update.
+    /// Applies a partial update to an existing supplier.
     /// </summary>
+    /// <returns>An action result indicating the outcome of the operation.</returns>
     [HttpPatch("{supplierGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -84,6 +88,10 @@ public class SuppliersController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Deletes an existing supplier identified by the specified GUID.
+    /// </summary>
+    /// <returns>An action result indicating the outcome of the delete operation.</returns>
     [HttpDelete("{supplierGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

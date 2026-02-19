@@ -13,10 +13,11 @@ namespace Nimbo.Wms.Controllers;
 public class ItemsController : ControllerBase
 {
     /// <summary>
-    /// Create item
+    /// Creates a new item.
     /// </summary>
-    /// <response code="201">Created</response>
-    /// <response code="400">Bad request</response>
+    /// <returns>An action result indicating the outcome of the operation.</returns>
+    /// <response code="201">The item was successfully created.</response>
+    /// <response code="400">The request is invalid.</response>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [Produces("application/json")]
@@ -35,9 +36,10 @@ public class ItemsController : ControllerBase
     }
 
     /// <summary>
-    /// Get all items
+    /// Retrieves a list of all items.
     /// </summary>
-    /// <response code="200">OK</response>
+    /// <returns>A read-only list of item data transfer objects.</returns>
+    /// <response code="200">The items were successfully retrieved.</response>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
@@ -49,10 +51,14 @@ public class ItemsController : ControllerBase
     }
 
     /// <summary>
-    /// Get item by itemGuid
+    /// Retrieves an item by its unique identifier.
     /// </summary>
-    /// <response code="200">OK</response>
-    /// <response code="404">Not found</response>
+    /// <param name="itemGuid">The unique identifier of the item to retrieve.</param>
+    /// <param name="handler">The query handler responsible for processing the request.</param>
+    /// <param name="ct">The cancellation token to observe while waiting for the task to complete.</param>
+    /// <returns>The details of the requested item.</returns>
+    /// <response code="200">The item was successfully retrieved.</response>
+    /// <response code="404">The item with the specified identifier was not found.</response>
     [HttpGet]
     [Route("{itemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -68,11 +74,12 @@ public class ItemsController : ControllerBase
     }
 
     /// <summary>
-    /// Patch item
+    /// Updates an existing item with the specified details.
     /// </summary>
-    /// <response code="204">No content</response>
-    /// <response code="404">Not found</response>
-    /// <response code="400">Bad request</response>
+    /// <returns>An action result indicating the outcome of the operation.</returns>
+    /// <response code="204">The item was successfully updated.</response>
+    /// <response code="400">The request is invalid.</response>
+    /// <response code="404">The specified item was not found.</response>
     [HttpPatch("{itemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -86,12 +93,13 @@ public class ItemsController : ControllerBase
         await handler.HandleAsync(command, ct);
         return NoContent();
     }
-    
+
     /// <summary>
-    /// Delete item
+    /// Deletes an item identified by the specified GUID.
     /// </summary>
-    /// <response code="204">No content</response>
-    /// <response code="404">Not found</response>
+    /// <returns>An action result indicating the outcome of the operation.</returns>
+    /// <response code="204">The item was successfully deleted.</response>
+    /// <response code="404">The item was not found.</response>
     [HttpDelete("{itemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
