@@ -11,12 +11,11 @@ namespace Nimbo.Wms.Controllers;
 public class WarehouseTopologyController : ControllerBase
 {
     /// <summary>
-    /// Add zone to warehouse.
-    /// Returns 404 if warehouse does not exist.
+    /// Adds a new zone to the specified warehouse using the provided request data and command handler.
     /// </summary>
-    /// <response code="201">Created</response>
-    /// <response code="400">Bad request</response>
-    /// <response code="404">Not found</response>
+    /// <returns>
+    /// An ActionResult containing a response with the identifier of the newly created zone.
+    /// </returns>
     [HttpPost("zones")]
     [ProducesResponseType(typeof(AddZoneResponse), StatusCodes.Status201Created)]
     [Produces("application/json")]
@@ -39,12 +38,11 @@ public class WarehouseTopologyController : ControllerBase
     }
 
     /// <summary>
-    /// Add location to zone.
-    /// Returns 404 if warehouse or zone does not exist.
+    /// Adds a new location to the specified warehouse based on the provided request parameters.
     /// </summary>
-    /// <response code="201">Created</response>
-    /// <response code="400">Bad request</response>
-    /// <response code="404">Not found</response>
+    /// <returns>
+    /// An ActionResult containing the response with the newly created location's identifier.
+    /// </returns>
     [HttpPost("locations")]
     [ProducesResponseType(typeof(AddLocationResponse), StatusCodes.Status201Created)]
     [Produces("application/json")]

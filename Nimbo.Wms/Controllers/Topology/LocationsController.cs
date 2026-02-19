@@ -11,12 +11,10 @@ namespace Nimbo.Wms.Controllers;
 public class LocationsController : ControllerBase
 {
     /// <summary>
-    /// Patches location.
-    /// Returns 404 if warehouse does not exist.
+    /// Updates the attributes of a location identified by its unique identifier.
     /// </summary>
-    /// <response code="204">No content</response>
-    /// <response code="404">Not found</response>
-    /// <response code="400">Bad request</response>
+    /// <returns>An asynchronous operation that returns a NoContent response if the update is successful.
+    /// Returns a NotFound response if the location does not exist. Returns a BadRequest response if the input data is invalid.</returns>
     [HttpPatch("{locationGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -33,11 +31,10 @@ public class LocationsController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes location.
-    /// Returns 404 if warehouse does not exist.
+    /// Deletes a location identified by its unique identifier.
     /// </summary>
-    /// <response code="204">No content</response>
-    /// <response code="404">Not found</response>
+    /// <returns>An asynchronous operation that returns a NoContent response if the deletion is successful.
+    /// Returns a NotFound response if the location does not exist.</returns>
     [HttpDelete("{locationGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
