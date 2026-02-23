@@ -6,7 +6,7 @@ using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Http;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Controllers;
+namespace Nimbo.Wms.Controllers.Stock;
 
 [ApiController]
 [Route("api/stock")]

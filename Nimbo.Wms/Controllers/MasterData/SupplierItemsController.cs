@@ -4,7 +4,7 @@ using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
 using Nimbo.Wms.Contracts.MasterData.Http;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Controllers;
+namespace Nimbo.Wms.Controllers.MasterData;
 
 [ApiController]
 [Route("api/suppliers/{supplierGuid:guid}/items")]
