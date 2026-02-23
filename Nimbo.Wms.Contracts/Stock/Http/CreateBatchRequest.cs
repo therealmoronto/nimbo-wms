@@ -4,8 +4,8 @@ public sealed record CreateBatchRequest(
     Guid ItemId,
     string BatchNumber,
     Guid? SupplierId,
-    DateTime? ManufacturedAt,
-    DateTime? ExpiryDate,
-    DateTime? ReceivedAt,
+    DateTimeOffset? ManufacturedAt,
+    DateTimeOffset? ExpiryDate,
+    DateTimeOffset? ReceivedAt,
     string? Notes
 );

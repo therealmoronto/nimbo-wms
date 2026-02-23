@@ -58,9 +58,8 @@ public class ItemsLifecycleApiTests : ApiTestBase
         // 4) Get list of items
         var items = await Client.GetFromJsonAsync<List<ItemDto>>("/api/items");
         items.Should().NotBeNullOrEmpty();
-        items.Count.Should().Be(1);
-        
-        var updated = items.Single();
+
+        var updated = items.Single(i => i.Id == itemId);
         updated.Id.Should().Be(itemId);
         updated.Name.Should().Be("ITEM-003");
         updated.InternalSku.Should().Be("I-003");
@@ -77,7 +76,7 @@ public class ItemsLifecycleApiTests : ApiTestBase
         // 6) Get list of items
         items = await Client.GetFromJsonAsync<List<ItemDto>>("/api/items");
         items.Should().NotBeNull();
-        items.Count.Should().Be(0);
+        items.Should().NotContain(i => i.Id == itemId);
     }
 
     [Fact]

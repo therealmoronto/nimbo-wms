@@ -53,9 +53,9 @@ public sealed class CreateBatchHandler : ICommandHandler<CreateBatchCommand, Bat
             itemId,
             request.BatchNumber,
             supplierId,
-            request.ManufacturedAt,
-            request.ExpiryDate,
-            request.ReceivedAt,
+            request.ManufacturedAt?.UtcDateTime,
+            request.ExpiryDate?.UtcDateTime,
+            request.ReceivedAt?.UtcDateTime,
             request.Notes);
 
         await _batchRepository.AddAsync(batch, ct);

@@ -61,16 +61,6 @@ public class BatchesController : ControllerBase
     /// <summary>
     /// Retrieves a list of batches based on the provided filter criteria.
     /// </summary>
-    /// <param name="request">
-    /// The request containing filtering options such as ItemId and SupplierId.
-    /// If these values are provided, the results will be filtered accordingly.
-    /// </param>
-    /// <param name="handler">
-    /// The query handler responsible for processing the request and retrieving the matching batches.
-    /// </param>
-    /// <param name="ct">
-    /// A cancellation token that can be used to cancel the operation.
-    /// </param>
     /// <returns>
     /// Returns an IReadOnlyList of BatchDto representing the batches that match the given criteria.
     /// If no filter criteria are provided, all batches are returned.
@@ -79,12 +69,13 @@ public class BatchesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
     public async Task<IReadOnlyList<BatchDto>> GetBatches(
-        [FromBody] GetBatchesRequest request,
+        [FromQuery] Guid? itemGuid,
+        [FromQuery] Guid? supplierGuid,
         [FromServices] IQueryHandler<GetBatchesQuery, IReadOnlyList<BatchDto>> handler,
         CancellationToken ct)
     {
-        var itemId = request.ItemId.HasValue ? ItemId.From(request.ItemId.Value) : (ItemId?)null;
-        var supplierId = request.SupplierId.HasValue ? SupplierId.From(request.SupplierId.Value) : (SupplierId?)null;
+        var itemId = itemGuid.HasValue ? ItemId.From(itemGuid.Value) : (ItemId?)null;
+        var supplierId = supplierGuid.HasValue ? SupplierId.From(supplierGuid.Value) : (SupplierId?)null;
         var query = new GetBatchesQuery(itemId, supplierId);
         return await handler.HandleAsync(query, ct);
     }

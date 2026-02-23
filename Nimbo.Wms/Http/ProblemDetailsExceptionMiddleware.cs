@@ -74,6 +74,7 @@ public sealed class ProblemDetailsExceptionMiddleware
             NotFoundException => (StatusCodes.Status404NotFound, "Not Found", "https://httpstatuses.com/404"),
 
             // Common "bad input" exceptions
+            InvalidOperationException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
             ArgumentException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
             FormatException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
             DomainException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),

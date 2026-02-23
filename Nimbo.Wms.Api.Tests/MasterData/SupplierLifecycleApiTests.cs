@@ -96,6 +96,10 @@ public class SupplierLifecycleApiTests : ApiTestBase
         supplierItemDto.DefaultPurchasePrice.Should().Be(100m);
         supplierItemDto.IsPreferred.Should().BeTrue();
 
+        var suppliers = await Client.GetFromJsonAsync<IReadOnlyList<SupplierDto>>("/api/suppliers");
+        suppliers.Should().NotBeNullOrEmpty();
+        suppliers.Should().Contain(s => s.Id == supplierId);
+
         var deleteResponse = await Client.DeleteAsync($"/api/suppliers/{supplierId}");
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }

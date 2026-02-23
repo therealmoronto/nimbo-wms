@@ -69,5 +69,10 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
 
         topology.Zones.Should().ContainSingle(z => z.Id == zoneGuid);
         topology.Locations.Should().ContainSingle(l => l.ZoneId == zoneGuid && l.Code == "A-01-01-01");
+
+        // 5) Get warehouses list
+        var warehouses = await Client.GetFromJsonAsync<IReadOnlyList<WarehouseListItemDto>>("/api/topology/warehouses");
+        warehouses.Should().NotBeNull();
+        warehouses.Should().ContainSingle(w => w.Id == warehouseGuid);
     }
 }
