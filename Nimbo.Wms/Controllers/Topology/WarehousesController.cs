@@ -13,10 +13,11 @@ namespace Nimbo.Wms.Controllers;
 public sealed class WarehousesController : ControllerBase
 {
     /// <summary>
-    /// Get warehouses flat list without zones and locations.
-    /// Returns empty list if no warehouses exist.
+    /// Retrieves a list of all warehouses with their basic details.
     /// </summary>
-    /// <response code="200">OK</response>
+    /// <returns>
+    /// A task representing the asynchronous operation, containing a read-only list of warehouse items with their identifiers, codes, and names.
+    /// </returns>
     [HttpGet]
     [ProducesResponseType(typeof(IReadOnlyList<WarehouseListItemDto>), StatusCodes.Status200OK)]
     [Produces("application/json")]
@@ -28,11 +29,13 @@ public sealed class WarehousesController : ControllerBase
     }
 
     /// <summary>
-    /// Get warehouse topology by warehouseGuid.
+    /// Retrieves the topology of a specific warehouse identified by its unique identifier.
     /// </summary>
-    /// <response code="200">OK</response>
-    /// <response code="404">Not found</response>
-    /// <response code="400">Bad request</response>
+    /// <returns>
+    /// A task representing the asynchronous operation, containing the topology details of the warehouse,
+    /// including zones and locations, if found. If no warehouse is found with the given identifier,
+    /// a Not Found (404) response is returned.
+    /// </returns>
     [HttpGet("{warehouseGuid:guid}")]
     [ProducesResponseType(typeof(WarehouseTopologyDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -47,10 +50,12 @@ public sealed class WarehousesController : ControllerBase
     }
 
     /// <summary>
-    /// Create warehouse
+    /// Creates a new warehouse using the specified details provided in the request model.
     /// </summary>
-    /// <response code="201">Created</response>
-    /// <response code="400">Bad request</response>
+    /// <returns>
+    /// An action result containing the details of the newly created warehouse, including its unique identifier,
+    /// and a Created (201) response status.
+    /// </returns>
     [HttpPost]
     [ProducesResponseType(typeof(CreateWarehouseResponse), StatusCodes.Status201Created)]
     [Produces("application/json")]
@@ -68,13 +73,13 @@ public sealed class WarehousesController : ControllerBase
             routeValues: new { warehouseGuid = warehouseId.Value },
             value: new CreateWarehouseResponse(warehouseId.Value));
     }
-    
+
     /// <summary>
-    /// Update warehouse
+    /// Updates the details of an existing warehouse identified by the specified unique identifier.
     /// </summary>
-    /// <response code="204">No content</response>
-    /// <response code="404">Not found</response>
-    /// <response code="400">Bad request</response>
+    /// <returns>
+    /// A task that represents the asynchronous operation. If successful, it returns a No Content (204) response.
+    /// </returns>
     [HttpPatch("{warehouseGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -91,11 +96,11 @@ public sealed class WarehousesController : ControllerBase
     }
 
     /// <summary>
-    /// Delete warehouse
+    /// Deletes a warehouse identified by the specified unique identifier.
     /// </summary>
-    /// <response code="204">No content</response>
-    /// <response code="404">Not found</response>
-    /// <response code="400">Bad request</response>
+    /// <returns>
+    /// A task that represents the asynchronous operation. If successful, it returns a No Content (204) response.
+    /// </returns>
     [HttpDelete("{warehouseGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
