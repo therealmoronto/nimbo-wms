@@ -20,7 +20,8 @@ public class ItemsLifecycleApiTests : ApiTestBase
     {
         // 1) Create item
         var createItemRequest = new CreateItemRequest(
-            "ITEM-001", "I-001",
+            "ITEM-001",
+            "I-001",
             "00100245",
             UnitOfMeasure.Kilogram);
 

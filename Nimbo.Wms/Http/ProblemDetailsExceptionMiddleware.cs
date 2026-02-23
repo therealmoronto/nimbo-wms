@@ -67,9 +67,6 @@ public sealed class ProblemDetailsExceptionMiddleware
     
     private static (int status, string title, string type) MapException(Exception ex)
     {
-        Console.WriteLine($"Error occured: {ex.Message}");
-        Console.WriteLine(ex.StackTrace);
-
         // NOTE: Add your project-specific exceptions here.
         return ex switch
         {

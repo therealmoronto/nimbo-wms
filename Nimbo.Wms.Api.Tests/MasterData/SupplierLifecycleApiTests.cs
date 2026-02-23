@@ -40,8 +40,8 @@ public class SupplierLifecycleApiTests : ApiTestBase
             false);
 
         var createItemRequest = new CreateItemRequest(
-            "ITEM-001",
-            "I-001",
+            "SUPPLIER-ITEM-001",
+            "SI-001",
             "00100245",
             UnitOfMeasure.Kilogram);
         
