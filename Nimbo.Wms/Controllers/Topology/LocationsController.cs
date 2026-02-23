@@ -4,7 +4,7 @@ using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Controllers;
+namespace Nimbo.Wms.Controllers.Topology;
 
 [ApiController]
 [Route("api/topology/locations")]

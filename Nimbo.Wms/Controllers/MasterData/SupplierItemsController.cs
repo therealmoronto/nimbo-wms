@@ -4,7 +4,7 @@ using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
 using Nimbo.Wms.Contracts.MasterData.Http;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Controllers;
+namespace Nimbo.Wms.Controllers.MasterData;
 
 [ApiController]
 [Route("api/suppliers/{supplierGuid:guid}/items")]
@@ -40,6 +40,14 @@ public class SupplierItemsController : ControllerBase
             value: new AddSupplierItemResponse(supplierItemId.Value));
     }
 
+    /// <summary>
+    /// Updates the details of a specific supplier item associated with a supplier.
+    /// </summary>
+    /// <returns>
+    /// An <see cref="IActionResult"/> representing the result of the operation.
+    /// Returns a 204 No Content status upon successful update. If the specified supplier or supplier item
+    /// is not found, it may return a 404 Not Found status. For invalid inputs, it may return a 400 Bad Request status.
+    /// </returns>
     [HttpPatch("{supplierItemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -57,10 +65,18 @@ public class SupplierItemsController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Deletes a specific supplier item associated with the specified supplier.
+    /// </summary>
+    /// <returns>
+    /// An <see cref="IActionResult"/> representing the result of the operation. If successful, it
+    /// returns a 204 No Content status. If the specified supplier or supplier item is not found,
+    /// it returns a 404 Not Found status.
+    /// </returns>
     [HttpDelete("{supplierItemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteSupplier(
+    public async Task<IActionResult> DeleteSupplierItem(
         [FromRoute] Guid supplierGuid,
         [FromRoute] Guid supplierItemGuid,
         [FromServices] ICommandHandler<DeleteSupplierItemCommand> handler,

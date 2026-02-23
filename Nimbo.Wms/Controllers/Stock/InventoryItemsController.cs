@@ -6,7 +6,7 @@ using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Http;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Controllers;
+namespace Nimbo.Wms.Controllers.Stock;
 
 [ApiController]
 [Route("api/stock")]
@@ -81,13 +81,15 @@ public class InventoryItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
     public async Task<IReadOnlyList<InventoryItemDto>> GetInventoryItems(
-        [FromBody] GetInventoryItemRequest request,
+        [FromQuery] Guid? warehouseGuid,
+        [FromQuery] Guid? itemGuid,
+        [FromQuery] Guid? batchGuid,
         [FromServices] IQueryHandler<GetInventoryItemsQuery, IReadOnlyList<InventoryItemDto>> handler,
         CancellationToken ct)
     {
-        var warehouseId = request.WarehouseId is not null ? WarehouseId.From(request.WarehouseId.Value) : (WarehouseId?)null;
-        var itemId = request.ItemId is not null ? ItemId.From(request.ItemId.Value) : (ItemId?)null;
-        var batchId = request.BatchId is not null ? BatchId.From(request.BatchId.Value) : (BatchId?)null;
+        var warehouseId = warehouseGuid is not null ? WarehouseId.From(warehouseGuid.Value) : (WarehouseId?)null;
+        var itemId = itemGuid is not null ? ItemId.From(itemGuid.Value) : (ItemId?)null;
+        var batchId = batchGuid is not null ? BatchId.From(batchGuid.Value) : (BatchId?)null;
         var query = new GetInventoryItemsQuery(warehouseId, itemId, batchId);
         return await handler.HandleAsync(query, ct);
     }

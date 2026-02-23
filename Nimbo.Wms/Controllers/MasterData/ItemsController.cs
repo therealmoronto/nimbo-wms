@@ -6,7 +6,7 @@ using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Http;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Controllers;
+namespace Nimbo.Wms.Controllers.MasterData;
 
 [ApiController]
 [Route("api/items")]

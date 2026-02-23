@@ -1,13 +1,17 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using Nimbo.Wms.Filters;
 using Nimbo.Wms.Http;
 using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<UtcDateTimeValidationFilter>();
+});
 
 builder.Services.AddDbContext<NimboWmsDbContext>(
     options =>
