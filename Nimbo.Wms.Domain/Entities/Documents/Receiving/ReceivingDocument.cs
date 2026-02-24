@@ -31,14 +31,14 @@ public class ReceivingDocument : DocumentBase<ReceivingDocumentId, ReceivingStat
         return line.Id;
     }
 
-    public void RemoveLine(Guid lineId) => RemoveLine(lineId, DateTime.UtcNow);
+    public void RemoveLine(Guid lineId) => RemoveLine(lineId);
 
     public void ChangeLineReceivedQuantity(Guid lineId, Quantity receivedQty)
     {
         EnsureCanBeEdited();
         EnsurePositive(receivedQty);
-        ChangeLineQuantity(lineId, receivedQty, DateTime.UtcNow);
-        Touch(DateTime.UtcNow);
+        ChangeLineQuantity(lineId, receivedQty);
+        Touch();
     }
 
     public void ChangeLineExpectedQuantity(Guid lineId, Quantity? expectedQty)
@@ -48,7 +48,7 @@ public class ReceivingDocument : DocumentBase<ReceivingDocumentId, ReceivingStat
 
         var line = GetLine(lineId);
         line.ChangeExpectedQuantity(expectedQty);
-        Touch(DateTime.UtcNow);
+        Touch();
     }
 
     public void ChangeLineToLocation(Guid lineId, LocationId toLocationId)
@@ -56,7 +56,7 @@ public class ReceivingDocument : DocumentBase<ReceivingDocumentId, ReceivingStat
         EnsureCanBeEdited();
         var line = GetLine(lineId);
         line.ChangeToLocationId(toLocationId);
-        Touch(DateTime.UtcNow);
+        Touch();
     }
 
     public void Start() => TransitionTo(ReceivingStatus.InProgress);
@@ -67,7 +67,7 @@ public class ReceivingDocument : DocumentBase<ReceivingDocumentId, ReceivingStat
     {
         EnsureLinesAreValid();
         TransitionTo(ReceivingStatus.Posted);
-        MarkPosted(DateTime.UtcNow);
+        MarkPosted();
     }
 
     protected override void ValidateTransition(ReceivingStatus currentStatus, ReceivingStatus newStatus)

@@ -11,7 +11,7 @@ public abstract class DocumentLineBase<TDocumentId>
         // Required by EF Core
     }
     
-    public DocumentLineBase(TDocumentId documentId, ItemId itemId, Quantity quantity, string? notes)
+    protected DocumentLineBase(TDocumentId documentId, ItemId itemId, Quantity quantity, string? notes)
     {
         Id = Guid.NewGuid();
         DocumentId = documentId;

@@ -25,7 +25,7 @@ public abstract class DocumentBase<TId, TStatus, TLine>
         Title = title;
         CreatedAt = createdAt;
         Status = Enum.Parse<TStatus>("Draft", ignoreCase: false);
-        Touch(createdAt);
+        Touch();
     }
 
     public TId Id { get; }
@@ -63,10 +63,10 @@ public abstract class DocumentBase<TId, TStatus, TLine>
             throw new DomainException($"Line with id '{line.Id}' already exists.");
 
         _lines.Add(line);
-        Touch(utcNow);
+        Touch();
     }
 
-    protected void RemoveLine(Guid lineId, DateTime utcNow)
+    protected void RemoveLine(Guid lineId)
     {
         EnsureCanBeEdited();
 
@@ -75,7 +75,7 @@ public abstract class DocumentBase<TId, TStatus, TLine>
             throw new DomainException($"Line with id '{lineId}' not found.");
 
         _lines.RemoveAt(index);
-        Touch(utcNow);
+        Touch();
     }
 
     protected TLine GetLine(Guid lineId)
@@ -84,20 +84,20 @@ public abstract class DocumentBase<TId, TStatus, TLine>
         return line ?? throw new DomainException($"Line with id '{lineId}' not found.");
     }
 
-    protected void ChangeLineQuantity(Guid lineId, Quantity quantity, DateTime utcNow)
+    protected void ChangeLineQuantity(Guid lineId, Quantity quantity)
     {
         EnsureCanBeEdited();
         var line = GetLine(lineId);
         line.ChangeQuantity(quantity);
-        Touch(utcNow);
+        Touch();
     }
 
-    protected void ChangeLineNotes(Guid lineId, string? notes, DateTime utcNow)
+    protected void ChangeLineNotes(Guid lineId, string? notes)
     {
         EnsureCanBeEdited();
         var line = GetLine(lineId);
         line.ChangeNotes(notes);
-        Touch(utcNow);
+        Touch();
     }
 
     public virtual void ChangeCode(string newCode)
@@ -107,7 +107,7 @@ public abstract class DocumentBase<TId, TStatus, TLine>
             throw new DomainException("Code cannot be empty.");
 
         Code = newCode.Trim();
-        Touch(DateTime.UtcNow);
+        Touch();
     }
 
     public virtual void ChangeTitle(string newTitle)
@@ -123,17 +123,17 @@ public abstract class DocumentBase<TId, TStatus, TLine>
     {
         EnsureCanBeEdited();
         Notes = newNotes?.Trim();
-        Touch(DateTime.UtcNow);
+        Touch();
     }
 
     public virtual void TransitionTo(TStatus newStatus)
     {
         ValidateTransition(Status, newStatus);
         Status = newStatus;
-        Touch(DateTime.UtcNow);
+        Touch();
     }
 
-    public virtual void MarkPosted(DateTime utcNow)
+    public virtual void MarkPosted()
     {
         if (PostedAt is not null)
             throw new DomainException("Document has already been posted.");
@@ -141,13 +141,13 @@ public abstract class DocumentBase<TId, TStatus, TLine>
         if (Status.ToString() != "Posted")
             throw new DomainException("Document must be in 'Posted' status before marking as posted.");
 
-        PostedAt = utcNow;
-        Touch(utcNow);
+        Touch();
+        PostedAt = DateTime.UtcNow;
     }
 
-    protected void Touch(DateTime utcNow)
+    protected void Touch()
     {
-        UpdatedAt = utcNow;
+        UpdatedAt = DateTime.UtcNow;
         Version++;
     }
 
