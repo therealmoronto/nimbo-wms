@@ -1,8 +1,10 @@
+using JetBrains.Annotations;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.ValueObject;
 
 namespace Nimbo.Wms.Domain.Entities.Documents.Common;
 
+[PublicAPI]
 public abstract class DocumentLineBase<TDocumentId>
     where TDocumentId : struct, IEntityId
 {
@@ -26,7 +28,7 @@ public abstract class DocumentLineBase<TDocumentId>
 
     public ItemId ItemId { get; }
 
-    public Quantity Quantity { get; private set; }
+    public virtual Quantity Quantity { get; private set; }
 
     public string? Notes { get; private set; }
 

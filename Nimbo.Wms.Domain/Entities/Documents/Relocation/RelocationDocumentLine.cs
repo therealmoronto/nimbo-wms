@@ -1,17 +1,25 @@
+using JetBrains.Annotations;
 using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.ValueObject;
 
 namespace Nimbo.Wms.Domain.Entities.Documents.Relocation;
 
-public class RelocationDocumentLine : DocumentLineBase<RelocationDocumentId>
+[PublicAPI]
+public sealed class RelocationDocumentLine : DocumentLineBase<RelocationDocumentId>
 {
     private RelocationDocumentLine()
     {
         // Required by EF Core
     }
 
-    public RelocationDocumentLine(RelocationDocumentId documentId, ItemId itemId, LocationId from, LocationId to, Quantity quantity, string? notes)
+    public RelocationDocumentLine(
+        RelocationDocumentId documentId,
+        ItemId itemId,
+        LocationId from,
+        LocationId to,
+        Quantity quantity,
+        string? notes = null)
         : base(documentId, itemId, quantity, notes)
     {
         From = from;

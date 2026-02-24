@@ -23,6 +23,95 @@ namespace Nimbo.Wms.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Adjustment.AdjustmentDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<DateTime?>("PostedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ReasonCode")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("ReasonText")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("WarehouseId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("adjustment_documents", "nimbo");
+                });
+
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Adjustment.AdjustmentDocumentLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentId");
+
+                    b.HasIndex("DocumentId", "ItemId", "LocationId");
+
+                    b.ToTable("adjustment_document_lines", "nimbo");
+                });
+
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocument", b =>
                 {
                     b.Property<Guid>("Id")
@@ -613,6 +702,41 @@ namespace Nimbo.Wms.Migrations
                     b.ToTable("zones", "nimbo");
                 });
 
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Adjustment.AdjustmentDocumentLine", b =>
+                {
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Documents.Adjustment.AdjustmentDocument", null)
+                        .WithMany("Lines")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Nimbo.Wms.Domain.ValueObject.QuantityDelta", "Delta", b1 =>
+                        {
+                            b1.Property<Guid>("AdjustmentDocumentLineId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Uom")
+                                .IsRequired()
+                                .HasMaxLength(16)
+                                .HasColumnType("character varying(16)")
+                                .HasColumnName("delta_uom");
+
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric(18, 3)")
+                                .HasColumnName("delta_amount");
+
+                            b1.HasKey("AdjustmentDocumentLineId");
+
+                            b1.ToTable("adjustment_document_lines", "nimbo");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AdjustmentDocumentLineId");
+                        });
+
+                    b.Navigation("Delta")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocumentLine", b =>
                 {
                     b.HasOne("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocument", null)
@@ -829,6 +953,11 @@ namespace Nimbo.Wms.Migrations
                         .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Adjustment.AdjustmentDocument", b =>
+                {
+                    b.Navigation("Lines");
                 });
 
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocument", b =>

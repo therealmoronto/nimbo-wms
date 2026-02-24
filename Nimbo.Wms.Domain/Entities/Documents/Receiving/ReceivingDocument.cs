@@ -7,7 +7,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Domain.Entities.Documents.Receiving;
 
 [PublicAPI]
-public class ReceivingDocument : DocumentBase<ReceivingDocumentId, ReceivingStatus, ReceivingDocumentLine>
+public sealed class ReceivingDocument : DocumentBase<ReceivingDocumentId, ReceivingStatus, ReceivingDocumentLine>
 {
     private ReceivingDocument()
     {
@@ -19,7 +19,7 @@ public class ReceivingDocument : DocumentBase<ReceivingDocumentId, ReceivingStat
     {
         WarehouseId = warehouseId;
     }
-    
+
     public WarehouseId WarehouseId { get; } 
 
     public Guid AddLine(ItemId itemId, Quantity receivedQuantity, LocationId toLocationId, Quantity? expectedQuantity, string? notes)
@@ -27,11 +27,9 @@ public class ReceivingDocument : DocumentBase<ReceivingDocumentId, ReceivingStat
         EnsurePositive(receivedQuantity);
         EnsureNullableNonNegative(expectedQuantity);
         var line = new ReceivingDocumentLine(Id, itemId, receivedQuantity, toLocationId, expectedQuantity, notes);
-        AddLine(line, DateTime.UtcNow);
+        AddLine(line);
         return line.Id;
     }
-
-    public void RemoveLine(Guid lineId) => RemoveLine(lineId);
 
     public void ChangeLineReceivedQuantity(Guid lineId, Quantity receivedQty)
     {

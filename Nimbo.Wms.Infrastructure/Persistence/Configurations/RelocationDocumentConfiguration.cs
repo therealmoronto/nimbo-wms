@@ -14,7 +14,8 @@ public class RelocationDocumentConfiguration : IEntityTypeConfiguration<Relocati
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
-            .HasEntityIdConversion();
+            .HasEntityIdConversion()
+            .ValueGeneratedNever();
 
         builder.Property(x => x.WarehouseId)
             .HasEntityIdConversion()
