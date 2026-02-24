@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Nimbo.Wms.Migrations
 {
     [DbContext(typeof(NimboWmsDbContext))]
-    partial class NimboWmsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260223172725_Documents_DeletedAllDocumentsClassesAndConfigs")]
+    partial class Documents_DeletedAllDocumentsClassesAndConfigs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,83 +25,6 @@ namespace Nimbo.Wms.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocument", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
-
-                    b.Property<DateTime?>("PostedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("receiving_documents", "nimbo");
-                });
-
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocumentLine", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DocumentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ItemId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
-
-                    b.Property<Guid>("ToLocationId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentId");
-
-                    b.HasIndex("ItemId");
-
-                    b.HasIndex("DocumentId", "ItemId");
-
-                    b.ToTable("receiving_document_lines", "nimbo");
-                });
 
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.MasterData.Customer", b =>
                 {
@@ -522,72 +448,6 @@ namespace Nimbo.Wms.Migrations
                     b.ToTable("zones", "nimbo");
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocumentLine", b =>
-                {
-                    b.HasOne("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocument", null)
-                        .WithMany("Lines")
-                        .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Nimbo.Wms.Domain.Entities.MasterData.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.OwnsOne("Nimbo.Wms.Domain.ValueObject.Quantity", "ExpectedQuantity", b1 =>
-                        {
-                            b1.Property<Guid>("ReceivingDocumentLineId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Uom")
-                                .IsRequired()
-                                .HasMaxLength(16)
-                                .HasColumnType("character varying(16)")
-                                .HasColumnName("expected_quantity_uom");
-
-                            b1.Property<decimal>("Value")
-                                .HasColumnType("numeric(18, 3)")
-                                .HasColumnName("expected_quantity_amount");
-
-                            b1.HasKey("ReceivingDocumentLineId");
-
-                            b1.ToTable("receiving_document_lines", "nimbo");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReceivingDocumentLineId");
-                        });
-
-                    b.OwnsOne("Nimbo.Wms.Domain.ValueObject.Quantity", "Quantity", b1 =>
-                        {
-                            b1.Property<Guid>("ReceivingDocumentLineId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Uom")
-                                .IsRequired()
-                                .HasMaxLength(16)
-                                .HasColumnType("character varying(16)")
-                                .HasColumnName("quantity_uom");
-
-                            b1.Property<decimal>("Value")
-                                .HasColumnType("numeric(18, 3)")
-                                .HasColumnName("quantity_amount");
-
-                            b1.HasKey("ReceivingDocumentLineId");
-
-                            b1.ToTable("receiving_document_lines", "nimbo");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReceivingDocumentLineId");
-                        });
-
-                    b.Navigation("ExpectedQuantity");
-
-                    b.Navigation("Quantity")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.MasterData.SupplierItem", b =>
                 {
                     b.HasOne("Nimbo.Wms.Domain.Entities.MasterData.Item", null)
@@ -685,11 +545,6 @@ namespace Nimbo.Wms.Migrations
                         .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocument", b =>
-                {
-                    b.Navigation("Lines");
                 });
 
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.MasterData.Supplier", b =>
