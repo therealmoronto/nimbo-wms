@@ -1,45 +1,44 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nimbo.Wms.Domain.Entities.Documents.Shipment;
-using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Configurations;
 
-public class ShipmentDocumentLineConfiguration : IEntityTypeConfiguration<ShipmentDocumentLine>
+public class ShipmentPickLineConfiguration : IEntityTypeConfiguration<ShipmentPickLine>
 {
-    public void Configure(EntityTypeBuilder<ShipmentDocumentLine> builder)
+    public void Configure(EntityTypeBuilder<ShipmentPickLine> builder)
     {
-        builder.ToTable("shipment_document_lines");
-
+        builder.ToTable("shipment_pick_lines");
+        
         builder.HasKey(x => x.Id);
-
+        
         builder.Property(x => x.Id)
             .ValueGeneratedNever();
-
+        
         builder.Property(x => x.DocumentId)
             .HasEntityIdConversion()
             .IsRequired();
-
+        
         builder.Property(x => x.ItemId)
             .HasEntityIdConversion()
             .IsRequired();
-
-        builder.Property(x => x.Notes)
-            .HasMaxLength(512);
-
-        // base.Quantity == RequestedQuantity
+        
+        builder.Property(x => x.FromLocation)
+            .HasEntityIdConversion()
+            .IsRequired();
+        
         builder.OwnsOne(
             x => x.Quantity,
             q =>
             {
                 q.Property(p => p.Value)
-                    .HasColumnName("requested_quantity_amount")
+                    .HasColumnName("picked_quantity_amount")
                     .HasColumnType("numeric(18, 3)")
                     .IsRequired();
 
                 q.Property(p => p.Uom)
-                    .HasColumnName("requested_quantity_uom")
+                    .HasColumnName("picked_quantity_uom")
                     .HasConversion<string>()
                     .HasMaxLength(16)
                     .IsRequired();
@@ -49,12 +48,10 @@ public class ShipmentDocumentLineConfiguration : IEntityTypeConfiguration<Shipme
 
         builder.Navigation(x => x.Quantity).IsRequired();
 
-        builder.HasOne<Item>()
-            .WithMany()
-            .HasForeignKey(x => x.ItemId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.Property(x => x.Notes)
+            .HasMaxLength(512);
 
         builder.HasIndex(x => x.DocumentId);
-        builder.HasIndex(x => new { x.DocumentId, x.ItemId });
+        builder.HasIndex(x => new { x.DocumentId, x.ItemId, x.FromLocation });
     }
 }

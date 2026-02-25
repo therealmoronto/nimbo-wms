@@ -50,6 +50,11 @@ public class ShipmentDocumentConfiguration : IEntityTypeConfiguration<ShipmentDo
             .HasForeignKey(x => x.DocumentId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasMany(x => x.PickLines)
+            .WithOne()
+            .HasForeignKey(x => x.DocumentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.HasIndex(x => x.Code).IsUnique();
         builder.HasIndex(x => x.Status);
         builder.HasIndex(x => x.WarehouseId);

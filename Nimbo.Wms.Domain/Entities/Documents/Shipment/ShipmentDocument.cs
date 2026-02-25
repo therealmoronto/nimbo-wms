@@ -9,7 +9,9 @@ namespace Nimbo.Wms.Domain.Entities.Documents.Shipment;
 [PublicAPI]
 public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, ShipmentStatus, ShipmentDocumentLine>
 {
-    public ShipmentDocument()
+    private readonly List<ShipmentPickLine> _pickLines = new();
+    
+    private ShipmentDocument()
     {
         // Required by EF Core
     }
@@ -24,6 +26,8 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
 
     public CustomerId? CustomerId { get; private set; }
 
+    public IReadOnlyList<ShipmentPickLine> PickLines => _pickLines.AsReadOnly();
+
     public void ChangeCustomer(CustomerId? customerId)
     {
         EnsureCanBeEdited();
@@ -34,7 +38,7 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
         Touch();
     }
     
-    public void AddLine(ItemId itemId, Quantity requestedQty, string? notes = null)
+    public void AddRequestedLine(ItemId itemId, Quantity requestedQty, string? notes = null)
     {
         EnsureCanBeEdited();
 
@@ -48,26 +52,80 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
         AddLine(line);
         Touch();
     }
-    
-    public void ChangeLineShippedQuantity(Guid lineId, Quantity shippedQty)
+
+    public void AddPickLine(ItemId itemId, LocationId fromLocationId, Quantity qty, string? notes = null)
+    {
+        EnsureCanBeEdited();
+
+        var planLine = Lines.FirstOrDefault(x => x.ItemId == itemId)
+                       ?? throw new DomainException("Cannot pick an item that is not present in shipment lines.");
+
+        if (qty.Value <= 0m)
+            throw new DomainException("Pick quantity must be greater than zero.");
+
+        if (Equals(fromLocationId, default(LocationId)))
+            throw new DomainException("FromLocationId is required.");
+
+        _pickLines.Add(new ShipmentPickLine(Id, itemId, fromLocationId, qty, notes));
+
+        EnsurePickTotalsDoNotExceedRequested(itemId, planLine.RequestedQuantity);
+        Touch();
+    }
+
+    public void ChangeLineRequestedQuantity(Guid lineId, Quantity requestedQuantity)
     {
         EnsureCanBeEdited();
         var line = GetLine(lineId);
-        line.ChangeShippedQuantity(shippedQty);
+        line.ChangeQuantity(requestedQuantity);
         Touch();
     }
-    
+
+    public void ChangePickLineQuantity(Guid pickLineId, Quantity qty)
+    {
+        EnsureCanBeEdited();
+
+        var pl = GetPickLine(pickLineId);
+        pl.ChangeQuantity(qty);
+
+        var plan = Lines.First(x => x.ItemId == pl.ItemId);
+        EnsurePickTotalsDoNotExceedRequested(pl.ItemId, plan.RequestedQuantity);
+
+        Touch();
+    }
+
+    public void ChangePickLineFromLocation(Guid pickLineId, LocationId fromLocationId)
+    {
+        EnsureCanBeEdited();
+
+        var pl = GetPickLine(pickLineId);
+        pl.ChangeFromLocation(fromLocationId);
+
+        Touch();
+    }
+
+    public void RemovePickLine(Guid pickLineId)
+    {
+        EnsureCanBeEdited();
+
+        var index = _pickLines.FindIndex(x => x.Id == pickLineId);
+        if (index < 0)
+            throw new DomainException($"Pick line '{pickLineId}' not found.");
+
+        _pickLines.RemoveAt(index);
+        Touch();
+    }
+
     public void Start() => TransitionTo(ShipmentStatus.InProgress);
 
     public void MarkShipped()
     {
-        EnsureLinesAreValidForShipping();
+        EnsureReadyToShip();
         TransitionTo(ShipmentStatus.Shipped);
     }
 
     public void Post()
     {
-        EnsureLinesAreValidForPosting();
+        EnsureReadyToPost();
         TransitionTo(ShipmentStatus.Posted);
         MarkPosted();
     }
@@ -76,26 +134,6 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
     {
         if (Lines.Count == 0)
             throw new DomainException("Shipment must contain at least one line.");
-    }
-
-    private void EnsureLinesAreValidForShipping()
-    {
-        EnsureLinesAreValid();
-
-        foreach (var line in Lines)
-        {
-            if (line.ShippedQuantity is null)
-                throw new DomainException("All lines must have shipped quantity set.");
-        }
-    }
-
-    private void EnsureLinesAreValidForPosting()
-    {
-        foreach (var line in Lines)
-        {
-            if (line.ShippedQuantity is null || line.ShippedQuantity.Value <= 0m)
-                throw new DomainException("Invalid shipped quantity.");
-        }
     }
 
     protected override void ValidateTransition(ShipmentStatus current, ShipmentStatus next)
@@ -114,5 +152,43 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
 
         if (current is ShipmentStatus.Posted or ShipmentStatus.Cancelled)
             throw new DomainException($"Invalid transition: {current} -> {next}.");
+    }
+
+    private ShipmentPickLine GetPickLine(Guid pickLineId)
+    {
+        return _pickLines.FirstOrDefault(x => x.Id == pickLineId)
+               ?? throw new DomainException($"Pick line '{pickLineId}' not found.");
+    }
+
+    private void EnsureReadyToShip()
+    {
+        EnsureLinesAreValid();
+
+        if (_pickLines.Count == 0)
+            throw new DomainException("Shipment must contain at least one pick line.");
+
+        // Full shipment policy: picked totals must match requested totals for each item
+        foreach (var line in Lines)
+        {
+            var picked = GetPickedTotalForItem(line.ItemId);
+            if (picked != line.RequestedQuantity.Value)
+                throw new DomainException("All shipment lines must be fully picked before shipping.");
+        }
+    }
+
+    private void EnsureReadyToPost()
+    {
+        if (_pickLines.Any(x => x.Quantity.Value <= 0m))
+            throw new DomainException("Invalid pick quantity.");
+    }
+
+    private decimal GetPickedTotalForItem(ItemId itemId)
+        => _pickLines.Where(x => x.ItemId == itemId).Sum(x => x.Quantity.Value);
+
+    private void EnsurePickTotalsDoNotExceedRequested(ItemId itemId, Quantity requestedQty)
+    {
+        var picked = GetPickedTotalForItem(itemId);
+        if (picked > requestedQty.Value)
+            throw new DomainException("Picked quantity exceeds requested quantity for the item.");
     }
 }
