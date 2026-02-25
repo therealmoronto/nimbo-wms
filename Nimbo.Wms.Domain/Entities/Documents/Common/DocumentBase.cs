@@ -117,6 +117,7 @@ public abstract class DocumentBase<TId, TStatus, TLine>
             throw new DomainException("Title cannot be empty.");
 
         Title = newTitle;
+        Touch();
     }
 
     public virtual void ChangeNotes(string? newNotes)
