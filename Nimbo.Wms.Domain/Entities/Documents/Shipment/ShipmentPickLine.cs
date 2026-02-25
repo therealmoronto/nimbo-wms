@@ -13,7 +13,12 @@ public sealed class ShipmentPickLine
         // Required by EF Core
     }
 
-    public ShipmentPickLine(ShipmentDocumentId documentId, ItemId itemId, LocationId fromLocation, Quantity quantity, string? notes = null)
+    public ShipmentPickLine(
+        ShipmentDocumentId documentId,
+        ItemId itemId,
+        LocationId fromLocation,
+        Quantity quantity,
+        string? notes = null)
     {
         if (quantity.Value <= 0m)
             throw new DomainException("Pick quantity must be greater than zero.");
