@@ -362,6 +362,33 @@ namespace Nimbo.Wms.Migrations
                     b.ToTable("shipment_document_lines", "nimbo");
                 });
 
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Shipment.ShipmentPickLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("FromLocation")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentId");
+
+                    b.HasIndex("DocumentId", "ItemId", "FromLocation");
+
+                    b.ToTable("shipment_pick_lines", "nimbo");
+                });
+
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.MasterData.Customer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -975,33 +1002,43 @@ namespace Nimbo.Wms.Migrations
                                 .HasForeignKey("ShipmentDocumentLineId");
                         });
 
-                    b.OwnsOne("Nimbo.Wms.Domain.ValueObject.Quantity", "ShippedQuantity", b1 =>
+                    b.Navigation("Quantity")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Shipment.ShipmentPickLine", b =>
+                {
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Documents.Shipment.ShipmentDocument", null)
+                        .WithMany("PickLines")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Nimbo.Wms.Domain.ValueObject.Quantity", "Quantity", b1 =>
                         {
-                            b1.Property<Guid>("ShipmentDocumentLineId")
+                            b1.Property<Guid>("ShipmentPickLineId")
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("Uom")
                                 .IsRequired()
                                 .HasMaxLength(16)
                                 .HasColumnType("character varying(16)")
-                                .HasColumnName("shipped_quantity_uom");
+                                .HasColumnName("picked_quantity_uom");
 
                             b1.Property<decimal>("Value")
                                 .HasColumnType("numeric(18, 3)")
-                                .HasColumnName("shipped_quantity_amount");
+                                .HasColumnName("picked_quantity_amount");
 
-                            b1.HasKey("ShipmentDocumentLineId");
+                            b1.HasKey("ShipmentPickLineId");
 
-                            b1.ToTable("shipment_document_lines", "nimbo");
+                            b1.ToTable("shipment_pick_lines", "nimbo");
 
                             b1.WithOwner()
-                                .HasForeignKey("ShipmentDocumentLineId");
+                                .HasForeignKey("ShipmentPickLineId");
                         });
 
                     b.Navigation("Quantity")
                         .IsRequired();
-
-                    b.Navigation("ShippedQuantity");
                 });
 
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.MasterData.SupplierItem", b =>
@@ -1121,6 +1158,8 @@ namespace Nimbo.Wms.Migrations
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Shipment.ShipmentDocument", b =>
                 {
                     b.Navigation("Lines");
+
+                    b.Navigation("PickLines");
                 });
 
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.MasterData.Supplier", b =>
