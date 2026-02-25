@@ -14,7 +14,8 @@ public class ReceivingDocumentConfiguration : IEntityTypeConfiguration<Receiving
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
-            .HasEntityIdConversion();
+            .HasEntityIdConversion()
+            .ValueGeneratedNever();;
 
         builder.Property(x => x.Code)
             .HasMaxLength(32)

@@ -7,9 +7,9 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Domain.Entities.Documents.Relocation;
 
 [PublicAPI]
-public class RelocationDocument : DocumentBase<RelocationDocumentId, RelocationStatus, RelocationDocumentLine>
+public sealed class RelocationDocument : DocumentBase<RelocationDocumentId, RelocationStatus, RelocationDocumentLine>
 {
-    public RelocationDocument()
+    private RelocationDocument()
     {
         // Required by EF Core
     }
@@ -34,12 +34,12 @@ public class RelocationDocument : DocumentBase<RelocationDocumentId, RelocationS
             throw new DomainException("Duplicate relocation line (same item and same from/to).");
 
         var line = new RelocationDocumentLine(Id, itemId, from, to, quantity, notes);
-        AddLine(line, DateTime.UtcNow);
+        AddLine(line);
 
         return line.Id;
     }
-    
-    public void ChangeLineQuantity(Guid lineId, Quantity quantity)
+
+    public void ChangeLineRelocationQuantity(Guid lineId, Quantity quantity)
     {
         EnsureCanBeEdited();
         EnsurePositive(quantity);
@@ -48,6 +48,7 @@ public class RelocationDocument : DocumentBase<RelocationDocumentId, RelocationS
         line.ChangeQuantity(quantity);
         Touch();
     }
+
     public void ChangeLineFrom(Guid lineId, LocationId from)
     {
         EnsureCanBeEdited();

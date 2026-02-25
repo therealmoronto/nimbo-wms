@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Nimbo.Wms.Domain.Entities.Documents.Relocation;
+using Nimbo.Wms.Domain.Entities.Documents.Adjustment;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Configurations;
 
-public class RelocationDocumentConfiguration : IEntityTypeConfiguration<RelocationDocument>
+public class AdjustmentDocumentConfiguration : IEntityTypeConfiguration<AdjustmentDocument>
 {
-    public void Configure(EntityTypeBuilder<RelocationDocument> builder)
+    public void Configure(EntityTypeBuilder<AdjustmentDocument> builder)
     {
-        builder.ToTable("relocation_documents");
+        builder.ToTable("adjustment_documents");
 
         builder.HasKey(x => x.Id);
 
@@ -40,8 +40,14 @@ public class RelocationDocumentConfiguration : IEntityTypeConfiguration<Relocati
 
         builder.Property(x => x.Version).IsRequired();
 
-        builder.Property(x => x.Notes)
-            .HasMaxLength(512);
+        builder.Property(x => x.Notes).HasMaxLength(512);
+
+        builder.Property(x => x.ReasonCode)
+            .HasMaxLength(64)
+            .IsRequired();
+
+        builder.Property(x => x.ReasonText)
+            .HasMaxLength(256);
 
         builder.HasMany(x => x.Lines)
             .WithOne()

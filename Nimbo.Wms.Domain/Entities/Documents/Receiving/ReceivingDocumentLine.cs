@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Nimbo.Wms.Domain.Common;
 using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Identification;
@@ -5,7 +6,8 @@ using Nimbo.Wms.Domain.ValueObject;
 
 namespace Nimbo.Wms.Domain.Entities.Documents.Receiving;
 
-public class ReceivingDocumentLine : DocumentLineBase<ReceivingDocumentId>
+[PublicAPI]
+public sealed class ReceivingDocumentLine : DocumentLineBase<ReceivingDocumentId>
 {
     public ReceivingDocumentLine()
     {
@@ -17,8 +19,8 @@ public class ReceivingDocumentLine : DocumentLineBase<ReceivingDocumentId>
         ItemId itemId,
         Quantity receivedQuantity,
         LocationId toLocationId,
-        Quantity? expectedQuantity,
-        string? notes)
+        Quantity? expectedQuantity = null,
+        string? notes = null)
         : base(documentId, itemId, receivedQuantity, notes)
     {
         ToLocationId = toLocationId;

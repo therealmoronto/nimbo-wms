@@ -56,7 +56,7 @@ public abstract class DocumentBase<TId, TStatus, TLine>
             throw new InvalidOperationException("Cannot edit posted or cancelled documents.");
     }
 
-    public void AddLine(TLine line, DateTime utcNow)
+    public void AddLine(TLine line)
     {
         EnsureCanBeEdited();
         if (_lines.Any(x => Equals(x.Id, line.Id)))

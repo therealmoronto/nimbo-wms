@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace Nimbo.Wms.Domain.Identification;
 
 [PublicAPI]
-public struct RelocationDocumentId : IEntityId
+public readonly struct RelocationDocumentId : IEntityId
 {
     public RelocationDocumentId(Guid value)
     {
