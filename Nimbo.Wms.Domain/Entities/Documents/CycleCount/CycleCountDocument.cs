@@ -34,11 +34,12 @@ public sealed class CycleCountDocument : DocumentBase<CycleCountDocumentId, Cycl
         if (Lines.Any(x => x.ItemId == itemId && x.LocationId == locationId))
             throw new DomainException("Duplicate cycle count line.");
 
-        var lineId = AddLine(new CycleCountDocumentLine(Id, locationId, itemId, expectedQty));
+        var line = new CycleCountDocumentLine(Id, locationId, itemId, expectedQty);
+        AddLine(line);
 
         Touch();
 
-        return lineId;
+        return line.Id;
     }
 
     public void ChangeLineActualQuantity(Guid lineId, Quantity actualQty)

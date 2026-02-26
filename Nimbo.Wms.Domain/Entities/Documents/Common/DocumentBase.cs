@@ -68,7 +68,7 @@ public abstract class DocumentBase<TId, TStatus, TLine>
         Touch();
     }
 
-    protected Guid AddLine(TLine line)
+    protected void AddLine(TLine line)
     {
         EnsureCanBeEdited();
         if (_lines.Any(x => Equals(x.Id, line.Id)))
@@ -76,8 +76,6 @@ public abstract class DocumentBase<TId, TStatus, TLine>
 
         _lines.Add(line);
         Touch();
-
-        return line.Id;
     }
 
     protected TLine GetLine(Guid lineId)
