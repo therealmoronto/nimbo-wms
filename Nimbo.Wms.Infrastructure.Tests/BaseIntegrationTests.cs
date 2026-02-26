@@ -31,9 +31,7 @@ public abstract class BaseIntegrationTests : IClassFixture<PostgresFixture>
 
     protected IServiceProvider Services { get; }
     
-    protected IUnitOfWork UnitOfWork =>
-        Services.GetRequiredService<IUnitOfWork>();
+    protected IUnitOfWork UnitOfWork => Services.GetRequiredService<IUnitOfWork>();
 
-    protected NimboWmsDbContext DbContext =>
-        Services.GetRequiredService<NimboWmsDbContext>();
+    protected NimboWmsDbContext DbContext => Services.GetRequiredService<NimboWmsDbContext>();
 }

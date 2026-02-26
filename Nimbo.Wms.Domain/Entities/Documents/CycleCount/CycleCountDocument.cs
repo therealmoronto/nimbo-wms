@@ -7,7 +7,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Domain.Entities.Documents.CycleCount;
 
 [PublicAPI]
-public sealed class CycleCountDocument : DocumentBase<CycleCountLineDocumentId, CycleCountStatus, CycleCountDocumentLine>
+public sealed class CycleCountDocument : DocumentBase<CycleCountDocumentId, CycleCountStatus, CycleCountDocumentLine>
 {
     private CycleCountDocument()
     {
@@ -15,7 +15,7 @@ public sealed class CycleCountDocument : DocumentBase<CycleCountLineDocumentId, 
     }
     
     public CycleCountDocument(
-        CycleCountLineDocumentId id,
+        CycleCountDocumentId id,
         WarehouseId warehouseId,
         string code,
         string title,
@@ -27,15 +27,24 @@ public sealed class CycleCountDocument : DocumentBase<CycleCountLineDocumentId, 
 
     public WarehouseId WarehouseId { get; }
     
-    public void AddLine(ItemId itemId, LocationId locationId, Quantity expectedQty)
+    public Guid AddLine(ItemId itemId, LocationId locationId, Quantity expectedQty)
     {
         EnsureCanBeEdited();
 
         if (Lines.Any(x => x.ItemId == itemId && x.LocationId == locationId))
             throw new DomainException("Duplicate cycle count line.");
 
-        AddLine(new CycleCountDocumentLine(Id, locationId, itemId, expectedQty));
+        var lineId = AddLine(new CycleCountDocumentLine(Id, locationId, itemId, expectedQty));
 
+        Touch();
+
+        return lineId;
+    }
+
+    public void ChangeLineActualQuantity(Guid lineId, Quantity actualQty)
+    {
+        var line = GetLine(lineId);
+        line.ChangeActualQuantity(actualQty);
         Touch();
     }
 

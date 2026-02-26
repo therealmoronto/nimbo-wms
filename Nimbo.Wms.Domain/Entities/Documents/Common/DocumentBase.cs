@@ -56,17 +56,7 @@ public abstract class DocumentBase<TId, TStatus, TLine>
             throw new InvalidOperationException("Cannot edit posted or cancelled documents.");
     }
 
-    public void AddLine(TLine line)
-    {
-        EnsureCanBeEdited();
-        if (_lines.Any(x => Equals(x.Id, line.Id)))
-            throw new DomainException($"Line with id '{line.Id}' already exists.");
-
-        _lines.Add(line);
-        Touch();
-    }
-
-    protected void RemoveLine(Guid lineId)
+    public virtual void RemoveLine(Guid lineId)
     {
         EnsureCanBeEdited();
 
@@ -76,6 +66,18 @@ public abstract class DocumentBase<TId, TStatus, TLine>
 
         _lines.RemoveAt(index);
         Touch();
+    }
+
+    protected Guid AddLine(TLine line)
+    {
+        EnsureCanBeEdited();
+        if (_lines.Any(x => Equals(x.Id, line.Id)))
+            throw new DomainException($"Line with id '{line.Id}' already exists.");
+
+        _lines.Add(line);
+        Touch();
+
+        return line.Id;
     }
 
     protected TLine GetLine(Guid lineId)
