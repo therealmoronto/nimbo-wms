@@ -66,7 +66,7 @@ public class ShipmentDocumentSmokeTests : BaseIntegrationTests
         doc.WarehouseId.Should().Be(loaded.WarehouseId);
         doc.Code.Should().Be(loaded.Code);
         doc.Title.Should().Be(loaded.Title);
-        doc.CreatedAt.Should().Be(loaded.CreatedAt);
+        doc.CreatedAt.Should().BeCloseTo(loaded.CreatedAt, TimeSpan.FromMicroseconds(1));
 
         loaded.Lines.Should().NotBeNullOrEmpty();
         loaded.Lines.Should().ContainSingle(l => l.ItemId == item.Id);

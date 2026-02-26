@@ -61,6 +61,7 @@ public class CycleCountDocumentSmokeTests : BaseIntegrationTests
         doc.Id.Should().Be(loaded.Id);
         doc.WarehouseId.Should().Be(loaded.WarehouseId);
         doc.Code.Should().Be(loaded.Code);
+        doc.CreatedAt.Should().BeCloseTo(loaded.CreatedAt, TimeSpan.FromMilliseconds(1));
 
         loaded.Lines.Should().NotBeNullOrEmpty();
         loaded.Lines.Should().ContainSingle(l => l.ItemId == item.Id);
