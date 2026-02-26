@@ -10,7 +10,7 @@ namespace Nimbo.Wms.Infrastructure.Tests.Smoke;
 public class MigrationsSmokeTests
 {
     private readonly PostgresFixture _fixture;
-    
+
     public MigrationsSmokeTests(PostgresFixture fixture)
     {
         _fixture = fixture;

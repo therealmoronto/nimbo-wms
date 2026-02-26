@@ -7,7 +7,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Domain.Entities.Documents.CycleCount;
 
 [PublicAPI]
-public sealed class CycleCountDocumentLine : DocumentLineBase<CycleCountLineDocumentId>
+public sealed class CycleCountDocumentLine : DocumentLineBase<CycleCountDocumentId>
 {
     private CycleCountDocumentLine()
     {
@@ -15,7 +15,7 @@ public sealed class CycleCountDocumentLine : DocumentLineBase<CycleCountLineDocu
     }
 
     public CycleCountDocumentLine(
-        CycleCountLineDocumentId documentId,
+        CycleCountDocumentId documentId,
         LocationId locationId,
         ItemId itemId,
         Quantity quantity,
