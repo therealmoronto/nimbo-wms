@@ -22,14 +22,14 @@ This document is the architectural contract for contributors. It lists stable, p
 
 ## 4. Domain Modeling Conventions
 
-- Aggregates: model transactional boundaries explicitly. Documents (InventoryCount, ShipmentOrder, etc.) are aggregates; lines belong to their parent aggregate.
+- Aggregates: model transactional boundaries explicitly. Documents (CycleCountDocument, ShipmentDocument, ReceivingDocument, RelocationDocument, AdjustmentDocument) are aggregates; lines belong to their parent aggregate.
 - Invariants: enforce in constructors and domain methods; state is valid after construction and after each operation.
 - No EF attributes or references in domain code. Domain is persistence-ignorant.
 - Mutability: avoid public setters. Use methods to change state. Provide private parameterless constructors for EF materialization only.
 
 ## 5. Identifiers and Type Safety
 
-- Strongly typed IDs: domain identifiers wrap `Guid` in dedicated types (e.g., `InventoryCountId`, `LocationId`) to prevent accidental mixing.
+- Strongly typed IDs: domain identifiers wrap `Guid` in dedicated types (e.g., `CycleCountDocumentId`, `LocationId`) to prevent accidental mixing.
 - Raw `Guid` usage: permitted only at external boundaries (DTOs, external APIs) or in rare temporary internal cases documented in code. Prefer typed IDs everywhere else.
 - Conversions: conversions between typed IDs and primitives are implemented in the infrastructure mapping layer (ValueConverters). Do not expose primitives in domain APIs.
 
