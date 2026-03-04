@@ -30,6 +30,9 @@ public class ReceivingDocumentPostingService : IDocumentPostingService<Receiving
 
         foreach (var line in document.Lines)
         {
+            if (line.ReceivedQuantity.IsZero)
+                continue;
+
             var inventoryItem = await _inventoryItemRepo.GetByCriteriaAsync(document.WarehouseId, line.ToLocationId, line.ItemId, ct);
             if (inventoryItem is null)
             {
