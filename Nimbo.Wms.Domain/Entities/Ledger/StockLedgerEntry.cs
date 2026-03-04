@@ -5,8 +5,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Domain.Entities.Ledger;
 
 [PublicAPI]
-public sealed class StockLedgerEntry<TDocumentId> : BaseEntity<StockLedgerEntryId>
-    where TDocumentId : struct, IEntityId
+public sealed class StockLedgerEntry : BaseEntity<StockLedgerEntryId>
 {
     private StockLedgerEntry()
     {
@@ -17,9 +16,10 @@ public sealed class StockLedgerEntry<TDocumentId> : BaseEntity<StockLedgerEntryI
         InventoryItemId inventoryItemId,
         ItemId itemId,
         LocationId locationId,
+        WarehouseId warehouseId,
         QuantityDelta quantityDelta,
         Quantity balanceAfter,
-        TDocumentId sourceDocumentId,
+        Guid sourceDocumentId,
         Guid sourceDocumentLineId,
         LedgerTransactionType transactionType,
         DateTime occurredAt)
@@ -28,6 +28,7 @@ public sealed class StockLedgerEntry<TDocumentId> : BaseEntity<StockLedgerEntryI
         InventoryItemId = inventoryItemId;
         ItemId = itemId;
         LocationId = locationId;
+        WarehouseId = warehouseId;
         QuantityDelta = quantityDelta;
         BalanceAfter = balanceAfter;
         SourceDocumentId = sourceDocumentId;
@@ -42,11 +43,13 @@ public sealed class StockLedgerEntry<TDocumentId> : BaseEntity<StockLedgerEntryI
 
     public LocationId LocationId { get; }
 
+    public WarehouseId WarehouseId { get; }
+
     public QuantityDelta QuantityDelta { get; }
 
     public Quantity BalanceAfter { get; }
 
-    public TDocumentId SourceDocumentId { get; }
+    public Guid SourceDocumentId { get; }
 
     public Guid SourceDocumentLineId { get; }
 
