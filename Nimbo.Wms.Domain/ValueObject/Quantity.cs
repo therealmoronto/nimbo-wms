@@ -54,6 +54,8 @@ public record Quantity
         return new QuantityDelta(value, Uom);
     }
 
+    public QuantityDelta ToDelta() => new(Value, Uom);
+
     public static Quantity operator +(Quantity a, Quantity b) => a.Add(b);
 
     public static Quantity operator -(Quantity a, Quantity b) => a.Subtract(b);
