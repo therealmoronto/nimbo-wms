@@ -53,10 +53,10 @@ public sealed class AdjustmentDocumentPostingService : IDocumentPostingService<A
                 await _inventoryItemRepo.AddAsync(inventoryItem, ct);
             }
 
-            if (line.Delta > 0)
-                inventoryItem.Increase(line.Delta.GetAbsQuantity());
-            else if (!inventoryItem.Quantity.IsZero && inventoryItem.Quantity >= line.Delta.GetAbsQuantity())
-                inventoryItem.Decrease(line.Delta.GetAbsQuantity());
+            if (inventoryItem.Quantity.Value < Math.Abs(line.Delta.Value))
+                throw new DomainException($"Insufficient stock for Item {line.ItemId} at Location {line.LocationId}");
+
+            inventoryItem.Quantity.ApplyDelta(line.Delta);
 
             var ledgerEntry = new StockLedgerEntry(
                 inventoryItem.Id,

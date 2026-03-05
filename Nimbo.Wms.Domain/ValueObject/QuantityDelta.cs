@@ -11,12 +11,11 @@ public sealed class QuantityDelta
 
     public QuantityDelta(decimal value, UnitOfMeasure uom)
     {
-        if (value == 0m)
-            throw new DomainException("Quantity delta cannot be zero.");
-
         Value = value;
         Uom = uom;
     }
+
+    public bool IsZero => Value == 0m;
 
     public decimal Value { get; private set; }
 

@@ -13,6 +13,7 @@ public sealed class EfShipmentDocumentRepository : EfDocumentRepository<Shipment
     public override Task<ShipmentDocument?> GetByIdAsync(ShipmentDocumentId id, CancellationToken ct = default)
     {
         return Set.Include(d => d.Lines)
+            .Include(d => d.PickLines)
             .FirstOrDefaultAsync(d => d.Id == id, ct);
     }
 }
