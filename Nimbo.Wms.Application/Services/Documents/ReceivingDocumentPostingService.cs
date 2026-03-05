@@ -12,7 +12,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Application.Services.Documents;
 
 [PublicAPI]
-public class ReceivingDocumentPostingService : IDocumentPostingService<ReceivingDocument>
+public sealed class ReceivingDocumentPostingService : IDocumentPostingService<ReceivingDocument>
 {
     private readonly IStockLedgerEntryRepository _stockLedgerEntryRepo;
     private readonly IInventoryItemRepository _inventoryItemRepo;
