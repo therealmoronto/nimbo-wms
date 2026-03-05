@@ -11,6 +11,6 @@ internal sealed class EfUnitOfWork : IUnitOfWork
         _dbContext = dbContext;
     }
 
-    public Task SaveChangesAsync(CancellationToken ct = default)
+    public Task CommitAsync(CancellationToken ct = default)
         => _dbContext.SaveChangesAsync(ct);
 }

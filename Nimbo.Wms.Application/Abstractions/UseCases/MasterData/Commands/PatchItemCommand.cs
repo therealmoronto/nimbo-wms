@@ -50,6 +50,6 @@ public sealed class PatchItemHandler : ICommandHandler<PatchItemCommand>
             item.SetPhysical(weight, volume);
         }
 
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
     }
 }

@@ -59,7 +59,7 @@ public sealed class CreateBatchHandler : ICommandHandler<CreateBatchCommand, Bat
             request.Notes);
 
         await _batchRepository.AddAsync(batch, ct);
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
 
         return batchId;
     }

@@ -26,6 +26,6 @@ public sealed class DeleteItemHandler : ICommandHandler<DeleteItemCommand>
             throw new NotFoundException($"Item with id {command.ItemId} not found");
 
         await _repository.DeleteAsync(item, ct);
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
     }
 }

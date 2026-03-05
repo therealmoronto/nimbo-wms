@@ -70,6 +70,8 @@ public class ReceivingDocumentLineConfiguration : IEntityTypeConfiguration<Recei
                 q.WithOwner();
             });
 
+        builder.Navigation(x => x.ExpectedQuantity).IsRequired(false);
+
         builder.HasOne<Item>()
             .WithMany()
             .HasForeignKey(x => x.ItemId)

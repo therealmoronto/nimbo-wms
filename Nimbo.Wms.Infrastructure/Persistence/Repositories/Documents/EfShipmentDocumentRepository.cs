@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
 using Nimbo.Wms.Domain.Entities.Documents.Shipment;
@@ -5,7 +6,8 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Repositories.Documents;
 
-public sealed class EfShipmentDocumentRepository : EfDocumentRepository<ShipmentDocument, ShipmentDocumentId>, IShipmentDocumentRepository
+[PublicAPI]
+internal sealed class EfShipmentDocumentRepository : EfDocumentRepository<ShipmentDocument, ShipmentDocumentId>, IShipmentDocumentRepository
 {
     public EfShipmentDocumentRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }

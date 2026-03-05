@@ -27,7 +27,7 @@ public sealed class CreateSupplierHandler : ICommandHandler<CreateSupplierComman
         var supplier = new Supplier(supplerId, request.Code, request.Name);
         
         await _repository.AddAsync(supplier, ct);
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
 
         return supplerId;
     }

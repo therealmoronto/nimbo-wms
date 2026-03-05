@@ -57,6 +57,10 @@ public sealed class QuantityDelta
 
     public static bool operator >=(QuantityDelta left, decimal right) => left.Value >= right;
 
+    public static bool operator ==(QuantityDelta left, decimal right) => left.Value == right;
+
+    public static bool operator !=(QuantityDelta left, decimal right) => left.Value != right;
+
     public QuantityDelta Increase(decimal value, UnitOfMeasure uom)
     {
         return new QuantityDelta(Math.Abs(value), uom);

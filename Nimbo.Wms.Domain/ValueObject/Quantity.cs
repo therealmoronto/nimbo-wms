@@ -76,6 +76,10 @@ public record Quantity
 
     public static bool operator >=(Quantity left, decimal right) => left.Value >= right;
 
+    public static bool operator ==(Quantity left, decimal right) => left.Value == right;
+
+    public static bool operator !=(Quantity left, decimal right) => left.Value != right;
+
     private void EnsureSameUom(Quantity other)
     {
         if (Uom != other.Uom)

@@ -27,6 +27,6 @@ public sealed class DeleteSupplierHandler : ICommandHandler<DeleteSupplierComman
             throw new NotFoundException("Supplier not found");
 
         await _repository.DeleteAsync(supplier, ct);
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
     }
 }

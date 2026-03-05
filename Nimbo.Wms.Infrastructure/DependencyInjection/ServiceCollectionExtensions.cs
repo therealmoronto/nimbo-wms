@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
+using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
@@ -24,6 +25,7 @@ using Nimbo.Wms.Domain.Entities.Documents.Shipment;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Documents;
+using Nimbo.Wms.Infrastructure.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Stock;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Topology;
@@ -45,6 +47,7 @@ public static class ServiceCollectionExtensions
             services.AddTopology();
             services.AddMasterData();
             services.AddStock();
+            services.AddDocuments();
 
             return services;
         }
@@ -126,6 +129,8 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IShipmentDocumentRepository, EfShipmentDocumentRepository>();
             services.AddScoped<IAdjustmentDocumentRepository, EfAdjustmentDocumentRepository>();
             services.AddScoped<ICycleCountDocumentRepository, EfCycleCountDocumentRepository>();
+
+            services.AddScoped<IStockLedgerEntryRepository, EfStockLedgerEntryRepository>();
 
             return services;
         }

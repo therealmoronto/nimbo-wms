@@ -64,7 +64,6 @@ public class CycleCountDocumentLineConfiguration : IEntityTypeConfiguration<Cycl
                 q.WithOwner();
             });
 
-        // usually optional; keep it explicit
         builder.Navigation(x => x.ActualQuantity).IsRequired(false);
 
         builder.HasIndex(x => x.DocumentId);
