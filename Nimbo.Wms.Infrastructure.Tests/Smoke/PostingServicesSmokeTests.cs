@@ -61,8 +61,8 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
         entries.Should().ContainSingle();
         var entry = entries.First();
         entry.TransactionType.Should().Be(LedgerTransactionType.Receipt);
-        entry.QuantityDelta.Should().Be(10);
-        entry.BalanceAfter.Should().Be(10);
+        entry.QuantityDelta.Value.Should().Be(10);
+        entry.BalanceAfter.Value.Should().Be(10);
         entry.SourceDocumentId.Should().Be(doc.Id.Value);
     }
 
@@ -117,16 +117,16 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
         var uow = Scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
         // 1. Create Warehouse
-        var warehouse = new Warehouse(WarehouseId.New(), "TST-WH", "Test Warehouse");
+        var warehouse = new Warehouse(WarehouseId.New(), $"TST-WH{Guid.NewGuid().ToString()[..5]}", "Test Warehouse");
 
         // 2. Create Location within a Zone
-        var zone = warehouse.AddZone(ZoneId.New(), "TST-ZONE", "Zone 51", ZoneType.Storage);
+        var zone = warehouse.AddZone(ZoneId.New(), $"TST-ZONE{Guid.NewGuid().ToString()[..5]}", "Zone 51", ZoneType.Storage);
         var location = warehouse.AddLocation(LocationId.New(), zone.Id, "LOC-01", LocationType.Pallet);
 
         await warehouseRepo.AddAsync(warehouse);
 
         // 3. Create Master Data Item
-        var item = new Item(ItemId.New(), "ITM-001", "Test Item", "12345678", UnitOfMeasure.Piece);
+        var item = new Item(ItemId.New(), "ITM-001", Guid.NewGuid().ToString()[..5], "12345678", UnitOfMeasure.Piece);
         await itemRepo.AddAsync(item);
 
         await uow.CommitAsync();
