@@ -75,11 +75,11 @@ public class RelocationDocumentPostingService : IDocumentPostingService<Relocati
                 targetItem.ItemId,
                 targetItem.LocationId,
                 targetItem.WarehouseId,
-                line.Quantity.ToDelta(), // Positive delta for TransferIn
+                line.Quantity.ToDelta(),
                 targetItem.Quantity,
                 document.Id,
                 line.Id,
-                LedgerTransactionType.TransferIn, //
+                LedgerTransactionType.TransferIn,
                 DateTime.UtcNow);
 
             await _stockLedgerEntryRepo.AddAsync(inLedger, ct);
