@@ -10,9 +10,9 @@ public sealed class EfShipmentDocumentRepository : EfDocumentRepository<Shipment
     public EfShipmentDocumentRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
 
-    public override async Task<ShipmentDocument?> GetByIdAsync(ShipmentDocumentId id, CancellationToken ct = default)
+    public override Task<ShipmentDocument?> GetByIdAsync(ShipmentDocumentId id, CancellationToken ct = default)
     {
-        return await Set.Include(d => d.Lines)
+        return Set.Include(d => d.Lines)
             .FirstOrDefaultAsync(d => d.Id == id, ct);
     }
 }

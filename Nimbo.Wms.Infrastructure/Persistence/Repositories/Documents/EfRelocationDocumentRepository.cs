@@ -10,9 +10,9 @@ public sealed class EfRelocationDocumentRepository : EfDocumentRepository<Reloca
     public EfRelocationDocumentRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
 
-    public override async Task<RelocationDocument?> GetByIdAsync(RelocationDocumentId id, CancellationToken ct = default)
+    public override Task<RelocationDocument?> GetByIdAsync(RelocationDocumentId id, CancellationToken ct = default)
     {
-        return await Set.Include(d => d.Lines)
+        return Set.Include(d => d.Lines)
             .FirstOrDefaultAsync(d => d.Id == id, ct);
     }
 }
