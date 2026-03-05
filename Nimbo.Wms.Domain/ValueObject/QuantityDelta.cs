@@ -22,15 +22,17 @@ public sealed class QuantityDelta
 
     public UnitOfMeasure Uom { get; private set; }
 
-    public static QuantityDelta Increase(decimal value, UnitOfMeasure uom)
+    public QuantityDelta Increase(decimal value, UnitOfMeasure uom)
     {
         return new QuantityDelta(Math.Abs(value), uom);
     }
 
-    public static QuantityDelta Decrease(decimal value, UnitOfMeasure uom)
+    public QuantityDelta Decrease(decimal value, UnitOfMeasure uom)
     {
         return new QuantityDelta(-Math.Abs(value), uom);
     }
+
+    public QuantityDelta Negate() => new(-1m * Value, Uom);
 
     public Quantity GetAbsQuantity() => new(Math.Abs(Value), Uom);
 }

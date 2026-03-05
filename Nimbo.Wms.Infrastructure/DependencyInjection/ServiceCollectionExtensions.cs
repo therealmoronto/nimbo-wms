@@ -17,6 +17,7 @@ using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Domain.Entities.Documents.Receiving;
+using Nimbo.Wms.Domain.Entities.Documents.Relocation;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Documents;
@@ -112,8 +113,10 @@ public static class ServiceCollectionExtensions
         private IServiceCollection AddDocuments()
         {
             services.AddScoped<IDocumentPostingService<ReceivingDocument>, ReceivingDocumentPostingService>();
+            services.AddScoped<IDocumentPostingService<RelocationDocument>, RelocationDocumentPostingService>();
 
             services.AddScoped<IReceivingDocumentRepository, EfReceivingDocumentRepository>();
+            services.AddScoped<IRelocationDocumentRepository, EfRelocationDocumentRepository>();
 
             return services;
         }
