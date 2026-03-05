@@ -22,6 +22,42 @@ public sealed class QuantityDelta
 
     public UnitOfMeasure Uom { get; private set; }
 
+    public QuantityDelta Add(QuantityDelta other)
+    {
+        EnsureSameUom(other);
+        return new QuantityDelta(Value + other.Value, Uom);
+    }
+
+    public QuantityDelta Subtract(QuantityDelta other)
+    {
+        EnsureSameUom(other);
+        var result = Value - other.Value;
+        if (result < 0m)
+            throw new InvalidOperationException("Resulting quantity cannot be negative.");
+
+        return new QuantityDelta(result, Uom);
+    }
+
+    public static QuantityDelta operator +(QuantityDelta a, QuantityDelta b) => a.Add(b);
+
+    public static QuantityDelta operator -(QuantityDelta a, QuantityDelta b) => a.Subtract(b);
+
+    public static bool operator <(QuantityDelta left, QuantityDelta right) => left.Value < right.Value;
+
+    public static bool operator >(QuantityDelta left, QuantityDelta right) => left.Value > right.Value;
+
+    public static bool operator <(QuantityDelta left, decimal right) => left.Value < right;
+
+    public static bool operator >(QuantityDelta left, decimal right) => left.Value > right;
+
+    public static bool operator <=(QuantityDelta left, QuantityDelta right) => left.Value <= right.Value;
+
+    public static bool operator >=(QuantityDelta left, QuantityDelta right) => left.Value >= right.Value;
+
+    public static bool operator <=(QuantityDelta left, decimal right) => left.Value <= right;
+
+    public static bool operator >=(QuantityDelta left, decimal right) => left.Value >= right;
+
     public QuantityDelta Increase(decimal value, UnitOfMeasure uom)
     {
         return new QuantityDelta(Math.Abs(value), uom);
@@ -35,4 +71,10 @@ public sealed class QuantityDelta
     public QuantityDelta Negate() => new(-1m * Value, Uom);
 
     public Quantity GetAbsQuantity() => new(Math.Abs(Value), Uom);
+
+    private void EnsureSameUom(QuantityDelta other)
+    {
+        if (Uom != other.Uom)
+            throw new InvalidOperationException($"UoM mismatch: {Uom} vs {other.Uom}");
+    }
 }
