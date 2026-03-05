@@ -5,7 +5,7 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Repositories.Documents;
 
-public class EfRelocationDocumentRepository : EfDocumentRepository<RelocationDocument, RelocationDocumentId>, IRelocationDocumentRepository
+public sealed class EfRelocationDocumentRepository : EfDocumentRepository<RelocationDocument, RelocationDocumentId>, IRelocationDocumentRepository
 {
     public EfRelocationDocumentRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }

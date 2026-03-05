@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
@@ -10,7 +11,8 @@ using Nimbo.Wms.Domain.ValueObject;
 
 namespace Nimbo.Wms.Application.Services.Documents;
 
-public class RelocationDocumentPostingService : IDocumentPostingService<RelocationDocument>
+[PublicAPI]
+public sealed class RelocationDocumentPostingService : IDocumentPostingService<RelocationDocument>
 {
     private readonly IStockLedgerEntryRepository _stockLedgerEntryRepo;
     private readonly IInventoryItemRepository _inventoryItemRepo;
