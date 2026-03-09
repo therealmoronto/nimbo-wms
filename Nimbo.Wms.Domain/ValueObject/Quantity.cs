@@ -1,12 +1,14 @@
-﻿using Nimbo.Wms.Domain.References;
+﻿using System.Text.Json.Serialization;
+using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Domain.ValueObject;
 
 /// <summary>
 /// Immutable quantity with a unit of measure.
 /// </summary>
-public record Quantity
+public readonly record struct Quantity
 {
+    [JsonConstructor]
     public Quantity(decimal value, UnitOfMeasure uom)
     {
         if (value < 0m)
@@ -54,9 +56,31 @@ public record Quantity
         return new QuantityDelta(value, Uom);
     }
 
+    public QuantityDelta ToDelta() => new(Value, Uom);
+
     public static Quantity operator +(Quantity a, Quantity b) => a.Add(b);
 
     public static Quantity operator -(Quantity a, Quantity b) => a.Subtract(b);
+
+    public static bool operator <(Quantity left, Quantity right) => left.Value < right.Value;
+
+    public static bool operator >(Quantity left, Quantity right) => left.Value > right.Value;
+
+    public static bool operator <(Quantity left, decimal right) => left.Value < right;
+
+    public static bool operator >(Quantity left, decimal right) => left.Value > right;
+
+    public static bool operator <=(Quantity left, Quantity right) => left.Value <= right.Value;
+
+    public static bool operator >=(Quantity left, Quantity right) => left.Value >= right.Value;
+
+    public static bool operator <=(Quantity left, decimal right) => left.Value <= right;
+
+    public static bool operator >=(Quantity left, decimal right) => left.Value >= right;
+
+    public static bool operator ==(Quantity left, decimal right) => left.Value == right;
+
+    public static bool operator !=(Quantity left, decimal right) => left.Value != right;
 
     private void EnsureSameUom(Quantity other)
     {

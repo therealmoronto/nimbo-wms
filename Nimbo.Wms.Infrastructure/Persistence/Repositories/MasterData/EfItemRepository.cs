@@ -4,7 +4,7 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Repositories.MasterData;
 
-internal sealed class EfItemRepository : EfRepository<Item, ItemId>, IItemRepository
+internal sealed class EfItemRepository : EfEntityRepository<Item, ItemId>, IItemRepository
 {
     public EfItemRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }

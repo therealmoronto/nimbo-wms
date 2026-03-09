@@ -37,13 +37,66 @@ This document is the source of truth for how tests are executed in this reposito
 - Order: unit tests run first; integration tests and migration smoke tests run after unit tests and before packaging/deploy stages.
 - Failure handling: integration test failures are treated as blocking; flaky tests must be fixed or disabled with a ticket linked in the PR.
 
-## 6. Local development constraints
+## 6. Posting Smoke Tests
+
+Every document type (ReceivingDocument, ShipmentDocument, RelocationDocument, CycleCountDocument, AdjustmentDocument) must have a posting smoke test that verifies the complete posting workflow and physical side effects.
+
+**Requirements:**
+- Smoke test framework: use `PostgresFixture` to spin up an ephemeral test database.
+- Document lifecycle: create a document in Draft state, transition through InProgress and Completed states, then post.
+- Assertion scope: verify that the posting operation results in:
+  1. Document state updated to "Posted" in the database.
+  2. Inventory aggregates (InventoryItem quantities) correctly updated.
+  3. StockLedgerEntry records created with correct deltas and running balances.
+- Isolation: each smoke test uses a fresh database state; tests do not share seeded data.
+
+**Example Smoke Test Structure:**
+```csharp
+[Collection("Postgres")]
+public class ReceivingDocumentPostingSmokeTests
+{
+    private readonly PostgresFixture _fixture;
+
+    public ReceivingDocumentPostingSmokeTests(PostgresFixture fixture) => _fixture = fixture;
+
+    [Fact]
+    public async Task PostingReceivingDocument_UpdatesInventory_And_CreatesLedgerEntries()
+    {
+        // Arrange: create warehouse, item, location, document with lines
+        var warehouseId = // ...
+        var receivingDoc = // create in Draft state
+
+        // Act: transition through states and post
+        receivingDoc.Start(); // -> InProgress
+        receivingDoc.Complete(); // -> Completed
+        var handler = new PostReceivingDocumentHandler(/* ... */);
+        await handler.HandleAsync(new PostReceivingDocumentCommand(receivingDoc.Id), CancellationToken.None);
+
+        // Assert: verify document, inventory, and ledger state
+        var postedDoc = await _db.Set<ReceivingDocument>().FirstAsync(x => x.Id == receivingDoc.Id);
+        Assert.Equal(ReceivingStatus.Posted, postedDoc.Status);
+
+        var ledgerEntries = await _db.Set<StockLedgerEntry>()
+            .Where(x => x.DocumentId == receivingDoc.Id)
+            .ToListAsync();
+        Assert.NotEmpty(ledgerEntries);
+
+        var inventoryItem = await _db.Set<InventoryItem>()
+            .FirstAsync(x => x.ItemId == /* ... */);
+        Assert.NotNull(inventoryItem.AvailableQuantity);
+    }
+}
+```
+
+---
+
+## 7. Local development constraints
 
 - Docker requirement: developers must have Docker available to run integration tests locally (Testcontainers need Docker daemon).
 - Fast feedback: unit tests are the primary fast feedback loop; integration tests are heavier and may be run selectively during development.
 - Skipping: integration tests can be skipped locally via test filters or categories, but CI must run the full integration suite on every merge/PR.
 
-## 7. Non-goals and forbidden approaches
+## 8. Non-goals and forbidden approaches
 
 - Do not use SQLite for persistence validation or to assert EF Core/Postgres behavior.
 - Do not use `EnsureCreated()` in tests that aim to validate migrations or production schema compatibility.

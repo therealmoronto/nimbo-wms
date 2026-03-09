@@ -33,7 +33,7 @@ public sealed class AddZoneToWarehouseHandler : ICommandHandler<AddZoneToWarehou
         var request = command.Request;
         warehouse.AddZone(zoneId, request.Code, request.Name, request.Type);
 
-        await _unitOfWork.SaveChangesAsync(ct);
+        await _unitOfWork.CommitAsync(ct);
 
         return zoneId;
     }

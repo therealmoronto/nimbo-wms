@@ -44,7 +44,7 @@ public sealed class AddSupplierItemHandler : ICommandHandler<AddSupplierItemComm
             minOrderQty: null,
             isPreferred: false);
 
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
         return supplierItemId;
     }
 }

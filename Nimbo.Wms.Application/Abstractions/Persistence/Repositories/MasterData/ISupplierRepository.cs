@@ -3,7 +3,7 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 
-public interface ISupplierRepository : IRepository<Supplier, SupplierId>
+public interface ISupplierRepository : IEntityRepository<Supplier, SupplierId>
 {
     Task<Supplier?> GetByIdWithItemsAsync(SupplierId id, CancellationToken ct = default);
 

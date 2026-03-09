@@ -37,7 +37,7 @@ public class RelocationDocumentLineConfiguration : IEntityTypeConfiguration<Relo
         builder.Property(x => x.Notes)
             .HasMaxLength(512);
 
-        builder.OwnsOne(
+        builder.ComplexProperty(
             x => x.Quantity,
             q =>
             {
@@ -51,11 +51,7 @@ public class RelocationDocumentLineConfiguration : IEntityTypeConfiguration<Relo
                     .HasConversion<string>()
                     .HasMaxLength(16)
                     .IsRequired();
-
-                q.WithOwner();
             });
-
-        builder.Navigation(x => x.Quantity).IsRequired();
 
         builder.HasOne<Item>()
             .WithMany()

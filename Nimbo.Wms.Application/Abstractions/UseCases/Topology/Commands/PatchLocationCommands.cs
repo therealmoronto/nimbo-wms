@@ -85,6 +85,6 @@ public sealed class PatchLocationHandler : ICommandHandler<PatchLocationCommand>
             else location.Unblock();
         }
 
-        await _unitOfWork.SaveChangesAsync(ct);
+        await _unitOfWork.CommitAsync(ct);
     }
 }

@@ -27,6 +27,6 @@ public sealed class DeleteZoneHandler : ICommandHandler<DeleteZoneCommand>
 
         warehouse.RemoveZone(command.ZoneId);
 
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
     }
 }

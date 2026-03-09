@@ -5,7 +5,7 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Repositories.Topology;
 
-internal sealed class EfWarehouseRepository : EfRepository<Warehouse, WarehouseId>, IWarehouseRepository
+internal sealed class EfWarehouseRepository : EfEntityRepository<Warehouse, WarehouseId>, IWarehouseRepository
 {
     public EfWarehouseRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }

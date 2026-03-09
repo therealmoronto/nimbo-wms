@@ -5,11 +5,11 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Repositories;
 
-internal abstract class EfRepository<TModel, TId> : IRepository<TModel,TId>
+internal abstract class EfEntityRepository<TModel, TId> : IEntityRepository<TModel,TId>
     where TModel : class, IEntity<TId>
     where TId : struct, IEntityId
 {
-    protected EfRepository(NimboWmsDbContext dbContext)
+    protected EfEntityRepository(NimboWmsDbContext dbContext)
     {
         DbContext = dbContext;
         Set = dbContext.Set<TModel>();

@@ -24,8 +24,10 @@ This document is the source of truth describing how persistence is handled in th
 ## Value Objects
 
 - **Immutability:** Value objects must be immutable. Their state is set at creation and cannot be changed after construction.
-- **Mapping:** Value objects are mapped with `OwnsOne` / owned entity configuration in EF Core.
-- **Optional owned values:** Optional value objects are modeled as nullable owned navigations (the owning property can be null).
+- **Implementation:** Small value objects used in multiple fields of a single entity (e.g., `Quantity` and `ExpectedQuantity` on the same line item) must be implemented as `readonly record struct` to leverage copy-by-value semantics and prevent EF Core identity tracking collisions.
+- **Mapping:** Value objects are mapped with `.ComplexProperty()` configuration in EF Core (available in EF Core 10+). This replaces the legacy `OwnsOne` / owned entity pattern.
+- **ComplexProperty benefits:** `.ComplexProperty()` removes the need for `WithOwner()` boilerplate and simplifies configuration when value objects appear in multiple fields.
+- **Optional complex values:** Optional value objects are modeled as nullable complex properties (the property can be null).
 - **Scalar nullability:** Inner scalar properties of value objects must not be nullable unless the domain explicitly requires null as a valid value.
 
 ## Collections and Backing Fields
@@ -62,6 +64,7 @@ This document is the source of truth describing how persistence is handled in th
 ## Mapping and Reliability Notes
 
 - **Converters & comparers:** Any non-primitive mapping (typed IDs, lists, enums stored as text/integers) must provide both a `ValueConverter` and a `ValueComparer` when necessary so EF change tracking works reliably.
+- **readonly record struct behavior:** Value objects implemented as `readonly record struct` are copied by value, not by reference. EF Core tracks changes by comparing the entire struct value; this prevents false "dirty" states when two fields hold identical value objects and one is modified.
 - **No shadow FKs for domain logic:** Avoid relying on shadow foreign keys for domain logic; foreign key values used by the domain should be explicit, typed properties.
 - **Explicit indexes & constraints:** Indexes, uniqueness constraints, and FK constraints required by the domain must be declared in migrations and mapping code — do not rely solely on ad-hoc SQL.
 

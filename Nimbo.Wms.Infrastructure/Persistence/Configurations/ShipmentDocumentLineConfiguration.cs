@@ -29,7 +29,7 @@ public class ShipmentDocumentLineConfiguration : IEntityTypeConfiguration<Shipme
             .HasMaxLength(512);
 
         // base.Quantity == RequestedQuantity
-        builder.OwnsOne(
+        builder.ComplexProperty(
             x => x.Quantity,
             q =>
             {
@@ -43,11 +43,7 @@ public class ShipmentDocumentLineConfiguration : IEntityTypeConfiguration<Shipme
                     .HasConversion<string>()
                     .HasMaxLength(16)
                     .IsRequired();
-
-                q.WithOwner();
             });
-
-        builder.Navigation(x => x.Quantity).IsRequired();
 
         builder.HasOne<Item>()
             .WithMany()

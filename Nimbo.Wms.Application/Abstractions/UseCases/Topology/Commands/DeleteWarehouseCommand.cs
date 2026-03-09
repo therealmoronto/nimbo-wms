@@ -28,6 +28,6 @@ public sealed class DeleteWarehouseHandler : ICommandHandler<DeleteWarehouseComm
         warehouse.EnsureCanBeDeleted();
         await _repository.DeleteAsync(warehouse, ct);
 
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
     }
 }

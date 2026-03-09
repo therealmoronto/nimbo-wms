@@ -42,7 +42,7 @@ public class SupplierRepositoryTests : BaseIntegrationTests
 
         await ItemRepository.AddAsync(item);
         await SupplierRepository.AddAsync(supplier);
-        await UnitOfWork.SaveChangesAsync();
+        await UnitOfWork.CommitAsync();
 
         supplier.AddItem(
             SupplierItemId.New(),
@@ -57,7 +57,7 @@ public class SupplierRepositoryTests : BaseIntegrationTests
             isPreferred: true
         );
 
-        await UnitOfWork.SaveChangesAsync();
+        await UnitOfWork.CommitAsync();
 
         var reloaded = await SupplierRepository.GetByIdAsync(supplier.Id);
 
