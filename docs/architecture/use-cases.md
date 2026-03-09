@@ -392,6 +392,53 @@ internal sealed class GetWarehousesHandler : IQueryHandler<GetWarehousesQuery, I
 
 ---
 
+## Document Posting Workflow
+
+Documents (Receiving, Shipment, Relocation, CycleCount, Adjustment) follow a standard lifecycle: Draft → InProgress → Completed → Posted.
+
+**The Posting Workflow (Command Handler Responsibility):**
+
+1. **Load the Document Aggregate**
+   ```csharp
+   var document = await _repository.GetByIdAsync(documentId, ct);
+   document.EnsureCanBePosted(); // validate state
+   ```
+
+2. **Transition to "Completed" State**
+   ```csharp
+   document.Complete(); // enforces invariants, returns success or throws
+   ```
+
+3. **Delegate Physical Updates to a Posting Service**
+   ```csharp
+   var postingService = _serviceFactory.GetPostingService(document.GetType());
+   await postingService.PostAsync(document, ct);
+   // Service updates Inventory state and appends StockLedgerEntry records
+   ```
+
+4. **Finalize Document State and Commit Atomically**
+   ```csharp
+   document.Post(); // transitions to Posted state
+   await _repository.UpdateAsync(document, ct);
+   await _unitOfWork.CommitAsync(ct); // atomic transaction across Document, Inventory, StockLedger
+   ```
+
+**Critical Constraint:**
+The `IUnitOfWork` must be managed by the Command Handler, not delegated to the Posting Service. This ensures that updates to the Document, Inventory aggregates, and StockLedger entries all commit in a single transactional boundary. If the Posting Service held its own transaction, system failures mid-commit could leave the system in an inconsistent state (document posted but inventory not updated, or vice versa).
+
+**Why Separate Posting Logic into Services:**
+- Documents enforce operational rules (e.g., "all lines must have quantities").
+- Inventory and Ledger updates follow calculation rules specific to each document type.
+- Separating posting logic into `IDocumentPostingService<T>` makes the domain logic testable without database dependencies and allows flexibility in how posts are implemented.
+
+**The Physical Ledger as Immutable Fact:**
+- Posting services create `StockLedgerEntry` records that are never modified or deleted.
+- Each ledger entry captures the delta applied and the running balance (`BalanceAfter`) at that instant.
+- For internal movements (Relocation), the posting service generates two entries: a `TransferOut` (negative) and `TransferIn` (positive).
+- The ledger is the source of truth for audit trails and historical stock balances.
+
+---
+
 ## Why MediatR Is Not Used (Yet)
 
 MediatR is a common CQRS library that provides a service bus for dispatching commands and queries. We do not use it because:

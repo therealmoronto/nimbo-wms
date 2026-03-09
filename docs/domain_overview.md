@@ -81,6 +81,30 @@ This document is the source of truth for core domain concepts and models used in
   - Location type and capacity constraints must be defined; moves/reservations must respect capacity rules.
   - Locations may be enabled/disabled; disabled locations cannot receive new allocations without explicit override.
 
+## 8. Physical Facts & The Stock Ledger
+
+**Operational Intent vs. Physical Reality:**
+- Documents represent *operational intent*: what the business plans to do (receive stock, ship orders, relocate items, count inventory, adjust discrepancies).
+- The Stock Ledger represents *physical reality*: the immutable historical record of what actually happened to inventory.
+
+**Stock Ledger (Immutable Fact Aggregate):**
+The `StockLedgerEntry` aggregate records every physical movement or adjustment:
+- Each entry is immutable once posted; entries are never updated or deleted.
+- Entries carry audit metadata: document ID, timestamp, warehouse, operator.
+- `BalanceAfter` field records the running balance at the moment the entry was posted.
+- Entries are the source of truth for historical stock positions and account reconciliation.
+
+**Double Entry Rule (Internal Movements):**
+- Every internal relocation (`RelocationDocument` posting) generates two ledger entries:
+  - A `TransferOut` entry (negative delta) at the source location.
+  - A `TransferIn` entry (positive delta) at the destination location.
+- This double-entry principle ensures that total quantity is conserved and audit trails are complete.
+
+**Lifecycle Contrast:**
+- Documents transition: Draft → InProgress → Completed → Posted.
+- Ledger entries are created only when the document reaches "Posted" state.
+- Once posted, a document is sealed; subsequent ledger entries cannot be reversed (though a new corrective document may be created).
+
 ---
 
 If a contributor needs a concrete modeling example for a specific aggregate (mapping, DTO boundary, or sample invariants), request one and a focused minimal example will be provided separately.
