@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using Nimbo.Wms.Domain.References;
 
@@ -6,6 +7,7 @@ namespace Nimbo.Wms.Domain.ValueObject;
 [PublicAPI]
 public readonly record struct QuantityDelta
 {
+    [JsonConstructor]
     public QuantityDelta(decimal value, UnitOfMeasure uom)
     {
         Value = value;

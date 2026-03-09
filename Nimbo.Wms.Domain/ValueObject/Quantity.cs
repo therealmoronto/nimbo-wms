@@ -1,4 +1,5 @@
-﻿using Nimbo.Wms.Domain.References;
+﻿using System.Text.Json.Serialization;
+using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Domain.ValueObject;
 
@@ -7,6 +8,7 @@ namespace Nimbo.Wms.Domain.ValueObject;
 /// </summary>
 public readonly record struct Quantity
 {
+    [JsonConstructor]
     public Quantity(decimal value, UnitOfMeasure uom)
     {
         if (value < 0m)
