@@ -6,6 +6,7 @@ using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
+using Nimbo.Wms.Domain.Entities.Documents.CycleCount;
 using Nimbo.Wms.Domain.Entities.Documents.Receiving;
 using Nimbo.Wms.Domain.Entities.Documents.Relocation;
 using Nimbo.Wms.Domain.Entities.Ledger;
@@ -106,6 +107,48 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
 
         sourceEntries.Should().Contain(e => e.TransactionType == LedgerTransactionType.TransferOut && e.QuantityDelta == -20);
         targetEntries.Should().Contain(e => e.TransactionType == LedgerTransactionType.TransferIn && e.QuantityDelta == 20);
+    }
+
+    [Fact]
+    public async Task CycleCountPost_ShouldCaptureDiscrepancy()
+    {
+        // 1. Setup: Seed initial stock (System thinks there are 10)
+        var (warehouseId, locationId, itemId) = await SeedRequiredData();
+        await SeedInitialStock(warehouseId, locationId, itemId, 10);
+
+        var cycleCountRepo = Scope.ServiceProvider.GetRequiredService<ICycleCountDocumentRepository>();
+        var postingService = Scope.ServiceProvider.GetRequiredService<IDocumentPostingService<CycleCountDocument>>();
+        var uow = Scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+        var doc = new CycleCountDocument(CycleCountDocumentId.New(), warehouseId, "CNT-001", "CNT", DateTime.UtcNow);
+        var lineId = doc.AddLine(itemId, locationId, new Quantity(10, UnitOfMeasure.Piece)); // This should capture 'BookQuantity' as 10 internally
+        var line = doc.GetLine(lineId);
+        line.ChangeActualQuantity(new Quantity(12, UnitOfMeasure.Piece));
+        doc.Complete(); // Move to Completed status so it can be Posted
+
+        await cycleCountRepo.AddAsync(doc);
+        await uow.CommitAsync();
+
+        // 3. Act: Post the reconciliation
+        await postingService.PostAsync(doc);
+        await uow.CommitAsync();
+
+        // 4. Assert Authoritative Stock is updated to the counted value (12)
+        var stockRepo = Scope.ServiceProvider.GetRequiredService<IInventoryItemRepository>();
+        var stock = await stockRepo.GetByCriteriaAsync(warehouseId, locationId, itemId);
+        stock!.Quantity.Value.Should().Be(12);
+
+        // 5. Assert Ledger records only the discrepancy (+2)
+        var ledgerRepo = Scope.ServiceProvider.GetRequiredService<IStockLedgerEntryRepository>();
+        var entries = await ledgerRepo.GetByInventoryItemIdAsync(stock.Id);
+
+        // We expect a Receipt (from Seed) and a CycleCount entry
+        entries.Should().HaveCount(1);
+
+        var countEntry = entries.First(e => e.TransactionType == LedgerTransactionType.CountingAdjustment);
+        countEntry.QuantityDelta.Value.Should().Be(2);   // The discrepancy
+        countEntry.BalanceAfter.Value.Should().Be(12); // The new authoritative total
+        countEntry.SourceDocumentId.Should().Be(doc.Id.Value);
     }
 
     private async Task<(WarehouseId WarehouseId, LocationId LocationId, ItemId ItemId)> SeedRequiredData()

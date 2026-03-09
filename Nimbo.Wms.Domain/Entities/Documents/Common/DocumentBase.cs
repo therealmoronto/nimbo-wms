@@ -70,6 +70,12 @@ public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
         Touch();
     }
 
+    public TLine GetLine(Guid lineId)
+    {
+        var line = _lines.FirstOrDefault(x => Equals(x.Id, lineId));
+        return line ?? throw new DomainException($"Line with id '{lineId}' not found.");
+    }
+
     protected void AddLine(TLine line)
     {
         EnsureCanBeEdited();
@@ -78,12 +84,6 @@ public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
 
         _lines.Add(line);
         Touch();
-    }
-
-    protected TLine GetLine(Guid lineId)
-    {
-        var line = _lines.FirstOrDefault(x => Equals(x.Id, lineId));
-        return line ?? throw new DomainException($"Line with id '{lineId}' not found.");
     }
 
     protected void ChangeLineQuantity(Guid lineId, Quantity quantity)
