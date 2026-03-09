@@ -79,6 +79,7 @@ public class StockLedgerEntryConfiguration : IEntityTypeConfiguration<StockLedge
         builder.Property(x => x.OccurredAt)
             .IsRequired();
 
+        builder.HasIndex(x => x.SourceDocumentId);
         builder.HasIndex(x => new { x.InventoryItemId, x.OccurredAt });
         builder.HasIndex(x => new { x.ItemId, x.LocationId });
     }
