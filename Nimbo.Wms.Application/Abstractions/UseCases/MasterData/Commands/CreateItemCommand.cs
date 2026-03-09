@@ -32,7 +32,7 @@ public sealed class CreateItemHandler : ICommandHandler<CreateItemCommand, ItemI
             request.BaseUom);
 
         await _repository.AddAsync(item, ct);
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
 
         return item.Id;
     }

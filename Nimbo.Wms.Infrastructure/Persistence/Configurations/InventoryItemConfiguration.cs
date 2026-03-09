@@ -44,7 +44,7 @@ public class InventoryItemConfiguration : IEntityTypeConfiguration<InventoryItem
         builder.Property(x => x.UnitCost)
             .HasColumnType("numeric(18, 4)");   
 
-        builder.OwnsOne(
+        builder.ComplexProperty(
             x => x.Quantity,
             q =>
             {
@@ -58,12 +58,7 @@ public class InventoryItemConfiguration : IEntityTypeConfiguration<InventoryItem
                     .HasConversion<string>()
                     .HasMaxLength(16)
                     .IsRequired();
-
-                q.WithOwner();
             });
-        
-        builder.Navigation(x => x.Quantity)
-            .IsRequired();
 
         builder.HasOne<Item>()
             .WithMany()

@@ -6,7 +6,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Domain.Entities.Documents.Common;
 
 [PublicAPI]
-public abstract class DocumentBase<TId, TStatus, TLine>
+public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
     where TId : struct, IEntityId
     where TStatus : struct, Enum
     where TLine : DocumentLineBase<TId>
@@ -28,12 +28,14 @@ public abstract class DocumentBase<TId, TStatus, TLine>
         Touch();
     }
 
+    IEntityId IDocument.Id => Id;
     public TId Id { get; }
 
     public string Code { get; private set; }
 
     public string Title { get; private set; }
 
+    Enum IDocument.Status => Status;
     public TStatus Status { get; private set; }
 
     public DateTime CreatedAt { get; }
@@ -68,6 +70,12 @@ public abstract class DocumentBase<TId, TStatus, TLine>
         Touch();
     }
 
+    public TLine GetLine(Guid lineId)
+    {
+        var line = _lines.FirstOrDefault(x => Equals(x.Id, lineId));
+        return line ?? throw new DomainException($"Line with id '{lineId}' not found.");
+    }
+
     protected void AddLine(TLine line)
     {
         EnsureCanBeEdited();
@@ -76,12 +84,6 @@ public abstract class DocumentBase<TId, TStatus, TLine>
 
         _lines.Add(line);
         Touch();
-    }
-
-    protected TLine GetLine(Guid lineId)
-    {
-        var line = _lines.FirstOrDefault(x => Equals(x.Id, lineId));
-        return line ?? throw new DomainException($"Line with id '{lineId}' not found.");
     }
 
     protected void ChangeLineQuantity(Guid lineId, Quantity quantity)

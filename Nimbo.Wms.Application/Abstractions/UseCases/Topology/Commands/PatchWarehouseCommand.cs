@@ -37,6 +37,6 @@ public sealed class PatchWarehouseHandler : ICommandHandler<PatchWarehouseComman
         warehouse.ChangeAddress(request.Address ?? warehouse.Address);
         warehouse.ChangeDescription(request.Description ?? warehouse.Description);
 
-        await _unitOfWork.SaveChangesAsync(ct);
+        await _unitOfWork.CommitAsync(ct);
     }
 }

@@ -51,7 +51,7 @@ public class InventoryItem : BaseEntity<InventoryItemId>
     /// Current stock quantity expressed in a unit of measure.
     /// Usually equals Item.BaseUom.
     /// </summary>
-    public Quantity Quantity { get; private set; } = null!;
+    public Quantity Quantity { get; private set; }
 
     /// <summary>
     /// Optional batch/lot identifier stored directly on InventoryItem (MVP).
@@ -78,6 +78,12 @@ public class InventoryItem : BaseEntity<InventoryItemId>
     {
         EnsureSameUom(amount);
         Quantity -= amount; // Quantity.Subtract already prevents negative results
+    }
+
+    public void ApplyDelta(QuantityDelta delta)
+    {
+        EnsureSameUom(delta);
+        Quantity = Quantity.ApplyDelta(delta);
     }
 
     public void MoveWithinWarehouse(LocationId toLocationId)
@@ -147,6 +153,12 @@ public class InventoryItem : BaseEntity<InventoryItemId>
     {
         if (Quantity.Uom != amount.Uom)
             throw new InvalidOperationException($"UoM mismatch: {Quantity.Uom} vs {amount.Uom}");
+    }
+
+    private void EnsureSameUom(QuantityDelta delta)
+    {
+        if (Quantity.Uom != delta.Uom)
+            throw new InvalidOperationException($"UoM mismatch: {Quantity.Uom} vs {delta.Uom}");
     }
 
     private static void EnsureSerialRules(string? serialNumber, Quantity quantity)

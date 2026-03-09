@@ -60,6 +60,6 @@ public sealed class PatchSupplierHandler : ICommandHandler<PatchSupplierCommand>
                 supplier.Deactivate();
         }
 
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
     }
 }

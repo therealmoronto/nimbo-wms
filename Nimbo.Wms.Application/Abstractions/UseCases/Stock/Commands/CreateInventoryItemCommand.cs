@@ -75,7 +75,7 @@ public sealed class CreateInventoryItemHandler : ICommandHandler<CreateInventory
             request.UnitCost);
 
         await _inventoryItemRepository.AddAsync(inventoryItem, ct);
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
         
         return inventoryItemId;
     }

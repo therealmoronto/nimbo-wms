@@ -55,6 +55,6 @@ public sealed class PatchZoneHandler : ICommandHandler<PatchZoneCommand>
             zone.SetAreaFlags(isQuarantine, isDamagedArea);
         }
 
-        await _unitOfWork.SaveChangesAsync(ct);
+        await _unitOfWork.CommitAsync(ct);
     }
 }

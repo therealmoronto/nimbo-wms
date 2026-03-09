@@ -28,6 +28,6 @@ public sealed class DeleteSupplierItemHandler : ICommandHandler<DeleteSupplierIt
         if (!supplier.RemoveItem(command.SupplierItemId))
             throw new NotFoundException("Supplier item not found");
 
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
     }
 }

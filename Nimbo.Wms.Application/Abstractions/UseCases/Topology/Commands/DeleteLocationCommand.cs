@@ -27,6 +27,6 @@ public sealed class DeleteLocationHandler : ICommandHandler<DeleteLocationComman
 
         warehouse.RemoveLocation(command.LocationId);
 
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
     }
 }

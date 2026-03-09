@@ -32,24 +32,22 @@ public class AdjustmentDocumentLineConfiguration : IEntityTypeConfiguration<Adju
             .HasMaxLength(512);
         
         builder.Ignore(x => x.Quantity);
-        
-        builder.OwnsOne(x => x.Delta, d =>
-        {
-            d.Property(p => p.Value)
-                .HasColumnName("delta_amount")
-                .HasColumnType("numeric(18, 3)")
-                .IsRequired();
 
-            d.Property(p => p.Uom)
-                .HasColumnName("delta_uom")
-                .HasConversion<string>()
-                .HasMaxLength(16)
-                .IsRequired();
+        builder.ComplexProperty(
+            x => x.Delta,
+            b =>
+            {
+                b.Property(p => p.Value)
+                    .HasColumnName("delta_amount")
+                    .HasColumnType("numeric(18, 3)")
+                    .IsRequired();
 
-            d.WithOwner();
-        });
-        
-        builder.Navigation(x => x.Delta).IsRequired();
+                b.Property(p => p.Uom)
+                    .HasColumnName("delta_uom")
+                    .HasConversion<string>()
+                    .HasMaxLength(16)
+                    .IsRequired();
+            });
 
         builder.HasIndex(x => x.DocumentId);
         builder.HasIndex(x => new { x.DocumentId, x.ItemId, x.LocationId });

@@ -65,6 +65,6 @@ public sealed class PatchSupplierItemHandler : ICommandHandler<PatchSupplierItem
                 item.UnmarkPreferred();
         }
 
-        await _uow.SaveChangesAsync(ct);
+        await _uow.CommitAsync(ct);
     }
 }

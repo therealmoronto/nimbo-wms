@@ -28,7 +28,7 @@ public sealed class CreateWarehouseHandler : ICommandHandler<CreateWarehouseComm
         var warehouse = new Warehouse(id, request.Code, request.Name);
 
         await _repository.AddAsync(warehouse, ct);
-        await _unitOfWork.SaveChangesAsync(ct);
+        await _unitOfWork.CommitAsync(ct);
 
         return id;
     }
