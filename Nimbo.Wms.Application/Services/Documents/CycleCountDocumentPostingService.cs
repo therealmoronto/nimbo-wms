@@ -32,7 +32,7 @@ public sealed class CycleCountDocumentPostingService : IDocumentPostingService<C
 
         foreach (var line in document.Lines)
         {
-            if (line.ActualQuantity is null)
+            if (!line.ActualQuantity.HasValue)
                 continue;
 
             var inventoryItem = await _inventoryItemRepo.GetByCriteriaAsync(
@@ -41,9 +41,10 @@ public sealed class CycleCountDocumentPostingService : IDocumentPostingService<C
                 line.ItemId,
                 ct);
 
+            var actualQuantity = line.ActualQuantity.Value;
             if (inventoryItem is null)
             {
-                if (line.ActualQuantity.IsZero)
+                if (actualQuantity.IsZero)
                     continue;
 
                 inventoryItem = new InventoryItem(
@@ -51,19 +52,19 @@ public sealed class CycleCountDocumentPostingService : IDocumentPostingService<C
                     line.ItemId,
                     document.WarehouseId,
                     line.LocationId,
-                    Quantity.Zero(line.ActualQuantity.Uom));
+                    Quantity.Zero(actualQuantity.Uom));
 
                 await _inventoryItemRepo.AddAsync(inventoryItem, ct);
             }
 
-            var delta = line.ActualQuantity.GetDelta(inventoryItem.Quantity);
+            var delta = actualQuantity.GetDelta(inventoryItem.Quantity);
             if (delta.IsZero)
                 continue;
 
             if (inventoryItem.Quantity.Value < Math.Abs(delta.Value))
                 throw new DomainException($"Insufficient stock for Item {line.ItemId} at Location {line.LocationId}");
 
-            inventoryItem.Quantity.ApplyDelta(delta);
+            inventoryItem.ApplyDelta(delta);
 
             var ledgerEntry = new StockLedgerEntry(
                 inventoryItem.Id,

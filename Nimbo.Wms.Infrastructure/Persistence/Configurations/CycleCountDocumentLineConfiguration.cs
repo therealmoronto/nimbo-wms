@@ -28,7 +28,7 @@ public class CycleCountDocumentLineConfiguration : IEntityTypeConfiguration<Cycl
             .HasEntityIdConversion()
             .IsRequired();
 
-        builder.OwnsOne(
+        builder.ComplexProperty(
             x => x.Quantity,
             q =>
             {
@@ -42,13 +42,9 @@ public class CycleCountDocumentLineConfiguration : IEntityTypeConfiguration<Cycl
                     .HasConversion<string>()
                     .HasMaxLength(16)
                     .IsRequired();
-
-                q.WithOwner();
             });
 
-        builder.Navigation(x => x.Quantity).IsRequired();
-
-        builder.OwnsOne(
+        builder.ComplexProperty(
             x => x.ActualQuantity,
             q =>
             {
@@ -60,11 +56,7 @@ public class CycleCountDocumentLineConfiguration : IEntityTypeConfiguration<Cycl
                     .HasColumnName("actual_quantity_uom")
                     .HasConversion<string>()
                     .HasMaxLength(16);
-
-                q.WithOwner();
             });
-
-        builder.Navigation(x => x.ActualQuantity).IsRequired(false);
 
         builder.HasIndex(x => x.DocumentId);
         builder.HasIndex(x => new { x.DocumentId, x.ItemId, x.LocationId }).IsUnique();

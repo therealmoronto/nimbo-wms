@@ -28,7 +28,7 @@ public class ShipmentPickLineConfiguration : IEntityTypeConfiguration<ShipmentPi
             .HasEntityIdConversion()
             .IsRequired();
         
-        builder.OwnsOne(
+        builder.ComplexProperty(
             x => x.Quantity,
             q =>
             {
@@ -42,11 +42,7 @@ public class ShipmentPickLineConfiguration : IEntityTypeConfiguration<ShipmentPi
                     .HasConversion<string>()
                     .HasMaxLength(16)
                     .IsRequired();
-
-                q.WithOwner();
             });
-
-        builder.Navigation(x => x.Quantity).IsRequired();
 
         builder.Property(x => x.Notes)
             .HasMaxLength(512);

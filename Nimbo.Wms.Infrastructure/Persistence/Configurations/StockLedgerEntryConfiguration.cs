@@ -40,7 +40,7 @@ public class StockLedgerEntryConfiguration : IEntityTypeConfiguration<StockLedge
             .ValueGeneratedNever()
             .IsRequired();
 
-        builder.OwnsOne(
+        builder.ComplexProperty(
             x => x.QuantityDelta,
             q =>
             {
@@ -55,9 +55,8 @@ public class StockLedgerEntryConfiguration : IEntityTypeConfiguration<StockLedge
                     .HasMaxLength(16)
                     .IsRequired();
             });
-        builder.Navigation(x => x.QuantityDelta).IsRequired();
 
-        builder.OwnsOne(
+        builder.ComplexProperty(
             x => x.BalanceAfter,
             q =>
             {
@@ -72,7 +71,6 @@ public class StockLedgerEntryConfiguration : IEntityTypeConfiguration<StockLedge
                     .HasMaxLength(16)
                     .IsRequired();
             });
-        builder.Navigation(x => x.BalanceAfter).IsRequired();
 
         builder.Property(x => x.TransactionType)
             .HasConversion<string>()

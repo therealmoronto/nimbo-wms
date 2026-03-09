@@ -1,14 +1,11 @@
 using JetBrains.Annotations;
-using Nimbo.Wms.Domain.Common;
 using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Domain.ValueObject;
 
 [PublicAPI]
-public sealed class QuantityDelta
+public readonly record struct QuantityDelta
 {
-    private QuantityDelta() { } // EF
-
     public QuantityDelta(decimal value, UnitOfMeasure uom)
     {
         Value = value;
@@ -17,9 +14,9 @@ public sealed class QuantityDelta
 
     public bool IsZero => Value == 0m;
 
-    public decimal Value { get; private set; }
+    public decimal Value { get; }
 
-    public UnitOfMeasure Uom { get; private set; }
+    public UnitOfMeasure Uom { get; }
 
     public QuantityDelta Add(QuantityDelta other)
     {
