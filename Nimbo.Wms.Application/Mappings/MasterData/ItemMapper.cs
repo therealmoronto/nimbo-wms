@@ -9,7 +9,9 @@ namespace Nimbo.Wms.Application.Mappings.MasterData;
 [Mapper(EnumMappingStrategy = EnumMappingStrategy.ByName)]
 public partial class ItemMapper : IMapper<Item, ItemDto>
 {
-    public partial ItemDto MapToDto(Item item);
-
     public partial IQueryable<ItemDto> ProjectToDto(IQueryable<Item> items);
+
+    public partial IEnumerable<ItemDto> MapToDto(IEnumerable<Item> items);
+
+    public partial ItemDto MapToDto(Item item);
 }

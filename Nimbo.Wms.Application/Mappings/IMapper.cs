@@ -9,5 +9,7 @@ public interface IMapper<TMaster, TDto>
 {
     public IQueryable<TDto> ProjectToDto(IQueryable<TMaster> items);
 
+    public IEnumerable<TDto> MapToDto(IEnumerable<TMaster> items);
+
     public TDto MapToDto(TMaster item);
 }

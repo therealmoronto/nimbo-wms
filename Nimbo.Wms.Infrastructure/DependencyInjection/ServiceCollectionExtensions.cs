@@ -80,6 +80,8 @@ public static class ServiceCollectionExtensions
         private IServiceCollection AddMasterData()
         {
             services.AddScoped<IMapper<Item, ItemDto>, ItemMapper>();
+            services.AddScoped<IMapper<Supplier, SupplierDto>, SupplierMapper>();
+            services.AddScoped<IMapper<SupplierItem, SupplierItemDto>, SupplierItemMapper>();
 
             services.AddScoped<IItemRepository, EfItemRepository>();
             services.AddScoped<ICustomerRepository, EfCustomerRepository>();
