@@ -7,7 +7,7 @@ public sealed record LocationDto(
     Guid ZoneId,
     Guid Id,
     string Code,
-    LocationType Type,
+    string Type,
     decimal? MaxWeightKg,
     decimal? MaxVolumeM3,
     bool IsSingleItemOnly,

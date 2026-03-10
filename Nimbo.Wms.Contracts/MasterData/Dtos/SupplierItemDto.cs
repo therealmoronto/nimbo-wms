@@ -1,4 +1,4 @@
-namespace Nimbo.Wms.Contracts.Topology.Dtos;
+namespace Nimbo.Wms.Contracts.MasterData.Dtos;
 
 public sealed record SupplierItemDto(
     Guid Id,

@@ -85,8 +85,8 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         inventoryItemDto.WarehouseId.Should().Be(warehouseId);
         inventoryItemDto.LocationId.Should().Be(locationId);
         inventoryItemDto.Quantity.Value.Should().Be(100m);
-        inventoryItemDto.Quantity.Uom.Should().Be(UnitOfMeasure.Kilogram);
-        inventoryItemDto.Status.Should().Be(InventoryStatus.Available);
+        inventoryItemDto.Quantity.UomCode.Should().Be(nameof(UnitOfMeasure.Kilogram));
+        inventoryItemDto.Status.Should().Be(nameof(InventoryStatus.Available));
         inventoryItemDto.SerialNumber.Should().BeNull();
         inventoryItemDto.UnitCost.Should().Be(25.50m);
 
@@ -99,6 +99,6 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         listedInventoryItem.ItemId.Should().Be(itemId);
         listedInventoryItem.WarehouseId.Should().Be(warehouseId);
         listedInventoryItem.Quantity.Value.Should().Be(100m);
-        listedInventoryItem.Status.Should().Be(InventoryStatus.Available);
+        listedInventoryItem.Status.Should().Be(nameof(InventoryStatus.Available));
     }
 }

@@ -1,5 +1,5 @@
-using Nimbo.Wms.Domain.References;
-using Nimbo.Wms.Domain.ValueObject;
+using Nimbo.Wms.Contracts.Common;
+using Nimbo.Wms.Contracts.Common.Dtos;
 
 namespace Nimbo.Wms.Contracts.Stock.Dtos;
 
@@ -8,8 +8,8 @@ public sealed record InventoryItemDto(
     Guid ItemId,
     Guid WarehouseId,
     Guid LocationId,
-    Quantity Quantity,
-    InventoryStatus Status,
+    QuantityDto Quantity,
+    string Status,
     Guid? BatchId,
     string? SerialNumber,
     decimal? UnitCost

@@ -47,7 +47,7 @@ internal sealed class GetWarehouseTopologyHandler : IQueryHandler<GetWarehouseTo
                     l.ZoneId.Value,
                     l.Id.Value,
                     l.Code,
-                    l.Type,
+                    l.Type.ToString(),
                     l.MaxWeightKg,
                     l.MaxVolumeM3,
                     l.IsSingleItemOnly,

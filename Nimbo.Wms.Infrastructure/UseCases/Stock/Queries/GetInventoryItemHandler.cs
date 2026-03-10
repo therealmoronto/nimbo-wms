@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts.Common.Dtos;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Infrastructure.Persistence;
@@ -27,8 +28,8 @@ public sealed class GetInventoryItemHandler : IQueryHandler<GetInventoryItemQuer
                 i.ItemId,
                 i.WarehouseId,
                 i.LocationId,
-                i.Quantity,
-                i.Status,
+                new QuantityDto(i.Quantity.Value, i.Quantity.Uom.ToString()),
+                i.Status.ToString(),
                 i.BatchId,
                 i.SerialNumber,
                 i.UnitCost))
