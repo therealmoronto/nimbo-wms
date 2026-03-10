@@ -2,9 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Queries;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Application.Mappings;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
-using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence;
 

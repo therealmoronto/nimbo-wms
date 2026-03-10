@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace Nimbo.Wms.Application.Mappings;
+namespace Nimbo.Wms.Contracts.Common;
 
 [PublicAPI]
 public interface IMapper<TMaster, TDto>

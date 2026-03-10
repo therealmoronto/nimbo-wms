@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Application.Mappings;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Infrastructure.Persistence;
