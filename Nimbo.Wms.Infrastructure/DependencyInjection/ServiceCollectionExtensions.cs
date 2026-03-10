@@ -13,10 +13,10 @@ using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
-using Nimbo.Wms.Application.Mappings;
 using Nimbo.Wms.Application.Mappings.MasterData;
 using Nimbo.Wms.Application.Mappings.Stock;
 using Nimbo.Wms.Application.Services.Documents;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Topology.Dtos;
@@ -112,6 +112,7 @@ public static class ServiceCollectionExtensions
         private IServiceCollection AddStock()
         {
             services.AddScoped<IMapper<Batch, BatchDto>, BatchMapper>();
+            services.AddScoped<IMapper<InventoryItem, InventoryItemDto>, InventoryItemMapper>();
 
             services.AddScoped<IBatchRepository, EfBatchRepository>();
             services.AddScoped<IInventoryItemRepository, EfInventoryItemRepository>();

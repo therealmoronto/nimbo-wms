@@ -85,7 +85,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         inventoryItemDto.WarehouseId.Should().Be(warehouseId);
         inventoryItemDto.LocationId.Should().Be(locationId);
         inventoryItemDto.Quantity.Value.Should().Be(100m);
-        inventoryItemDto.Quantity.UomCode.Should().Be(nameof(UnitOfMeasure.Kilogram));
+        inventoryItemDto.Quantity.Uom.Should().Be(nameof(UnitOfMeasure.Kilogram));
         inventoryItemDto.Status.Should().Be(nameof(InventoryStatus.Available));
         inventoryItemDto.SerialNumber.Should().BeNull();
         inventoryItemDto.UnitCost.Should().Be(25.50m);
