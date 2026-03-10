@@ -39,7 +39,7 @@ public class ItemsLifecycleApiTests : ApiTestBase
         created.Name.Should().Be("ITEM-001");
         created.InternalSku.Should().Be("I-001");
         created.Barcode.Should().Be("00100245");
-        created.BaseUom.Should().Be(UnitOfMeasure.Kilogram);
+        created.BaseUomCode.Should().Be(nameof(UnitOfMeasure.Kilogram));
         
         // 3) Patch item
         var patchItemRequest = new PatchItemRequest()
@@ -65,7 +65,7 @@ public class ItemsLifecycleApiTests : ApiTestBase
         updated.Name.Should().Be("ITEM-003");
         updated.InternalSku.Should().Be("I-003");
         updated.Barcode.Should().Be("00100147");
-        updated.BaseUom.Should().Be(UnitOfMeasure.Gram);
+        updated.BaseUomCode.Should().Be(nameof(UnitOfMeasure.Gram));
         updated.Manufacturer.Should().Be("MF-17");
         updated.WeightKg.Should().Be(1234.56m);
         updated.VolumeM3.Should().Be(78.9m);

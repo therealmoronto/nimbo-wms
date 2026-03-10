@@ -13,6 +13,8 @@ using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
+using Nimbo.Wms.Application.Mappings;
+using Nimbo.Wms.Application.Mappings.MasterData;
 using Nimbo.Wms.Application.Services.Documents;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.Stock.Dtos;
@@ -22,6 +24,7 @@ using Nimbo.Wms.Domain.Entities.Documents.CycleCount;
 using Nimbo.Wms.Domain.Entities.Documents.Receiving;
 using Nimbo.Wms.Domain.Entities.Documents.Relocation;
 using Nimbo.Wms.Domain.Entities.Documents.Shipment;
+using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Documents;
@@ -76,6 +79,8 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddMasterData()
         {
+            services.AddScoped<IMapper<Item, ItemDto>, ItemMapper>();
+
             services.AddScoped<IItemRepository, EfItemRepository>();
             services.AddScoped<ICustomerRepository, EfCustomerRepository>();
             services.AddScoped<ISupplierRepository, EfSupplierRepository>();
