@@ -1,20 +1,15 @@
+using JetBrains.Annotations;
+
 namespace Nimbo.Wms.Contracts.Stock.Dtos;
 
-public sealed class BatchDto
-{
-    public Guid Id { get; set; }
-
-    public Guid ItemId { get; set; }
-
-    public string BatchNumber { get; set; }
-
-    public Guid? SupplierId { get; set; }
-
-    public DateTime? ManufacturedAt { get; set; }
-
-    public DateTime? ExpiryDate { get; set; }
-
-    public DateTime? ReceivedAt { get; set; }
-
-    public string? Notes { get; set; }
-}
+[PublicAPI]
+public sealed record BatchDto(
+    Guid Id,
+    Guid ItemId,
+    string BatchNumber,
+    Guid? SupplierId,
+    DateTime? ManufacturedAt,
+    DateTime? ExpiryDate,
+    DateTime? ReceivedAt,
+    string? Notes
+);

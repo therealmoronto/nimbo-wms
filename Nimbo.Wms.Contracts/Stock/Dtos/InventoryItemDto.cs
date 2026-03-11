@@ -1,8 +1,9 @@
-using Nimbo.Wms.Contracts.Common;
+using JetBrains.Annotations;
 using Nimbo.Wms.Contracts.Common.Dtos;
 
 namespace Nimbo.Wms.Contracts.Stock.Dtos;
 
+[PublicAPI]
 public sealed record InventoryItemDto(
     Guid Id,
     Guid ItemId,
