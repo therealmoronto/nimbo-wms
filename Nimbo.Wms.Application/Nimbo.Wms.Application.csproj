@@ -11,4 +11,8 @@
       <ProjectReference Include="..\Nimbo.Wms.Domain\Nimbo.Wms.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Riok.Mapperly" Version="5.0.0-next.2" />
+    </ItemGroup>
+
 </Project>

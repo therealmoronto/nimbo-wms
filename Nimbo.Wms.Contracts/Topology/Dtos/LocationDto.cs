@@ -1,13 +1,14 @@
-using Nimbo.Wms.Domain.References;
+using JetBrains.Annotations;
 
 namespace Nimbo.Wms.Contracts.Topology.Dtos;
 
+[PublicAPI]
 public sealed record LocationDto(
     Guid WarehouseId,
     Guid ZoneId,
     Guid Id,
     string Code,
-    LocationType Type,
+    string Type,
     decimal? MaxWeightKg,
     decimal? MaxVolumeM3,
     bool IsSingleItemOnly,

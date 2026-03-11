@@ -1,5 +1,8 @@
-namespace Nimbo.Wms.Contracts.Topology.Dtos;
+using JetBrains.Annotations;
 
+namespace Nimbo.Wms.Contracts.MasterData.Dtos;
+
+[PublicAPI]
 public sealed record SupplierItemDto(
     Guid Id,
     Guid SupplierId,

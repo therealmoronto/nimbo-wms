@@ -13,7 +13,11 @@ using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
+using Nimbo.Wms.Application.Mappings.MasterData;
+using Nimbo.Wms.Application.Mappings.Stock;
+using Nimbo.Wms.Application.Mappings.Topology;
 using Nimbo.Wms.Application.Services.Documents;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Topology.Dtos;
@@ -22,6 +26,9 @@ using Nimbo.Wms.Domain.Entities.Documents.CycleCount;
 using Nimbo.Wms.Domain.Entities.Documents.Receiving;
 using Nimbo.Wms.Domain.Entities.Documents.Relocation;
 using Nimbo.Wms.Domain.Entities.Documents.Shipment;
+using Nimbo.Wms.Domain.Entities.MasterData;
+using Nimbo.Wms.Domain.Entities.Stock;
+using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Documents;
@@ -54,6 +61,11 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddTopology()
         {
+            services.AddScoped<IMapper<Warehouse, WarehouseTopologyDto>, WarehouseTopologyMapper>();
+            services.AddScoped<IMapper<Warehouse, WarehouseListItemDto>, WarehouseListItemMapper>();
+            services.AddScoped<IMapper<Zone, ZoneDto>, ZoneMapper>();
+            services.AddScoped<IMapper<Location, LocationDto>, LocationMapper>();
+
             services.AddScoped<IWarehouseRepository, EfWarehouseRepository>();
         
             services.AddScoped<ICommandHandler<CreateWarehouseCommand, WarehouseId>, CreateWarehouseHandler>();
@@ -76,6 +88,10 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddMasterData()
         {
+            services.AddScoped<IMapper<Item, ItemDto>, ItemMapper>();
+            services.AddScoped<IMapper<Supplier, SupplierDto>, SupplierMapper>();
+            services.AddScoped<IMapper<SupplierItem, SupplierItemDto>, SupplierItemMapper>();
+
             services.AddScoped<IItemRepository, EfItemRepository>();
             services.AddScoped<ICustomerRepository, EfCustomerRepository>();
             services.AddScoped<ISupplierRepository, EfSupplierRepository>();
@@ -102,6 +118,9 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddStock()
         {
+            services.AddScoped<IMapper<Batch, BatchDto>, BatchMapper>();
+            services.AddScoped<IMapper<InventoryItem, InventoryItemDto>, InventoryItemMapper>();
+
             services.AddScoped<IBatchRepository, EfBatchRepository>();
             services.AddScoped<IInventoryItemRepository, EfInventoryItemRepository>();
         

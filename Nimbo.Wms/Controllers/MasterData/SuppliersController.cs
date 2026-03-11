@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Queries;
+using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Http;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Topology.Http;

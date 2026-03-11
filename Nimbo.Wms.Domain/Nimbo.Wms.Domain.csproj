@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
+      <PackageReference Include="Riok.Mapperly" Version="5.0.0-next.2" />
     </ItemGroup>
 
 </Project>

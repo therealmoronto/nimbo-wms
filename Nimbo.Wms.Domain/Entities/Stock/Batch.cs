@@ -40,7 +40,7 @@ public class Batch : BaseEntity<BatchId>
     
     public ItemId ItemId { get; }
 
-    public string BatchNumber { get; private set; }
+    public string BatchNumber { get; private set; } = null!;
 
     public SupplierId? SupplierId { get; private set; }
 
