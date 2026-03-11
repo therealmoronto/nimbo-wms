@@ -24,6 +24,8 @@ public readonly struct ZoneId : IEntityId
     
     public override int GetHashCode() => Value.GetHashCode();
 
+    public static implicit operator Guid(ZoneId id) => id.Value;
+
     public static bool operator ==(ZoneId left, ZoneId right) => left.Value == right.Value;
 
     public static bool operator !=(ZoneId left, ZoneId right) => left.Value != right.Value;

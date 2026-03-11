@@ -6,6 +6,7 @@ public sealed record WarehouseTopologyDto(
     string Name,
     string? Address,
     string? Description,
+    bool IsActive,
     IReadOnlyList<ZoneDto> Zones,
     IReadOnlyList<LocationDto> Locations
 );
