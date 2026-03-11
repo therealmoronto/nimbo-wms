@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 namespace Nimbo.Wms.Contracts.Topology.Dtos;
 
 [PublicAPI]
-public sealed class LocationDto(
+public sealed record LocationDto(
     Guid WarehouseId,
     Guid ZoneId,
     Guid Id,
