@@ -13,3 +13,13 @@ public interface IMapper<TMaster, TDto>
 
     public TDto MapToDto(TMaster item);
 }
+
+[PublicAPI]
+public interface IValueObjectMapper<TMaster, TDto>
+    where TMaster : struct
+    where TDto : class
+{
+    public IEnumerable<TDto> MapToDto(IEnumerable<TMaster> items);
+
+    public TDto MapToDto(TMaster item);
+}

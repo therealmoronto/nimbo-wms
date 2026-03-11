@@ -40,9 +40,9 @@ public class Supplier : BaseEntity<SupplierId>
         IsActive = isActive;
     }
 
-    public string Code { get; private set; }
+    public string Code { get; private set; } = null!;
     
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
 
     public string? TaxId { get; private set; }
 

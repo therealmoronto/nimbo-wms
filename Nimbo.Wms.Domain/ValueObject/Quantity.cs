@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using Nimbo.Wms.Domain.References;
-using Riok.Mapperly.Abstractions;
 
 namespace Nimbo.Wms.Domain.ValueObject;
 
@@ -19,7 +18,6 @@ public readonly record struct Quantity
         Uom = uom;
     }
 
-    [MapperIgnore]
     public bool IsZero => Value == 0m;
 
     public decimal Value { get; }

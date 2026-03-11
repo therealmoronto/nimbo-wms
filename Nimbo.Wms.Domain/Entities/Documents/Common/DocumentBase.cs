@@ -31,11 +31,12 @@ public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
     IEntityId IDocument.Id => Id;
     public TId Id { get; }
 
-    public string Code { get; private set; }
+    public string Code { get; private set; } = null!;
 
-    public string Title { get; private set; }
+    public string Title { get; private set; } = null!;
 
     Enum IDocument.Status => Status;
+
     public TStatus Status { get; private set; }
 
     public DateTime CreatedAt { get; }
