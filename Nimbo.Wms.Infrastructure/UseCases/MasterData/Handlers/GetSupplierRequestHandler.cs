@@ -1,27 +1,27 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Queries;
 using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Queries;
 
-public sealed class GetSupplierHandler : IQueryHandler<GetSupplierQuery, SupplierDto>
+public sealed class GetSupplierRequestHandler : IRequestHandler<GetSupplierRequest, SupplierDto>
 {
     private readonly NimboWmsDbContext _dbContext;
 
-    public GetSupplierHandler(NimboWmsDbContext dbContext)
+    public GetSupplierRequestHandler(NimboWmsDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<SupplierDto> HandleAsync(GetSupplierQuery query, CancellationToken ct = default)
+    public async Task<SupplierDto> Handle(GetSupplierRequest request, CancellationToken ct = default)
     {
         var supplier = await _dbContext.Set<Supplier>()
             .AsNoTracking()
-            .Where(s => s.Id == query.SupplierId)
+            .Where(s => s.Id == request.SupplierId)
             .Select(s => new SupplierDto(s.Id.Value,
                 s.Code,
                 s.Name,

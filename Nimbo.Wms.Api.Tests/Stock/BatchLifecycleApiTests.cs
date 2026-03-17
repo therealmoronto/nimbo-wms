@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Http;
 using Nimbo.Wms.Domain.References;
@@ -28,7 +28,7 @@ public class BatchLifecycleApiTests : ApiTestBase
 
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemId = createdItem.Id;
+        var itemId = createdItem.ItemGuid;
 
         // 1) Create batch
         var manufacturedAt = new DateTime(2026, 1, 15);

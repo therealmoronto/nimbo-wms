@@ -1,8 +1,10 @@
+using MediatR;
 using Nimbo.Wms.Domain.References;
 
-namespace Nimbo.Wms.Contracts.MasterData.Http;
+namespace Nimbo.Wms.Contracts.MasterData.Requests;
 
 public sealed record PatchItemRequest(
+    Guid ItemGuid,
     string? Name = null,
     string? InternalSku = null,
     string? Barcode = null,
@@ -10,4 +12,4 @@ public sealed record PatchItemRequest(
     string? Manufacturer = null,
     decimal? WeightKg = null,
     decimal? VolumeM3 = null
-);
+) : IRequest;

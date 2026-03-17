@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Nimbo.Wms.Domain\Nimbo.Wms.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+    </ItemGroup>
+
 </Project>

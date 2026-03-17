@@ -7,14 +7,13 @@ using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
-using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
-using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Queries;
 using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
 using Nimbo.Wms.Application.Services.Documents;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Domain.Entities.Documents.Adjustment;
@@ -29,6 +28,7 @@ using Nimbo.Wms.Infrastructure.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Stock;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Topology;
+using Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 using Nimbo.Wms.Infrastructure.UseCases.MasterData.Queries;
 using Nimbo.Wms.Infrastructure.UseCases.Stock.Queries;
 using Nimbo.Wms.Infrastructure.UseCases.Topology.Queries;
@@ -48,6 +48,11 @@ public static class ServiceCollectionExtensions
             services.AddMasterData();
             services.AddStock();
             services.AddDocuments();
+
+            services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly);
+            });
 
             return services;
         }
@@ -79,23 +84,6 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IItemRepository, EfItemRepository>();
             services.AddScoped<ICustomerRepository, EfCustomerRepository>();
             services.AddScoped<ISupplierRepository, EfSupplierRepository>();
-
-            services.AddScoped<ICommandHandler<CreateItemCommand, ItemId>, CreateItemHandler>();
-            services.AddScoped<ICommandHandler<PatchItemCommand>, PatchItemHandler>();
-            services.AddScoped<ICommandHandler<DeleteItemCommand>, DeleteItemHandler>();
-
-            services.AddScoped<IQueryHandler<GetItemQuery, ItemDto>, GetItemHandler>();
-            services.AddScoped<IQueryHandler<GetItemsQuery, IReadOnlyList<ItemDto>>, GetItemsHandler>();
-
-            services.AddScoped<ICommandHandler<CreateSupplierCommand, SupplierId>, CreateSupplierHandler>();
-            services.AddScoped<ICommandHandler<PatchSupplierCommand>, PatchSupplierHandler>();
-            services.AddScoped<ICommandHandler<DeleteSupplierCommand>, DeleteSupplierHandler>();
-            services.AddScoped<ICommandHandler<AddSupplierItemCommand, SupplierItemId>, AddSupplierItemHandler>();
-            services.AddScoped<ICommandHandler<PatchSupplierItemCommand>, PatchSupplierItemHandler>();
-            services.AddScoped<ICommandHandler<DeleteSupplierItemCommand>, DeleteSupplierItemHandler>();
-
-            services.AddScoped<IQueryHandler<GetSupplierQuery, SupplierDto>, GetSupplierHandler>();
-            services.AddScoped<IQueryHandler<GetSuppliersQuery, IReadOnlyList<SupplierDto>>, GetSuppliersHandler>();
 
             return services;
         }

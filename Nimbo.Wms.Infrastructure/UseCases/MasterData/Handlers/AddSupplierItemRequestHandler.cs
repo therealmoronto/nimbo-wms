@@ -1,37 +1,32 @@
-using Nimbo.Wms.Application.Abstractions.Cqrs;
+using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
+namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
-public sealed record AddSupplierItemCommand(
-    AddSupplierItemRequest Request
-) : ICommand<SupplierItemId>;
-
-public sealed class AddSupplierItemHandler : ICommandHandler<AddSupplierItemCommand, SupplierItemId>
+public sealed class AddSupplierItemRequestHandler : IRequestHandler<AddSupplierItemRequest, SupplierItemId>
 {
     private readonly ISupplierRepository _repository;
     private readonly IUnitOfWork _uow;
 
-    public AddSupplierItemHandler(ISupplierRepository repository, IUnitOfWork uow)
+    public AddSupplierItemRequestHandler(ISupplierRepository repository, IUnitOfWork uow)
     {
         _repository = repository;
         _uow = uow;
     }
 
-    public async Task<SupplierItemId> HandleAsync(AddSupplierItemCommand command, CancellationToken ct = default)
+    public async Task<SupplierItemId> Handle(AddSupplierItemRequest request, CancellationToken ct = default)
     {
-        var request = command.Request;
-        var supplierId = SupplierId.From(request.SupplierId);
+        var supplierId = SupplierId.From(request.SupplierGuid);
         var supplier = await _repository.GetByIdWithItemsAsync(supplierId, ct);
         if (supplier is null)
             throw new NotFoundException("Supplier not found");
-        
+
         var supplierItemId = SupplierItemId.New();
-        var itemId = new ItemId(request.ItemId);
+        var itemId = new ItemId(request.ItemGuid);
         supplier.AddItem(
             supplierItemId,
             itemId,

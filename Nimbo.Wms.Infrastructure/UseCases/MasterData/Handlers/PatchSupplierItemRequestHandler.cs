@@ -1,40 +1,35 @@
-using Nimbo.Wms.Application.Abstractions.Cqrs;
+using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
+namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
-public sealed record PatchSupplierItemCommand(
-    SupplierId SupplierId,
-    SupplierItemId SupplierItemId,
-    PatchSupplierItemRequest Request
-) : ICommand;
-
-public sealed class PatchSupplierItemHandler : ICommandHandler<PatchSupplierItemCommand>
+public sealed class PatchSupplierItemRequestHandler : IRequestHandler<PatchSupplierItemRequest>
 {
     private readonly ISupplierRepository _repository;
     private readonly IUnitOfWork _uow;
 
-    public PatchSupplierItemHandler(ISupplierRepository repository, IUnitOfWork uow)
+    public PatchSupplierItemRequestHandler(ISupplierRepository repository, IUnitOfWork uow)
     {
         _repository = repository;
         _uow = uow;
     }
     
-    public async Task HandleAsync(PatchSupplierItemCommand command, CancellationToken ct = default)
+    public async Task Handle(PatchSupplierItemRequest request, CancellationToken ct = default)
     {
-        var supplier = await _repository.GetByIdWithItemsAsync(command.SupplierId, ct);
+        var supplierId = SupplierId.From(request.SupplierGuid);
+        var supplier = await _repository.GetByIdWithItemsAsync(supplierId, ct);
         if (supplier is null)
             throw new NotFoundException("Supplier not found");
-        
-        var item = supplier.Items.SingleOrDefault(i => i.Id == command.SupplierItemId);
+
+        var supplierItemId = SupplierItemId.From(request.SupplierItemGuid);
+        var item = supplier.Items.SingleOrDefault(i => i.Id == supplierItemId);
         if (item is null)
             throw new NotFoundException("Supplier item not found");
 
-        var request = command.Request;
         if (request.SupplierSku is not null)
             item.SetSupplierSku(request.SupplierSku);
 

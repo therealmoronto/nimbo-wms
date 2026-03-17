@@ -1,14 +1,13 @@
-using Nimbo.Wms.Application.Abstractions.Cqrs;
+using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
+namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
-public sealed record DeleteSupplierItemCommand(SupplierId SupplierId, SupplierItemId SupplierItemId) : ICommand;
-
-public sealed class DeleteSupplierItemHandler : ICommandHandler<DeleteSupplierItemCommand>
+public sealed class DeleteSupplierItemHandler : IRequestHandler<DeleteSupplierItemRequest>
 {
     private readonly ISupplierRepository _repository;
     private readonly IUnitOfWork _uow;
@@ -19,13 +18,15 @@ public sealed class DeleteSupplierItemHandler : ICommandHandler<DeleteSupplierIt
         _uow = uow;
     }
 
-    public async Task HandleAsync(DeleteSupplierItemCommand command, CancellationToken ct = default)
+    public async Task Handle(DeleteSupplierItemRequest request, CancellationToken ct = default)
     {
-        var supplier = await _repository.GetByIdAsync(command.SupplierId, ct);
+        var supplierId = SupplierId.From(request.SupplierGuid);
+        var supplier = await _repository.GetByIdAsync(supplierId, ct);
         if (supplier is null)
             throw new NotFoundException("Supplier not found");
 
-        if (!supplier.RemoveItem(command.SupplierItemId))
+        var supplierItemId = SupplierItemId.From(request.SupplierItemIGuid);
+        if (!supplier.RemoveItem(supplierItemId))
             throw new NotFoundException("Supplier item not found");
 
         await _uow.CommitAsync(ct);

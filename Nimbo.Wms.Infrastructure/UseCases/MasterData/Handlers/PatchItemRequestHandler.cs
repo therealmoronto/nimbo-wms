@@ -1,32 +1,29 @@
-using Nimbo.Wms.Application.Abstractions.Cqrs;
+using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
+namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
-public sealed record PatchItemCommand(ItemId ItemId, PatchItemRequest Request) : ICommand;
-
-public sealed class PatchItemHandler : ICommandHandler<PatchItemCommand>
+public sealed class PatchItemRequestHandler : IRequestHandler<PatchItemRequest>
 {
     private readonly IItemRepository _repository;
     private readonly IUnitOfWork _uow;
 
-    public PatchItemHandler(IItemRepository repository, IUnitOfWork uow)
+    public PatchItemRequestHandler(IItemRepository repository, IUnitOfWork uow)
     {
         _repository = repository;
         _uow = uow;
     }
     
-    public async Task HandleAsync(PatchItemCommand command, CancellationToken ct = default)
+    public async Task Handle(PatchItemRequest request, CancellationToken ct = default)
     {
-        var request = command.Request;
-        
-        var item = await _repository.GetByIdAsync(command.ItemId, ct);
+        var itemId = ItemId.From(request.ItemGuid);
+        var item = await _repository.GetByIdAsync(itemId, ct);
         if (item is null)
-            throw new NotFoundException($"Item with id {command.ItemId} not found");
+            throw new NotFoundException($"Item with id {itemId} not found");
         
         if (!string.IsNullOrWhiteSpace(request.Name))
             item.Rename(request.Name);

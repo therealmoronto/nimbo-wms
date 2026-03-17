@@ -1,6 +1,11 @@
-namespace Nimbo.Wms.Contracts.MasterData.Http;
+using MediatR;
+using Nimbo.Wms.Domain.Identification;
+
+namespace Nimbo.Wms.Contracts.MasterData.Requests;
 
 public sealed record PatchSupplierItemRequest(
+    Guid SupplierGuid,
+    Guid SupplierItemGuid,
     string? SupplierSku,
     string? SupplierBarcode,
     decimal? DefaultPurchasePrice,
@@ -9,4 +14,4 @@ public sealed record PatchSupplierItemRequest(
     int? LeadTimeDays,
     int? MinOrderQty,
     bool? IsPreferred
-);
+) : IRequest;

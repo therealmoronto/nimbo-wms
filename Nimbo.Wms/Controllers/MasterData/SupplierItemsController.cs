@@ -1,7 +1,6 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.MasterData;
@@ -26,12 +25,11 @@ public class SupplierItemsController : ControllerBase
     public async Task<IActionResult> AddSupplierItem(
         [FromRoute] Guid supplierGuid,
         [FromBody] AddSupplierItemRequest request,
-        [FromServices] ICommandHandler<AddSupplierItemCommand, SupplierItemId> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
         var supplierId = SupplierId.From(supplierGuid);
-        var command = new AddSupplierItemCommand(request with { SupplierId = supplierId });
-        var supplierItemId = await handler.HandleAsync(command, ct);
+        var supplierItemId = await mediator.Send(request with { SupplierGuid = supplierId }, ct);
 
         return CreatedAtAction(
             actionName: nameof(SuppliersController.GetSupplier),
@@ -56,12 +54,10 @@ public class SupplierItemsController : ControllerBase
         [FromRoute] Guid supplierGuid,
         [FromRoute] Guid supplierItemGuid,
         [FromBody] PatchSupplierItemRequest request,
-        [FromServices] ICommandHandler<PatchSupplierItemCommand> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var supplierId = SupplierId.From(supplierGuid);
-        var supplierItemId = SupplierItemId.From(supplierItemGuid);
-        await handler.HandleAsync(new PatchSupplierItemCommand(supplierId, supplierItemId, request), ct);
+        await mediator.Send(request with { SupplierGuid = supplierGuid, SupplierItemGuid = supplierItemGuid }, ct);
         return NoContent();
     }
 
@@ -79,12 +75,10 @@ public class SupplierItemsController : ControllerBase
     public async Task<IActionResult> DeleteSupplierItem(
         [FromRoute] Guid supplierGuid,
         [FromRoute] Guid supplierItemGuid,
-        [FromServices] ICommandHandler<DeleteSupplierItemCommand> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var supplierId = SupplierId.From(supplierGuid);
-        var supplierItemId = SupplierItemId.From(supplierItemGuid);
-        await handler.HandleAsync(new DeleteSupplierItemCommand(supplierId, supplierItemId), ct);
+        await mediator.Send(new DeleteSupplierItemRequest(supplierGuid, supplierItemGuid), ct);
         return NoContent();
     }
 }

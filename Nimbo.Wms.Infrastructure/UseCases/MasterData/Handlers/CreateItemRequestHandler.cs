@@ -1,29 +1,25 @@
-using Nimbo.Wms.Application.Abstractions.Cqrs;
+using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
+namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
-public sealed record CreateItemCommand(CreateItemRequest Request) : ICommand<ItemId>;
-
-
-public sealed class CreateItemHandler : ICommandHandler<CreateItemCommand, ItemId>
+public sealed class CreateItemRequestHandler : IRequestHandler<CreateItemRequest, ItemId>
 {
     private readonly IItemRepository _repository;
     private readonly IUnitOfWork _uow;
 
-    public CreateItemHandler(IItemRepository repository, IUnitOfWork uow)
+    public CreateItemRequestHandler(IItemRepository repository, IUnitOfWork uow)
     {
         _repository = repository;
         _uow = uow;
     }
-    
-    public async Task<ItemId> HandleAsync(CreateItemCommand command, CancellationToken ct = default)
+
+    public async Task<ItemId> Handle(CreateItemRequest request, CancellationToken ct = default)
     {
-        var request = command.Request;
         var item = new Item(
             ItemId.New(),
             request.Name,

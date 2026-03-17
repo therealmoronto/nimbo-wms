@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Http;
 using Nimbo.Wms.Contracts.Topology.Http;
@@ -56,7 +56,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
 
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemId = createdItem.Id;
+        var itemId = createdItem.ItemGuid;
 
         // 1) Create inventory item
         var createInventoryItemRequest = new CreateInventoryItemRequest(

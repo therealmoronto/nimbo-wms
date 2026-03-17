@@ -1,11 +1,7 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
-using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Queries;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Contracts.Topology.Dtos;
-using Nimbo.Wms.Contracts.Topology.Http;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 
@@ -23,11 +19,10 @@ public class SuppliersController : ControllerBase
     [Produces("application/json")]
     public async Task<IActionResult> CreateSupplier(
         [FromBody] CreateSupplierRequest request,
-        [FromServices] ICommandHandler<CreateSupplierCommand, SupplierId> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var command = new CreateSupplierCommand(request);
-        var supplierId = await handler.HandleAsync(command, ct);
+        var supplierId = await mediator.Send(request, ct);
         
         return CreatedAtAction(
             actionName: nameof(GetSupplier),
@@ -46,12 +41,11 @@ public class SuppliersController : ControllerBase
     [Produces("application/json")]
     public async Task<SupplierDto> GetSupplier(
         [FromRoute] Guid supplierGuid,
-        [FromServices] IQueryHandler<GetSupplierQuery, SupplierDto> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var supplierId = SupplierId.From(supplierGuid);
-        var query = new GetSupplierQuery(supplierId);
-        return await handler.HandleAsync(query, ct);
+        var request = new GetSupplierRequest(supplierGuid);
+        return await mediator.Send(request, ct);
     }
 
     /// <summary>
@@ -62,10 +56,10 @@ public class SuppliersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
     public async Task<IReadOnlyList<SupplierDto>> GetSuppliers(
-        [FromServices] IQueryHandler<GetSuppliersQuery, IReadOnlyList<SupplierDto>> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        return await handler.HandleAsync(new GetSuppliersQuery(), ct);
+        return await mediator.Send(new GetSuppliersRequest(), ct);
     }
 
     /// <summary>
@@ -79,12 +73,10 @@ public class SuppliersController : ControllerBase
     public async Task<IActionResult> PatchSupplier(
         [FromRoute] Guid supplierGuid,
         [FromBody] PatchSupplierRequest request,
-        [FromServices] ICommandHandler<PatchSupplierCommand> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var supplierId = SupplierId.From(supplierGuid);
-        var command = new PatchSupplierCommand(supplierId, request);
-        await handler.HandleAsync(command, ct);
+        await mediator.Send(request with { SupplierId = supplierGuid }, ct);
         return NoContent();
     }
 
@@ -97,11 +89,10 @@ public class SuppliersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteSupplier(
         [FromRoute] Guid supplierGuid,
-        [FromServices] ICommandHandler<DeleteSupplierCommand> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var supplierId = SupplierId.From(supplierGuid);
-        await handler.HandleAsync(new DeleteSupplierCommand(supplierId), ct);
+        await mediator.Send(new DeleteSupplierRequest(supplierGuid), ct);
         return NoContent();
     }
 }

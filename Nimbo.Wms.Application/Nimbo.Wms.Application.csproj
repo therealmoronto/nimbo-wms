@@ -11,4 +11,8 @@
       <ProjectReference Include="..\Nimbo.Wms.Domain\Nimbo.Wms.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="14.1.0" />
+    </ItemGroup>
+
 </Project>
