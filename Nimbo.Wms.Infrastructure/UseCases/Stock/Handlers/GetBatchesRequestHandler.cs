@@ -1,30 +1,30 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Contracts.Stock.Dtos;
+using Nimbo.Wms.Contracts.Stock.Requests;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Infrastructure.Persistence;
 
-namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Queries;
+namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
-public sealed class GetBatchesHandler : IQueryHandler<GetBatchesQuery, IReadOnlyList<BatchDto>>
+public sealed class GetBatchesRequestHandler : IRequestHandler<GetBatchesRequest, IReadOnlyList<BatchDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
 
-    public GetBatchesHandler(NimboWmsDbContext dbContext)
+    public GetBatchesRequestHandler(NimboWmsDbContext dbContext)
     {
         _dbContext = dbContext;
     }
     
-    public async Task<IReadOnlyList<BatchDto>> HandleAsync(GetBatchesQuery query, CancellationToken ct = default)
+    public async Task<IReadOnlyList<BatchDto>> Handle(GetBatchesRequest request, CancellationToken ct = default)
     {
         var dbQuery = _dbContext.Set<Batch>().AsNoTracking();
 
-        if (query.ItemId is not null)
-            dbQuery = dbQuery.Where(b => b.ItemId == query.ItemId);
+        if (request.ItemId is not null)
+            dbQuery = dbQuery.Where(b => b.ItemId == request.ItemId);
 
-        if (query.SupplierId is not null)
-            dbQuery = dbQuery.Where(b => b.SupplierId == query.SupplierId);
+        if (request.SupplierId is not null)
+            dbQuery = dbQuery.Where(b => b.SupplierId == request.SupplierId);
 
         var batches = await dbQuery.Select(b => new BatchDto(
                 b.Id,

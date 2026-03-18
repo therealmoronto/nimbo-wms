@@ -1,7 +1,7 @@
-using Nimbo.Wms.Application.Abstractions.Cqrs;
+using MediatR;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 
-public sealed record GetBatchQuery(BatchId BatchId) : IQuery<BatchDto>;
+public sealed record GetInventoryItemRequest(InventoryItemId InventoryItemId) : IRequest<InventoryItemDto>;

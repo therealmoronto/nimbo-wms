@@ -1,9 +1,8 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Contracts.Stock.Dtos;
-using Nimbo.Wms.Contracts.Stock.Http;
+using Nimbo.Wms.Contracts.Stock.Requests;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.Stock;
@@ -29,10 +28,10 @@ public class InventoryItemsController : ControllerBase
     [Produces("application/json")]
     public async Task<IActionResult> CreateInventoryItem(
         [FromBody] CreateInventoryItemRequest request,
-        [FromServices] ICommandHandler<CreateInventoryItemCommand, InventoryItemId> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var invetoryItemId = await handler.HandleAsync(new CreateInventoryItemCommand(request), ct);
+        var invetoryItemId = await mediator.Send(request, ct);
         return CreatedAtAction(
             nameof(GetInventoryItem),
             "InventoryItems",
@@ -58,11 +57,11 @@ public class InventoryItemsController : ControllerBase
     [Produces("application/json")]
     public async Task<InventoryItemDto> GetInventoryItem(
         [FromRoute] Guid inventoryItemGuid,
-        [FromServices] IQueryHandler<GetInventoryItemQuery, InventoryItemDto> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var query = new GetInventoryItemQuery(InventoryItemId.From(inventoryItemGuid));
-        return await handler.HandleAsync(query, ct);
+        var query = new GetInventoryItemRequest(InventoryItemId.From(inventoryItemGuid));
+        return await mediator.Send(query, ct);
     }
 
     /// <summary>
@@ -84,13 +83,10 @@ public class InventoryItemsController : ControllerBase
         [FromQuery] Guid? warehouseGuid,
         [FromQuery] Guid? itemGuid,
         [FromQuery] Guid? batchGuid,
-        [FromServices] IQueryHandler<GetInventoryItemsQuery, IReadOnlyList<InventoryItemDto>> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var warehouseId = warehouseGuid is not null ? WarehouseId.From(warehouseGuid.Value) : (WarehouseId?)null;
-        var itemId = itemGuid is not null ? ItemId.From(itemGuid.Value) : (ItemId?)null;
-        var batchId = batchGuid is not null ? BatchId.From(batchGuid.Value) : (BatchId?)null;
-        var query = new GetInventoryItemsQuery(warehouseId, itemId, batchId);
-        return await handler.HandleAsync(query, ct);
+        var query = new GetInventoryItemsRequest(warehouseGuid, itemGuid, batchGuid);
+        return await mediator.Send(query, ct);
     }
 }

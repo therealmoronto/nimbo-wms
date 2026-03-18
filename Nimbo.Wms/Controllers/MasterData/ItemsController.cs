@@ -8,7 +8,7 @@ namespace Nimbo.Wms.Controllers.MasterData;
 
 [ApiController]
 [Route("api/items")]
-public class ItemsController : ControllerBase
+public class ItemsController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// Creates a new item.
@@ -19,12 +19,9 @@ public class ItemsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [Produces("application/json")]
-    public async Task<IActionResult> Createitem(
-        [FromBody] CreateItemRequest request,
-        [FromServices] IMediator mediator,
-        CancellationToken ct)
+    public async Task<IActionResult> Createitem([FromBody] CreateItemRequest request, CancellationToken ct)
     {
-        var itemId = await mediator.Send(request, ct);
+        var itemId = await sender.Send(request, ct);
         return CreatedAtAction(
             actionName: nameof(GetItem),
             new { itemGuid = itemId.Value },
@@ -39,11 +36,9 @@ public class ItemsController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<ItemDto>> GetItems(
-        [FromServices] IMediator mediator,
-        CancellationToken ct)
+    public async Task<IReadOnlyList<ItemDto>> GetItems(CancellationToken ct)
     {
-        return await mediator.Send(new GetItemsRequest(), ct);
+        return await sender.Send(new GetItemsRequest(), ct);
     }
 
     /// <summary>
@@ -57,13 +52,10 @@ public class ItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<ItemDto> GetItem(
-        [FromRoute] Guid itemGuid,
-        [FromServices] IMediator mediator,
-        CancellationToken ct)
+    public async Task<ItemDto> GetItem([FromRoute] Guid itemGuid, CancellationToken ct)
     {
         var request = new GetItemRequest(ItemId.From(itemGuid));
-        return await mediator.Send(request, ct);
+        return await sender.Send(request, ct);
     }
 
     /// <summary>
@@ -76,13 +68,9 @@ public class ItemsController : ControllerBase
     [HttpPatch("{itemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> PatchItem(
-        [FromRoute] Guid itemGuid,
-        [FromBody] PatchItemRequest request,
-        [FromServices] IMediator mediator,
-        CancellationToken ct)
+    public async Task<IActionResult> PatchItem([FromRoute] Guid itemGuid, [FromBody] PatchItemRequest request, CancellationToken ct)
     {
-        await mediator.Send(request with { ItemGuid = itemGuid }, ct);
+        await sender.Send(request with { ItemGuid = itemGuid }, ct);
         return NoContent();
     }
 
@@ -95,13 +83,10 @@ public class ItemsController : ControllerBase
     [HttpDelete("{itemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteItem(
-        [FromRoute] Guid itemGuid,
-        [FromServices] IMediator mediator,
-        CancellationToken ct)
+    public async Task<IActionResult> DeleteItem([FromRoute] Guid itemGuid, CancellationToken ct)
     {
         var request = new DeleteItemRequest(itemGuid);
-        await mediator.Send(request, ct);
+        await sender.Send(request, ct);
         return NoContent();
     }
 }

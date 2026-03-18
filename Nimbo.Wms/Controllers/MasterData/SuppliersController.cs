@@ -7,7 +7,7 @@ namespace Nimbo.Wms.Controllers.MasterData;
 
 [ApiController]
 [Route("api/suppliers")]
-public class SuppliersController : ControllerBase
+public class SuppliersController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// Create a new supplier.
@@ -17,12 +17,9 @@ public class SuppliersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json")]
-    public async Task<IActionResult> CreateSupplier(
-        [FromBody] CreateSupplierRequest request,
-        [FromServices] IMediator mediator,
-        CancellationToken ct)
+    public async Task<IActionResult> CreateSupplier([FromBody] CreateSupplierRequest request, CancellationToken ct)
     {
-        var supplierId = await mediator.Send(request, ct);
+        var supplierId = await sender.Send(request, ct);
         
         return CreatedAtAction(
             actionName: nameof(GetSupplier),
@@ -39,13 +36,10 @@ public class SuppliersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<SupplierDto> GetSupplier(
-        [FromRoute] Guid supplierGuid,
-        [FromServices] IMediator mediator,
-        CancellationToken ct)
+    public async Task<SupplierDto> GetSupplier([FromRoute] Guid supplierGuid, CancellationToken ct)
     {
         var request = new GetSupplierRequest(supplierGuid);
-        return await mediator.Send(request, ct);
+        return await sender.Send(request, ct);
     }
 
     /// <summary>
@@ -55,11 +49,9 @@ public class SuppliersController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<SupplierDto>> GetSuppliers(
-        [FromServices] IMediator mediator,
-        CancellationToken ct)
+    public async Task<IReadOnlyList<SupplierDto>> GetSuppliers(CancellationToken ct)
     {
-        return await mediator.Send(new GetSuppliersRequest(), ct);
+        return await sender.Send(new GetSuppliersRequest(), ct);
     }
 
     /// <summary>
@@ -70,13 +62,9 @@ public class SuppliersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> PatchSupplier(
-        [FromRoute] Guid supplierGuid,
-        [FromBody] PatchSupplierRequest request,
-        [FromServices] IMediator mediator,
-        CancellationToken ct)
+    public async Task<IActionResult> PatchSupplier([FromRoute] Guid supplierGuid, [FromBody] PatchSupplierRequest request, CancellationToken ct)
     {
-        await mediator.Send(request with { SupplierId = supplierGuid }, ct);
+        await sender.Send(request with { SupplierId = supplierGuid }, ct);
         return NoContent();
     }
 
@@ -87,12 +75,9 @@ public class SuppliersController : ControllerBase
     [HttpDelete("{supplierGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteSupplier(
-        [FromRoute] Guid supplierGuid,
-        [FromServices] IMediator mediator,
-        CancellationToken ct)
+    public async Task<IActionResult> DeleteSupplier([FromRoute] Guid supplierGuid, CancellationToken ct)
     {
-        await mediator.Send(new DeleteSupplierRequest(supplierGuid), ct);
+        await sender.Send(new DeleteSupplierRequest(supplierGuid), ct);
         return NoContent();
     }
 }

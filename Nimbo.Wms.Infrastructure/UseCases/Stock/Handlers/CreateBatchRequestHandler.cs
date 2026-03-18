@@ -1,24 +1,22 @@
-using Nimbo.Wms.Application.Abstractions.Cqrs;
+using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Contracts.Stock.Http;
+using Nimbo.Wms.Contracts.Stock.Requests;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Application.Abstractions.UseCases.Stock.Commands;
+namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
-public sealed record CreateBatchCommand(CreateBatchRequest Request) : ICommand<BatchId>;
-
-public sealed class CreateBatchHandler : ICommandHandler<CreateBatchCommand, BatchId>
+public sealed class CreateBatchRequestHandler : IRequestHandler<CreateBatchRequest, BatchId>
 {
     private readonly IItemRepository _itemRepository;
     private readonly ISupplierRepository _supplierRepository;
     private readonly IBatchRepository _batchRepository;
     private readonly IUnitOfWork _uow;
 
-    public CreateBatchHandler(
+    public CreateBatchRequestHandler(
         IItemRepository itemRepository,
         ISupplierRepository supplierRepository,
         IBatchRepository batchRepository,
@@ -30,14 +28,13 @@ public sealed class CreateBatchHandler : ICommandHandler<CreateBatchCommand, Bat
         _uow = uow;
     }
 
-    public async Task<BatchId> HandleAsync(CreateBatchCommand command, CancellationToken ct = default)
+    public async Task<BatchId> Handle(CreateBatchRequest request, CancellationToken ct = default)
     {
-        var request = command.Request;
         var itemId = ItemId.From(request.ItemId);
         var item = await _itemRepository.GetByIdAsync(itemId, ct);
         if (item == null)
             throw new NotFoundException("Item not found");
-        
+
         SupplierId? supplierId = null;
         if (request.SupplierId.HasValue)
         {

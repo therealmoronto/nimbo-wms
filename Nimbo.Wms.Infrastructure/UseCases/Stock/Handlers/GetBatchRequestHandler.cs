@@ -1,27 +1,27 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Stock.Dtos;
+using Nimbo.Wms.Contracts.Stock.Requests;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Infrastructure.Persistence;
 
-namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Queries;
+namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
-public sealed class GetBatchHandler : IQueryHandler<GetBatchQuery, BatchDto>
+public sealed class GetBatchRequestHandler : IRequestHandler<GetBatchRequest, BatchDto>
 {
     private readonly NimboWmsDbContext _dbContext;
 
-    public GetBatchHandler(NimboWmsDbContext dbContext)
+    public GetBatchRequestHandler(NimboWmsDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<BatchDto> HandleAsync(GetBatchQuery query, CancellationToken ct = default)
+    public async Task<BatchDto> Handle(GetBatchRequest request, CancellationToken ct = default)
     {
         var batch = await _dbContext.Set<Batch>()
             .AsNoTracking()
-            .Where(b => b.Id == query.BatchId)
+            .Where(b => b.Id == request.BatchId)
             .Select(b => new BatchDto(
                 b.Id,
                 b.ItemId,

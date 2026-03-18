@@ -1,13 +1,14 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Contracts.Stock.Dtos;
+using Nimbo.Wms.Contracts.Stock.Requests;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Infrastructure.Persistence;
 
-namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Queries;
+namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
-public sealed class GetInventoryItemsHandler : IQueryHandler<GetInventoryItemsQuery, IReadOnlyList<InventoryItemDto>>
+public sealed class GetInventoryItemsHandler : IRequestHandler<GetInventoryItemsRequest, IReadOnlyList<InventoryItemDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
 
@@ -16,18 +17,18 @@ public sealed class GetInventoryItemsHandler : IQueryHandler<GetInventoryItemsQu
         _dbContext = dbContext;
     }
     
-    public async Task<IReadOnlyList<InventoryItemDto>> HandleAsync(GetInventoryItemsQuery query, CancellationToken ct = default)
+    public async Task<IReadOnlyList<InventoryItemDto>> Handle(GetInventoryItemsRequest request, CancellationToken ct = default)
     {
         var dbQuery = _dbContext.Set<InventoryItem>().AsNoTracking();
 
-        if (query.WarehouseId is not null)
-            dbQuery = dbQuery.Where(i => i.WarehouseId == query.WarehouseId);
+        if (request.WarehouseId is not null)
+            dbQuery = dbQuery.Where(i => i.WarehouseId == request.WarehouseId);
         
-        if (query.ItemId is not null)
-            dbQuery = dbQuery.Where(i => i.ItemId == query.ItemId);
+        if (request.ItemId is not null)
+            dbQuery = dbQuery.Where(i => i.ItemId == request.ItemId);
 
-        if (query.BatchId is not null)
-            dbQuery = dbQuery.Where(i => i.BatchId == query.BatchId);
+        if (request.BatchId is not null)
+            dbQuery = dbQuery.Where(i => i.BatchId == request.BatchId);
 
         var inventoryItems = await dbQuery.Select(i => new InventoryItemDto(
                 i.Id,

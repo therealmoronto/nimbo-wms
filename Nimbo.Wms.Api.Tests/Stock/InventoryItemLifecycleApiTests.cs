@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using FluentAssertions;
 using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Contracts.Stock.Dtos;
-using Nimbo.Wms.Contracts.Stock.Http;
+using Nimbo.Wms.Contracts.Stock.Requests;
 using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Domain.ValueObject;

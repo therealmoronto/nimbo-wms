@@ -1,7 +1,9 @@
+using MediatR;
+using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Domain.ValueObject;
 
-namespace Nimbo.Wms.Contracts.Stock.Http;
+namespace Nimbo.Wms.Contracts.Stock.Requests;
 
 public sealed record CreateInventoryItemRequest(
     Guid ItemId,
@@ -12,4 +14,6 @@ public sealed record CreateInventoryItemRequest(
     Guid? BatchId,
     string? SerialNumber,
     decimal? UnitCost
-);
+) : IRequest<InventoryItemId>;
+
+public sealed record CreateInventoryItemResponse(Guid Id);

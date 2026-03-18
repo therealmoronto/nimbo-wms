@@ -7,14 +7,9 @@ using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
-using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Commands;
-using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
 using Nimbo.Wms.Application.Services.Documents;
-using Nimbo.Wms.Contracts.MasterData.Dtos;
-using Nimbo.Wms.Contracts.MasterData.Requests;
-using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Domain.Entities.Documents.Adjustment;
 using Nimbo.Wms.Domain.Entities.Documents.CycleCount;
@@ -28,9 +23,6 @@ using Nimbo.Wms.Infrastructure.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Stock;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Topology;
-using Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
-using Nimbo.Wms.Infrastructure.UseCases.MasterData.Queries;
-using Nimbo.Wms.Infrastructure.UseCases.Stock.Queries;
 using Nimbo.Wms.Infrastructure.UseCases.Topology.Queries;
 
 namespace Nimbo.Wms.Infrastructure.DependencyInjection;
@@ -92,14 +84,6 @@ public static class ServiceCollectionExtensions
         {
             services.AddScoped<IBatchRepository, EfBatchRepository>();
             services.AddScoped<IInventoryItemRepository, EfInventoryItemRepository>();
-        
-            services.AddScoped<ICommandHandler<CreateBatchCommand, BatchId>, CreateBatchHandler>();
-            services.AddScoped<ICommandHandler<CreateInventoryItemCommand, InventoryItemId>, CreateInventoryItemHandler>();
-
-            services.AddScoped<IQueryHandler<GetInventoryItemQuery, InventoryItemDto>, GetInventoryItemHandler>();
-            services.AddScoped<IQueryHandler<GetBatchQuery, BatchDto>, GetBatchHandler>();
-            services.AddScoped<IQueryHandler<GetInventoryItemsQuery, IReadOnlyList<InventoryItemDto>>, GetInventoryItemsHandler>();
-            services.AddScoped<IQueryHandler<GetBatchesQuery, IReadOnlyList<BatchDto>>, GetBatchesHandler>();
 
             return services;
         }

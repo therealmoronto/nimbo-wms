@@ -7,7 +7,7 @@ namespace Nimbo.Wms.Controllers.MasterData;
 
 [ApiController]
 [Route("api/suppliers/{supplierGuid:guid}/items")]
-public class SupplierItemsController : ControllerBase
+public class SupplierItemsController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// Adds a new supplier item to the specified supplier.
@@ -25,11 +25,10 @@ public class SupplierItemsController : ControllerBase
     public async Task<IActionResult> AddSupplierItem(
         [FromRoute] Guid supplierGuid,
         [FromBody] AddSupplierItemRequest request,
-        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
         var supplierId = SupplierId.From(supplierGuid);
-        var supplierItemId = await mediator.Send(request with { SupplierGuid = supplierId }, ct);
+        var supplierItemId = await sender.Send(request with { SupplierGuid = supplierId }, ct);
 
         return CreatedAtAction(
             actionName: nameof(SuppliersController.GetSupplier),
@@ -54,10 +53,9 @@ public class SupplierItemsController : ControllerBase
         [FromRoute] Guid supplierGuid,
         [FromRoute] Guid supplierItemGuid,
         [FromBody] PatchSupplierItemRequest request,
-        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        await mediator.Send(request with { SupplierGuid = supplierGuid, SupplierItemGuid = supplierItemGuid }, ct);
+        await sender.Send(request with { SupplierGuid = supplierGuid, SupplierItemGuid = supplierItemGuid }, ct);
         return NoContent();
     }
 
@@ -75,10 +73,9 @@ public class SupplierItemsController : ControllerBase
     public async Task<IActionResult> DeleteSupplierItem(
         [FromRoute] Guid supplierGuid,
         [FromRoute] Guid supplierItemGuid,
-        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        await mediator.Send(new DeleteSupplierItemRequest(supplierGuid, supplierItemGuid), ct);
+        await sender.Send(new DeleteSupplierItemRequest(supplierGuid, supplierItemGuid), ct);
         return NoContent();
     }
 }
