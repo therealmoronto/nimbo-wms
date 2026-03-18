@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Nimbo.Wms.Contracts.MasterData.Requests;
+using Nimbo.Wms.Contracts.MasterData.Http;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Tests.Common.Attributes;

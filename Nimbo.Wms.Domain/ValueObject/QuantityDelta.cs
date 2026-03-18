@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using Nimbo.Wms.Domain.References;
+using Riok.Mapperly.Abstractions;
 
 namespace Nimbo.Wms.Domain.ValueObject;
 
@@ -14,11 +15,11 @@ public readonly record struct QuantityDelta
         Uom = uom;
     }
 
-    public bool IsZero => Value == 0m;
-
     public decimal Value { get; }
 
     public UnitOfMeasure Uom { get; }
+
+    public bool IsZero => Value == 0m;
 
     public QuantityDelta Add(QuantityDelta other)
     {

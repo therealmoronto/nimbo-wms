@@ -32,9 +32,9 @@ public sealed class Warehouse : BaseEntity<WarehouseId>
         IsActive = isActive;
     }
 
-    public string Code { get; private set; }
+    public string Code { get; private set; } = null!;
     
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
     
     public string? Address { get; private set; }
     

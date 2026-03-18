@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Nimbo.Wms.Domain.Common;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Converters;
 

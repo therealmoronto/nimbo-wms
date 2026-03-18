@@ -24,11 +24,20 @@ This document is the source of truth describing how persistence is handled in th
 ## Value Objects
 
 - **Immutability:** Value objects must be immutable. Their state is set at creation and cannot be changed after construction.
-- **Implementation:** Small value objects used in multiple fields of a single entity (e.g., `Quantity` and `ExpectedQuantity` on the same line item) must be implemented as `readonly record struct` to leverage copy-by-value semantics and prevent EF Core identity tracking collisions.
-- **Mapping:** Value objects are mapped with `.ComplexProperty()` configuration in EF Core (available in EF Core 10+). This replaces the legacy `OwnsOne` / owned entity pattern.
-- **ComplexProperty benefits:** `.ComplexProperty()` removes the need for `WithOwner()` boilerplate and simplifies configuration when value objects appear in multiple fields.
+- **Implementation:** All value objects must be implemented as `readonly record struct` to leverage copy-by-value semantics. This is essential when the same value object type is used in multiple fields of a single entity (e.g., `Quantity` and `ExpectedQuantity` on the same line item). Copy-by-value prevents EF Core identity tracking collisions and ensures proper change detection without false "dirty" states.
+- **Mapping Standard:** Value objects are mapped exclusively with `.ComplexProperty()` configuration in EF Core (available in EF Core 10+). This replaces the legacy `OwnsOne` / owned entity pattern and must be used for all value object persistence.
+- **ComplexProperty benefits:** `.ComplexProperty()` removes the need for `WithOwner()` boilerplate and simplifies configuration when value objects appear in multiple fields. It provides clean, idiomatic EF Core 10+ semantics without owned entity overhead.
 - **Optional complex values:** Optional value objects are modeled as nullable complex properties (the property can be null).
 - **Scalar nullability:** Inner scalar properties of value objects must not be nullable unless the domain explicitly requires null as a valid value.
+
+## Data Mapping & Projections (Mapperly)
+
+- **Mandatory tooling:** [Riok.Mapperly](https://mapperly.riok.app/) is the mandatory source generator for all transformations between Domain Entities and Contracts (DTOs). All cross-layer DTO mapping must be implemented via Mapperly mappers, not manual mapping code or LINQ projections.
+- **Projection pattern:** For database-driven queries, always utilize `ProjectToDto(IQueryable<T>)` mapper methods. EF Core translates these mapping expressions directly into `SELECT` statement clauses, avoiding in-memory materialization and ensuring query efficiency at the database layer.
+- **Value Object flattening:** Mappers must provide static mapping methods to flatten `readonly record struct` Value Objects into DTO primitives. For example, a domain `Quantity` structs (with `Value: decimal` and `Uom: string`) must be mapped to DTO properties such as `QuantityValue: decimal` and `QuantityUom: string`. This bridging logic belongs in the mapper, not scattered across domain or application code.
+- **Explicit property mapping:** Use the `[MapProperty]` attribute to resolve naming mismatches between Domain Entities and Contracts. For example, `[MapProperty(nameof(BaseUomCode), nameof(BaseUom))]` explicitly maps `BaseUomCode` on the entity to `BaseUom` on the DTO, making the intent clear and maintainable.
+- **Compile-time safety:** Mapperly provides compile-time validation of all mapping rules. Any unmapped required properties are reported as compilation errors and must be resolved via explicit configuration (e.g., `[MapProperty]`, mapper methods, or constructor injection). Do not ignore or suppress these warnings; all required properties must be explicitly addressed to ensure data integrity.
+- **No manual mapping overhead:** Mappers are source-generated at compile time, eliminating the need for manual mapping boilerplate and reducing the risk of mapping bugs introduced by human error.
 
 ## Collections and Backing Fields
 

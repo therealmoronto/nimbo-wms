@@ -40,9 +40,9 @@ public sealed class Zone : BaseEntity<ZoneId>
     
     public WarehouseId WarehouseId { get; }
 
-    public string Code { get; private set; }
+    public string Code { get; private set; } = null!;
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
 
     public ZoneType Type { get; private set; }
 

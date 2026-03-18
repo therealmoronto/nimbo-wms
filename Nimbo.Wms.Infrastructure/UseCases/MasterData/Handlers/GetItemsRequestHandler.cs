@@ -1,5 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Nimbo.Wms.Application.Abstractions.Cqrs;
+using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Queries;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.Entities.MasterData;
@@ -10,29 +12,18 @@ namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Queries;
 public class GetItemsRequestHandler : IRequestHandler<GetItemsRequest, IReadOnlyList<ItemDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
+    private readonly IMapper<Item, ItemDto> _mapper;
 
-    public GetItemsRequestHandler(NimboWmsDbContext dbContext)
+    public GetItemsRequestHandler(NimboWmsDbContext dbContext, IMapper<Item, ItemDto> mapper)
     {
         _dbContext = dbContext;
+        _mapper = mapper;
     }
 
     public async Task<IReadOnlyList<ItemDto>> Handle(GetItemsRequest request, CancellationToken ct = default)
     {
-        var items = await _dbContext.Set<Item>()
-            .AsNoTracking()
-            .Select(i => new ItemDto
-            (
-                i.Id,
-                i.Name,
-                i.InternalSku,
-                i.Barcode,
-                i.BaseUomCode,
-                i.Manufacturer,
-                i.WeightKg,
-                i.VolumeM3
-            ))
-            .ToListAsync(ct);
-
+        var dbQuery = _dbContext.Set<Item>().AsNoTracking();
+        var items = await _mapper.ProjectToDto(dbQuery).ToListAsync(ct);
         return items;
     }
 }

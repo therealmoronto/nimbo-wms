@@ -45,12 +45,21 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddTopology()
         {
+            services.AddScoped<IMapper<Warehouse, WarehouseTopologyDto>, WarehouseTopologyMapper>();
+            services.AddScoped<IMapper<Warehouse, WarehouseListItemDto>, WarehouseListItemMapper>();
+            services.AddScoped<IMapper<Zone, ZoneDto>, ZoneMapper>();
+            services.AddScoped<IMapper<Location, LocationDto>, LocationMapper>();
+
             services.AddScoped<IWarehouseRepository, EfWarehouseRepository>();
             return services;
         }
 
         private IServiceCollection AddMasterData()
         {
+            services.AddScoped<IMapper<Item, ItemDto>, ItemMapper>();
+            services.AddScoped<IMapper<Supplier, SupplierDto>, SupplierMapper>();
+            services.AddScoped<IMapper<SupplierItem, SupplierItemDto>, SupplierItemMapper>();
+
             services.AddScoped<IItemRepository, EfItemRepository>();
             services.AddScoped<ICustomerRepository, EfCustomerRepository>();
             services.AddScoped<ISupplierRepository, EfSupplierRepository>();
@@ -59,6 +68,9 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddStock()
         {
+            services.AddScoped<IMapper<Batch, BatchDto>, BatchMapper>();
+            services.AddScoped<IMapper<InventoryItem, InventoryItemDto>, InventoryItemMapper>();
+
             services.AddScoped<IBatchRepository, EfBatchRepository>();
             services.AddScoped<IInventoryItemRepository, EfInventoryItemRepository>();
             return services;

@@ -62,7 +62,7 @@ public sealed class Location : BaseEntity<LocationId>
 
     public ZoneId ZoneId { get; }
 
-    public string Code { get; private set; }
+    public string Code { get; private set; } = null!;
 
     public string? Aisle { get; private set; }
     

@@ -35,11 +35,11 @@ public class Item : BaseEntity<ItemId>
         VolumeM3 = RequirePositiveOrNull(volumeM3, nameof(volumeM3));
     }
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
     
-    public string InternalSku { get; private set; }
+    public string InternalSku { get; private set; } = null!;
     
-    public string Barcode { get; private set; }
+    public string Barcode { get; private set; } = null!;
     
     public UnitOfMeasure BaseUomCode { get; private set; }
     
@@ -57,7 +57,7 @@ public class Item : BaseEntity<ItemId>
     public void ChangeBaseUom(UnitOfMeasure baseUomCode)
         => BaseUomCode = baseUomCode;
 
-    public void ChangeBarcode(string? barcode) => Barcode = TrimOrNull(barcode);
+    public void ChangeBarcode(string barcode) => Barcode = barcode.Trim();
 
     public void ChangeManufacturer(string? manufacturer) => Manufacturer = TrimOrNull(manufacturer);
 
