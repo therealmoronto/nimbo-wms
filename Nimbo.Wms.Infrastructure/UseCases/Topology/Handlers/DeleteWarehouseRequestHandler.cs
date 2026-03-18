@@ -1,27 +1,24 @@
-using Nimbo.Wms.Application.Abstractions.Cqrs;
+using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 
-public sealed record DeleteWarehouseCommand(WarehouseId WarehouseId) : ICommand;
-
-public sealed class DeleteWarehouseHandler : ICommandHandler<DeleteWarehouseCommand>
+public sealed class DeleteWarehouseRequestHandler : IRequestHandler<DeleteWarehouseRequest>
 {
     private readonly IWarehouseRepository _repository;
     private readonly IUnitOfWork _uow;
 
-    public DeleteWarehouseHandler(IWarehouseRepository repository, IUnitOfWork uow)
+    public DeleteWarehouseRequestHandler(IWarehouseRepository repository, IUnitOfWork uow)
     {
         _repository = repository;
         _uow = uow;
     }
 
-    public async Task HandleAsync(DeleteWarehouseCommand command, CancellationToken ct = default)
+    public async Task Handle(DeleteWarehouseRequest request, CancellationToken ct = default)
     {
-        var warehouse = await _repository.GetByIdAsync(command.WarehouseId, ct);
+        var warehouse = await _repository.GetByIdAsync(request.WarehouseId, ct);
         if (warehouse == null)
             throw new NotFoundException("Warehouse not found");
         

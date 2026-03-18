@@ -1,8 +1,11 @@
+using MediatR;
 using Nimbo.Wms.Domain.References;
 
-namespace Nimbo.Wms.Contracts.Topology.Http;
+namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 
 public sealed record PatchLocationRequest(
+    Guid LocationGuid,
+
     string? Code = null,
     LocationType? Type = null,
 
@@ -21,4 +24,4 @@ public sealed record PatchLocationRequest(
     string? Rack = null,
     string? Level = null,
     string? Position = null
-);
+) : IRequest;

@@ -1,29 +1,27 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Topology.Dtos;
+using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Infrastructure.Persistence;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Queries;
 
-internal sealed class GetWarehouseTopologyHandler : IQueryHandler<GetWarehouseTopologyQuery, WarehouseTopologyDto>
+internal sealed class GetWarehouseTopologyRequestHandler : IRequestHandler<GetWarehouseTopologyRequest, WarehouseTopologyDto>
 {
     private readonly NimboWmsDbContext _db;
 
-    public GetWarehouseTopologyHandler(NimboWmsDbContext db)
+    public GetWarehouseTopologyRequestHandler(NimboWmsDbContext db)
     {
         _db = db;
     }
 
-    public async Task<WarehouseTopologyDto> HandleAsync(
-        GetWarehouseTopologyQuery query,
-        CancellationToken ct = default)
+    public async Task<WarehouseTopologyDto> Handle(GetWarehouseTopologyRequest request, CancellationToken ct = default)
     {
         var warehouse = await _db.Set<Warehouse>()
             .AsNoTracking()
-            .Where(w => w.Id == query.WarehouseId)
+            .Where(w => w.Id == request.WarehouseId)
             .Select(w => new
             {
                 w.Id,

@@ -1,8 +1,11 @@
+using MediatR;
 using Nimbo.Wms.Domain.References;
 
-namespace Nimbo.Wms.Contracts.Topology.Http;
+namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
 
 public sealed record PatchZoneRequest(
+    Guid ZoneGuid,
+
     string? Code = null,
     string? Name = null,
     ZoneType? Type = null,
@@ -12,4 +15,4 @@ public sealed record PatchZoneRequest(
 
     bool? IsQuarantine = null,
     bool? IsDamagedArea = null
-);
+) : IRequest;

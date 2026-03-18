@@ -1,14 +1,14 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
-using Nimbo.Wms.Contracts.Topology.Http;
 using Nimbo.Wms.Domain.Identification;
+using PatchLocationRequest = Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands.PatchLocationRequest;
 
 namespace Nimbo.Wms.Controllers.Topology;
 
 [ApiController]
 [Route("api/topology/locations")]
-public class LocationsController : ControllerBase
+public class LocationsController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// Updates the attributes of a location identified by its unique identifier.
@@ -19,14 +19,9 @@ public class LocationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> PatchLocation(
-        [FromRoute] Guid locationGuid,
-        [FromBody] PatchLocationRequest request,
-        [FromServices] ICommandHandler<PatchLocationCommand> handler,
-        CancellationToken ct)
+    public async Task<IActionResult> PatchLocation([FromRoute] Guid locationGuid, [FromBody] PatchLocationRequest request, CancellationToken ct)
     {
-        var locationId = LocationId.From(locationGuid);
-        await handler.HandleAsync(new PatchLocationCommand(locationId, request), ct);
+        await sender.Send(request with { LocationGuid = locationGuid }, ct);
         return NoContent();
     }
 
@@ -38,13 +33,10 @@ public class LocationsController : ControllerBase
     [HttpDelete("{locationGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteLocation(
-        [FromRoute] Guid locationGuid,
-        [FromServices] ICommandHandler<DeleteLocationCommand> handler,
-        CancellationToken ct)
+    public async Task<IActionResult> DeleteLocation([FromRoute] Guid locationGuid, CancellationToken ct)
     {
         var locationId = LocationId.From(locationGuid);
-        await handler.HandleAsync(new DeleteLocationCommand(locationId), ct);
+        await sender.Send(new DeleteLocationRequest(locationId), ct);
         return NoContent();
     }
 }

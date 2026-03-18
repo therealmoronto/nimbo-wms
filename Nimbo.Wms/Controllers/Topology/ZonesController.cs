@@ -1,14 +1,13 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
-using Nimbo.Wms.Contracts.Topology.Http;
-using Nimbo.Wms.Domain.Identification;
+using PatchZoneRequest = Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands.PatchZoneRequest;
 
 namespace Nimbo.Wms.Controllers.Topology;
 
 [ApiController]
 [Route("api/topology/zones")]
-public class ZonesController : ControllerBase
+public class ZonesController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// Updates the properties of a zone identified by the specified GUID.
@@ -26,11 +25,9 @@ public class ZonesController : ControllerBase
     public async Task<IActionResult> PatchZone(
         [FromRoute] Guid zoneGuid,
         [FromBody] PatchZoneRequest request,
-        [FromServices] ICommandHandler<PatchZoneCommand> handler,
         CancellationToken ct)
     {
-        var zoneId = ZoneId.From(zoneGuid);
-        await handler.HandleAsync(new PatchZoneCommand(zoneId, request), ct);
+        await sender.Send(request with { ZoneGuid = zoneGuid }, ct);
         return NoContent();
     }
 
@@ -49,11 +46,9 @@ public class ZonesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteZone(
         [FromRoute] Guid zoneGuid,
-        [FromServices] ICommandHandler<DeleteZoneCommand> handler,
         CancellationToken ct)
     {
-        var zoneId = ZoneId.From(zoneGuid);
-        await handler.HandleAsync(new DeleteZoneCommand(zoneId), ct);
+        await sender.Send(new DeleteZoneRequest(zoneGuid), ct);
         return NoContent();
     }
 }

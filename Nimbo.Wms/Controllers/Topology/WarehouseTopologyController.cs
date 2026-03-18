@@ -1,14 +1,12 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
 using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
-using Nimbo.Wms.Contracts.Topology.Http;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.Topology;
 
 [ApiController]
 [Route("api/topology/warehouses/{warehouseGuid:guid}")]
-public class WarehouseTopologyController : ControllerBase
+public class WarehouseTopologyController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// Adds a new zone to the specified warehouse using the provided request data and command handler.
@@ -22,12 +20,9 @@ public class WarehouseTopologyController : ControllerBase
     public async Task<ActionResult<AddZoneResponse>> AddZone(
         [FromRoute] Guid warehouseGuid,
         [FromBody] AddZoneRequest request,
-        [FromServices] ICommandHandler<AddZoneToWarehouseCommand, ZoneId> handler,
         CancellationToken ct)
     {
-        var warehouseId = WarehouseId.From(warehouseGuid);
-        var command = new AddZoneToWarehouseCommand(warehouseId, request);
-        var zoneId = await handler.HandleAsync(command, ct);
+        var zoneId = await sender.Send(request with { WarehouseGuid = warehouseGuid }, ct);
 
         // Location header points to warehouse topology
         return CreatedAtAction(
@@ -49,12 +44,9 @@ public class WarehouseTopologyController : ControllerBase
     public async Task<ActionResult<AddLocationResponse>> AddLocation(
         [FromRoute] Guid warehouseGuid,
         [FromBody] AddLocationRequest request,
-        [FromServices] ICommandHandler<AddLocationToWarehouseCommand, LocationId> handler,
         CancellationToken ct)
     {
-        var warehouseId = WarehouseId.From(warehouseGuid);
-        var command = new AddLocationToWarehouseCommand(warehouseId, request);
-        var locationId = await handler.HandleAsync(command, ct);
+        var locationId = await sender.Send(request with { WarehouseGuid = warehouseGuid}, ct);
 
         return CreatedAtAction(
             actionName: nameof(WarehousesController.GetWarehouseTopology),
