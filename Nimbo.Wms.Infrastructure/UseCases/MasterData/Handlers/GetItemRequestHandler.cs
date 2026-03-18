@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Common;
@@ -7,9 +8,10 @@ using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence;
 
-namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Queries;
+namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
-public sealed class GetItemRequestHandler : IRequestHandler<GetItemRequest, ItemDto>
+[PublicAPI]
+internal sealed class GetItemRequestHandler : IRequestHandler<GetItemRequest, ItemDto>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<Item, ItemDto> _mapper;

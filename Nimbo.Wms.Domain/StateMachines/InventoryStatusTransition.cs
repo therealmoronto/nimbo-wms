@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
+using Nimbo.Wms.Domain.References;
 
-namespace Nimbo.Wms.Domain.References;
+namespace Nimbo.Wms.Domain.StateMachines;
 
 /// <summary>
 /// Allowed transitions for InventoryStatus

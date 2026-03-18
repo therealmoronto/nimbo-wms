@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
+using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.Identification;
-using PatchLocationRequest = Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands.PatchLocationRequest;
+using PatchLocationRequest = Nimbo.Wms.Contracts.Topology.Requests.PatchLocationRequest;
 
 namespace Nimbo.Wms.Controllers.Topology;
 

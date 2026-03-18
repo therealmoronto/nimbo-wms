@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
-using PatchZoneRequest = Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands.PatchZoneRequest;
+using Nimbo.Wms.Contracts.Topology.Requests;
+using PatchZoneRequest = Nimbo.Wms.Contracts.Topology.Requests.PatchZoneRequest;
 
 namespace Nimbo.Wms.Controllers.Topology;
 

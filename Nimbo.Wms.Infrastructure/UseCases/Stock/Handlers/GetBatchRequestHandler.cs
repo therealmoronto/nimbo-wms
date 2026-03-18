@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Common;
@@ -9,7 +10,8 @@ using Nimbo.Wms.Infrastructure.Persistence;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
-public sealed class GetBatchRequestHandler : IRequestHandler<GetBatchRequest, BatchDto>
+[PublicAPI]
+internal sealed class GetBatchRequestHandler : IRequestHandler<GetBatchRequest, BatchDto>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<Batch, BatchDto> _mapper;

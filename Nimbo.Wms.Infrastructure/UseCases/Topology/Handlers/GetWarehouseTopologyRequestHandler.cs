@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Common;
@@ -7,8 +8,9 @@ using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Infrastructure.Persistence;
 
-namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Queries;
+namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 
+[PublicAPI]
 internal sealed class GetWarehouseTopologyRequestHandler : IRequestHandler<GetWarehouseTopologyRequest, WarehouseTopologyDto>
 {
     private readonly NimboWmsDbContext _db;
@@ -24,7 +26,7 @@ internal sealed class GetWarehouseTopologyRequestHandler : IRequestHandler<GetWa
     {
         var dbQuery = _db.Set<Warehouse>()
             .AsNoTracking()
-            .Where(w => w.Id == query.WarehouseId);
+            .Where(w => w.Id == request.WarehouseId);
 
         var warehouse = await _mapper.ProjectToDto(dbQuery).SingleOrDefaultAsync(ct);
         if (warehouse is null)

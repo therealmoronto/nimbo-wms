@@ -1,8 +1,9 @@
+using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Contracts.MasterData.Requests;
 
+[PublicAPI]
 public sealed record PatchSupplierRequest(
     Guid SupplierId,
     string? Code,

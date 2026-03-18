@@ -1,7 +1,9 @@
+using JetBrains.Annotations;
 using MediatR;
 
-namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
+namespace Nimbo.Wms.Contracts.Topology.Requests;
 
+[PublicAPI]
 public sealed record PatchWarehouseRequest(
     Guid WarehouseGuid,
     string? Code = null,

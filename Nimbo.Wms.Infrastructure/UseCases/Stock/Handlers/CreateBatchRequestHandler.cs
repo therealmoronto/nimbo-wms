@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
@@ -9,7 +10,8 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
-public sealed class CreateBatchRequestHandler : IRequestHandler<CreateBatchRequest, BatchId>
+[PublicAPI]
+internal sealed class CreateBatchRequestHandler : IRequestHandler<CreateBatchRequest, BatchId>
 {
     private readonly IItemRepository _itemRepository;
     private readonly ISupplierRepository _supplierRepository;

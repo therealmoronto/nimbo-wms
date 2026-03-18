@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Nimbo.Wms.Domain.Entities.Stock;
 
 namespace Nimbo.Wms.Domain.References;
 

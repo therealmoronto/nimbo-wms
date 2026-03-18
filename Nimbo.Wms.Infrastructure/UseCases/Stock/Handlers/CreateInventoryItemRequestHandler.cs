@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
@@ -10,7 +11,8 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
-public sealed class CreateInventoryItemRequestHandler : IRequestHandler<CreateInventoryItemRequest, InventoryItemId>
+[PublicAPI]
+internal sealed class CreateInventoryItemRequestHandler : IRequestHandler<CreateInventoryItemRequest, InventoryItemId>
 {
     private readonly IWarehouseRepository _warehouseRepository;
     private readonly IItemRepository _itemRepository;

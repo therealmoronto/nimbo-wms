@@ -1,8 +1,10 @@
+using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Contracts.MasterData.Requests;
 
+[PublicAPI]
 public sealed record PatchItemRequest(
     Guid ItemGuid,
     string? Name = null,

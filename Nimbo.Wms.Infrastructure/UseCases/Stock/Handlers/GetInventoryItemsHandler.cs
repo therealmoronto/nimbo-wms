@@ -1,6 +1,6 @@
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Requests;
@@ -9,7 +9,8 @@ using Nimbo.Wms.Infrastructure.Persistence;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
-public sealed class GetInventoryItemsHandler : IRequestHandler<GetInventoryItemsRequest, IReadOnlyList<InventoryItemDto>>
+[PublicAPI]
+internal sealed class GetInventoryItemsHandler : IRequestHandler<GetInventoryItemsRequest, IReadOnlyList<InventoryItemDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<InventoryItem, InventoryItemDto> _mapper;

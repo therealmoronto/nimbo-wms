@@ -1,8 +1,10 @@
+using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Contracts.Stock.Requests;
 
+[PublicAPI]
 public sealed record CreateBatchRequest(
     Guid ItemId,
     Guid? SupplierId,
@@ -13,4 +15,5 @@ public sealed record CreateBatchRequest(
     string? Notes
 ) : IRequest<BatchId>;
 
+[PublicAPI]
 public sealed record CreateBatchResponse(Guid Id);

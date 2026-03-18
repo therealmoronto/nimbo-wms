@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
@@ -7,7 +8,8 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
-public sealed class CreateItemRequestHandler : IRequestHandler<CreateItemRequest, ItemId>
+[PublicAPI]
+internal sealed class CreateItemRequestHandler : IRequestHandler<CreateItemRequest, ItemId>
 {
     private readonly IItemRepository _repository;
     private readonly IUnitOfWork _uow;

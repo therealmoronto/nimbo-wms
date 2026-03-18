@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
@@ -7,7 +8,8 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
-public sealed class DeleteSupplierRequestHandler : IRequestHandler<DeleteSupplierRequest>
+[PublicAPI]
+internal sealed class DeleteSupplierRequestHandler : IRequestHandler<DeleteSupplierRequest>
 {
     private readonly ISupplierRepository _repository;
     private readonly IUnitOfWork _uow;

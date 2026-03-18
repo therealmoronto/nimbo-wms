@@ -1,9 +1,11 @@
+using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 
-namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
+namespace Nimbo.Wms.Contracts.Topology.Requests;
 
+[PublicAPI]
 public sealed record AddZoneRequest(
     Guid WarehouseGuid,
     string Code,
@@ -11,4 +13,5 @@ public sealed record AddZoneRequest(
     ZoneType Type
 ) : IRequest<ZoneId>;
 
+[PublicAPI]
 public sealed record AddZoneResponse(Guid ZoneId);

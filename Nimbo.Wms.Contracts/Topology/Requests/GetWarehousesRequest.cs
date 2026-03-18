@@ -1,6 +1,8 @@
+using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 
-namespace Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
+namespace Nimbo.Wms.Contracts.Topology.Requests;
 
+[PublicAPI]
 public sealed record GetWarehousesRequest : IRequest<IReadOnlyList<WarehouseListItemDto>>;
