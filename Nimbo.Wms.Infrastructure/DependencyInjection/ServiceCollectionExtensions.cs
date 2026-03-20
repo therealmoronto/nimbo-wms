@@ -6,6 +6,7 @@ using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
+using Nimbo.Wms.Application.Common.Behaviors;
 using Nimbo.Wms.Application.Mappings.MasterData;
 using Nimbo.Wms.Application.Mappings.Stock;
 using Nimbo.Wms.Application.Mappings.Topology;
@@ -48,6 +49,8 @@ public static class ServiceCollectionExtensions
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly);
+
+                cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             });
 
             return services;
