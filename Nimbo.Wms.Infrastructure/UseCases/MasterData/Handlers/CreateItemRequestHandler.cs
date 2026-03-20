@@ -14,10 +14,9 @@ internal sealed class CreateItemRequestHandler : IRequestHandler<CreateItemReque
     private readonly IItemRepository _repository;
     private readonly IUnitOfWork _uow;
 
-    public CreateItemRequestHandler(IItemRepository repository, IUnitOfWork uow)
+    public CreateItemRequestHandler(IItemRepository repository)
     {
         _repository = repository;
-        _uow = uow;
     }
 
     public async Task<ItemId> Handle(CreateItemRequest request, CancellationToken ct = default)
@@ -30,7 +29,6 @@ internal sealed class CreateItemRequestHandler : IRequestHandler<CreateItemReque
             request.BaseUom);
 
         await _repository.AddAsync(item, ct);
-        await _uow.CommitAsync(ct);
 
         return item.Id;
     }

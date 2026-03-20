@@ -31,8 +31,6 @@ internal sealed class AddLocationRequestHandler : IRequestHandler<AddLocationReq
         var zoneId = ZoneId.From(request.ZoneGuid);
         warehouse.AddLocation(locationId, zoneId, request.Code, request.Type);
 
-        await _unitOfWork.CommitAsync(ct);
-
         return locationId;
     }
 }

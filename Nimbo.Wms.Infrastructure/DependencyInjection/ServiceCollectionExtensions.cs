@@ -51,6 +51,7 @@ public static class ServiceCollectionExtensions
                 cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly);
 
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
+                cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
             });
 
             return services;

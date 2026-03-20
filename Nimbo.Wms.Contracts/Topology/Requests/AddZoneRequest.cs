@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 
@@ -11,7 +12,7 @@ public sealed record AddZoneRequest(
     string Code,
     string Name,
     ZoneType Type
-) : IRequest<ZoneId>;
+) : IRequest<ZoneId>, ITxRequest;
 
 [PublicAPI]
 public sealed record AddZoneResponse(Guid ZoneId);
