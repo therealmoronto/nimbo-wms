@@ -1,10 +1,12 @@
 using System.Reflection;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using Nimbo.Wms.Application;
 using Nimbo.Wms.Filters;
-using Nimbo.Wms.Http;
 using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
+using Nimbo.Wms.Middlewares;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +27,7 @@ try
         options.UseNpgsql(cs, npgsql => npgsql.MigrationsAssembly("Nimbo.Wms.Infrastructure"));
     });
 
+    builder.Services.AddValidatorsFromAssembly(typeof(IApplicationMarker).Assembly);
     builder.Services.AddInfrastructure();
 
     builder.Services.AddEndpointsApiExplorer();
