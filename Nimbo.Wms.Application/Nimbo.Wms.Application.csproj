@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="MediatR" Version="14.1.0" />
       <PackageReference Include="Riok.Mapperly" Version="5.0.0-next.2" />
     </ItemGroup>
 

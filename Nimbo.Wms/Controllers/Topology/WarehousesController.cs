@@ -1,16 +1,14 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Commands;
-using Nimbo.Wms.Application.Abstractions.UseCases.Topology.Queries;
 using Nimbo.Wms.Contracts.Topology.Dtos;
-using Nimbo.Wms.Contracts.Topology.Http;
+using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.Topology;
 
 [ApiController]
 [Route("api/topology/warehouses")]
-public sealed class WarehousesController : ControllerBase
+public sealed class WarehousesController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// Retrieves a list of all warehouses with their basic details.
@@ -21,11 +19,9 @@ public sealed class WarehousesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IReadOnlyList<WarehouseListItemDto>), StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<WarehouseListItemDto>> GetWarehouses(
-        [FromServices] IQueryHandler<GetWarehousesQuery, IReadOnlyList<WarehouseListItemDto>> handler,
-        CancellationToken ct)
+    public async Task<IReadOnlyList<WarehouseListItemDto>> GetWarehouses(CancellationToken ct)
     {
-        return await handler.HandleAsync(new GetWarehousesQuery(), ct);
+        return await sender.Send(new GetWarehousesRequest(), ct);
     }
 
     /// <summary>
@@ -40,13 +36,9 @@ public sealed class WarehousesController : ControllerBase
     [ProducesResponseType(typeof(WarehouseTopologyDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<WarehouseTopologyDto> GetWarehouseTopology(
-        [FromRoute] Guid warehouseGuid,
-        [FromServices] IQueryHandler<GetWarehouseTopologyQuery, WarehouseTopologyDto> handler,
-        CancellationToken ct)
+    public async Task<WarehouseTopologyDto> GetWarehouseTopology([FromRoute] Guid warehouseGuid, CancellationToken ct)
     {
-        WarehouseId warehouseId = WarehouseId.From(warehouseGuid);
-        return await handler.HandleAsync(new GetWarehouseTopologyQuery(warehouseId), ct);
+        return await sender.Send(new GetWarehouseTopologyRequest(warehouseGuid), ct);
     }
 
     /// <summary>
@@ -59,13 +51,9 @@ public sealed class WarehousesController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(CreateWarehouseResponse), StatusCodes.Status201Created)]
     [Produces("application/json")]
-    public async Task<ActionResult<CreateWarehouseResponse>> CreateWarehouse(
-        [FromBody] CreateWarehouseRequest request,
-        [FromServices] ICommandHandler<CreateWarehouseCommand, WarehouseId> handler,
-        CancellationToken ct)
+    public async Task<ActionResult<CreateWarehouseResponse>> CreateWarehouse([FromBody] CreateWarehouseRequest request, CancellationToken ct)
     {
-        var command = new CreateWarehouseCommand(request);
-        var warehouseId = await handler.HandleAsync(command, ct);
+        var warehouseId = await sender.Send(request, ct);
 
         return CreatedAtAction(
             actionName: nameof(WarehousesController.GetWarehouseTopology),
@@ -84,14 +72,9 @@ public sealed class WarehousesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateWarehouse(
-        [FromRoute] Guid warehouseGuid,
-        [FromBody] PatchWarehouseRequest request,
-        [FromServices] ICommandHandler<PatchWarehouseCommand> handler,
-        CancellationToken ct)
+    public async Task<IActionResult> UpdateWarehouse([FromRoute] Guid warehouseGuid, [FromBody] PatchWarehouseRequest request, CancellationToken ct)
     {
-        var warehouseId = WarehouseId.From(warehouseGuid);
-        await handler.HandleAsync(new PatchWarehouseCommand(warehouseId, request), ct);
+        await sender.Send(request with { WarehouseGuid = warehouseGuid }, ct);
         return NoContent();
     }
 
@@ -105,13 +88,10 @@ public sealed class WarehousesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> DeleteWarehouse(
-        [FromRoute] Guid warehouseGuid,
-        [FromServices] ICommandHandler<DeleteWarehouseCommand> handler,
-        CancellationToken ct)
+    public async Task<IActionResult> DeleteWarehouse([FromRoute] Guid warehouseGuid, CancellationToken ct)
     {
         var warehouseId = WarehouseId.From(warehouseGuid);
-        await handler.HandleAsync(new DeleteWarehouseCommand(warehouseId), ct);
+        await sender.Send(new DeleteWarehouseRequest(warehouseId), ct);
         return NoContent();
     }
 }

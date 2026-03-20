@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Contracts.MasterData.Dtos;
 

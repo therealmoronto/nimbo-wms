@@ -1,18 +1,14 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
-using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Queries;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Contracts.Topology.Dtos;
-using Nimbo.Wms.Contracts.Topology.Http;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 
 [ApiController]
 [Route("api/suppliers")]
-public class SuppliersController : ControllerBase
+public class SuppliersController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// Create a new supplier.
@@ -22,13 +18,9 @@ public class SuppliersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json")]
-    public async Task<IActionResult> CreateSupplier(
-        [FromBody] CreateSupplierRequest request,
-        [FromServices] ICommandHandler<CreateSupplierCommand, SupplierId> handler,
-        CancellationToken ct)
+    public async Task<IActionResult> CreateSupplier([FromBody] CreateSupplierRequest request, CancellationToken ct)
     {
-        var command = new CreateSupplierCommand(request);
-        var supplierId = await handler.HandleAsync(command, ct);
+        var supplierId = await sender.Send(request, ct);
         
         return CreatedAtAction(
             actionName: nameof(GetSupplier),
@@ -45,14 +37,10 @@ public class SuppliersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<SupplierDto> GetSupplier(
-        [FromRoute] Guid supplierGuid,
-        [FromServices] IQueryHandler<GetSupplierQuery, SupplierDto> handler,
-        CancellationToken ct)
+    public async Task<SupplierDto> GetSupplier([FromRoute] Guid supplierGuid, CancellationToken ct)
     {
-        var supplierId = SupplierId.From(supplierGuid);
-        var query = new GetSupplierQuery(supplierId);
-        return await handler.HandleAsync(query, ct);
+        var request = new GetSupplierRequest(supplierGuid);
+        return await sender.Send(request, ct);
     }
 
     /// <summary>
@@ -62,11 +50,9 @@ public class SuppliersController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<SupplierDto>> GetSuppliers(
-        [FromServices] IQueryHandler<GetSuppliersQuery, IReadOnlyList<SupplierDto>> handler,
-        CancellationToken ct)
+    public async Task<IReadOnlyList<SupplierDto>> GetSuppliers(CancellationToken ct)
     {
-        return await handler.HandleAsync(new GetSuppliersQuery(), ct);
+        return await sender.Send(new GetSuppliersRequest(), ct);
     }
 
     /// <summary>
@@ -77,15 +63,9 @@ public class SuppliersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> PatchSupplier(
-        [FromRoute] Guid supplierGuid,
-        [FromBody] PatchSupplierRequest request,
-        [FromServices] ICommandHandler<PatchSupplierCommand> handler,
-        CancellationToken ct)
+    public async Task<IActionResult> PatchSupplier([FromRoute] Guid supplierGuid, [FromBody] PatchSupplierRequest request, CancellationToken ct)
     {
-        var supplierId = SupplierId.From(supplierGuid);
-        var command = new PatchSupplierCommand(supplierId, request);
-        await handler.HandleAsync(command, ct);
+        await sender.Send(request with { SupplierId = supplierGuid }, ct);
         return NoContent();
     }
 
@@ -96,13 +76,9 @@ public class SuppliersController : ControllerBase
     [HttpDelete("{supplierGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteSupplier(
-        [FromRoute] Guid supplierGuid,
-        [FromServices] ICommandHandler<DeleteSupplierCommand> handler,
-        CancellationToken ct)
+    public async Task<IActionResult> DeleteSupplier([FromRoute] Guid supplierGuid, CancellationToken ct)
     {
-        var supplierId = SupplierId.From(supplierGuid);
-        await handler.HandleAsync(new DeleteSupplierCommand(supplierId), ct);
+        await sender.Send(new DeleteSupplierRequest(supplierGuid), ct);
         return NoContent();
     }
 }

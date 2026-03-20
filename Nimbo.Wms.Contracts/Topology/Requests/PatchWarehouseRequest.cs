@@ -1,0 +1,13 @@
+using JetBrains.Annotations;
+using MediatR;
+
+namespace Nimbo.Wms.Contracts.Topology.Requests;
+
+[PublicAPI]
+public sealed record PatchWarehouseRequest(
+    Guid WarehouseGuid,
+    string? Code = null,
+    string? Name = null,
+    string? Address = null,
+    string? Description = null
+) : IRequest;

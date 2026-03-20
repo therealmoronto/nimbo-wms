@@ -1,10 +1,7 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Commands;
-using Nimbo.Wms.Application.Abstractions.UseCases.Stock.Queries;
 using Nimbo.Wms.Contracts.Stock.Dtos;
-using Nimbo.Wms.Contracts.Stock.Http;
-using Nimbo.Wms.Domain.Identification;
+using Nimbo.Wms.Contracts.Stock.Requests;
 
 namespace Nimbo.Wms.Controllers.Stock;
 
@@ -26,11 +23,10 @@ public class BatchesController : ControllerBase
     [Produces("application/json")]
     public async Task<IActionResult> CreateBatch(
         [FromBody] CreateBatchRequest request,
-        [FromServices] ICommandHandler<CreateBatchCommand, BatchId> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var command = new CreateBatchCommand(request);
-        var batchId = await handler.HandleAsync(command, ct);
+        var batchId = await mediator.Send(request, ct);
         return CreatedAtAction(
             nameof(GetBatch),
             "Batches",
@@ -51,11 +47,11 @@ public class BatchesController : ControllerBase
     [Produces("application/json")]
     public async Task<BatchDto> GetBatch(
         [FromRoute] Guid batchGuid,
-        [FromServices] IQueryHandler<GetBatchQuery, BatchDto> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var query = new GetBatchQuery(BatchId.From(batchGuid));
-        return await handler.HandleAsync(query, ct);
+        var query = new GetBatchRequest(batchGuid);
+        return await mediator.Send(query, ct);
     }
 
     /// <summary>
@@ -71,12 +67,10 @@ public class BatchesController : ControllerBase
     public async Task<IReadOnlyList<BatchDto>> GetBatches(
         [FromQuery] Guid? itemGuid,
         [FromQuery] Guid? supplierGuid,
-        [FromServices] IQueryHandler<GetBatchesQuery, IReadOnlyList<BatchDto>> handler,
+        [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var itemId = itemGuid.HasValue ? ItemId.From(itemGuid.Value) : (ItemId?)null;
-        var supplierId = supplierGuid.HasValue ? SupplierId.From(supplierGuid.Value) : (SupplierId?)null;
-        var query = new GetBatchesQuery(itemId, supplierId);
-        return await handler.HandleAsync(query, ct);
+        var query = new GetBatchesRequest(itemGuid, supplierGuid);
+        return await mediator.Send(query, ct);
     }
 }

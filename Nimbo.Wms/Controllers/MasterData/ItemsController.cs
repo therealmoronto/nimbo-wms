@@ -1,16 +1,14 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Abstractions.Cqrs;
-using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Commands;
-using Nimbo.Wms.Application.Abstractions.UseCases.MasterData.Queries;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 
 [ApiController]
 [Route("api/items")]
-public class ItemsController : ControllerBase
+public class ItemsController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// Creates a new item.
@@ -21,14 +19,9 @@ public class ItemsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [Produces("application/json")]
-    public async Task<IActionResult> Createitem(
-        [FromBody]CreateItemRequest request,
-        [FromServices] ICommandHandler<CreateItemCommand, ItemId> handler,
-        CancellationToken ct)
+    public async Task<IActionResult> Createitem([FromBody] CreateItemRequest request, CancellationToken ct)
     {
-        var command = new CreateItemCommand(request);
-        var itemId = await handler.HandleAsync(command, ct);
-        
+        var itemId = await sender.Send(request, ct);
         return CreatedAtAction(
             actionName: nameof(GetItem),
             new { itemGuid = itemId.Value },
@@ -43,19 +36,14 @@ public class ItemsController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<ItemDto>> GetItems(
-        [FromServices] IQueryHandler<GetItemsQuery, IReadOnlyList<ItemDto>> handler,
-        CancellationToken ct)
+    public async Task<IReadOnlyList<ItemDto>> GetItems(CancellationToken ct)
     {
-        return await handler.HandleAsync(new GetItemsQuery(), ct);
+        return await sender.Send(new GetItemsRequest(), ct);
     }
 
     /// <summary>
     /// Retrieves an item by its unique identifier.
     /// </summary>
-    /// <param name="itemGuid">The unique identifier of the item to retrieve.</param>
-    /// <param name="handler">The query handler responsible for processing the request.</param>
-    /// <param name="ct">The cancellation token to observe while waiting for the task to complete.</param>
     /// <returns>The details of the requested item.</returns>
     /// <response code="200">The item was successfully retrieved.</response>
     /// <response code="404">The item with the specified identifier was not found.</response>
@@ -64,13 +52,10 @@ public class ItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<ItemDto> GetItem(
-        [FromRoute] Guid itemGuid,
-        [FromServices] IQueryHandler<GetItemQuery, ItemDto> handler,
-        CancellationToken ct)
+    public async Task<ItemDto> GetItem([FromRoute] Guid itemGuid, CancellationToken ct)
     {
-        var query = new GetItemQuery(ItemId.From(itemGuid));
-        return await handler.HandleAsync(query, ct);
+        var request = new GetItemRequest(ItemId.From(itemGuid));
+        return await sender.Send(request, ct);
     }
 
     /// <summary>
@@ -83,14 +68,9 @@ public class ItemsController : ControllerBase
     [HttpPatch("{itemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> PatchItem(
-        [FromRoute] Guid itemGuid,
-        [FromBody] PatchItemRequest request,
-        [FromServices] ICommandHandler<PatchItemCommand> handler,
-        CancellationToken ct)
+    public async Task<IActionResult> PatchItem([FromRoute] Guid itemGuid, [FromBody] PatchItemRequest request, CancellationToken ct)
     {
-        var command = new PatchItemCommand(ItemId.From(itemGuid), request);
-        await handler.HandleAsync(command, ct);
+        await sender.Send(request with { ItemGuid = itemGuid }, ct);
         return NoContent();
     }
 
@@ -103,13 +83,10 @@ public class ItemsController : ControllerBase
     [HttpDelete("{itemGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteItem(
-        [FromRoute] Guid itemGuid,
-        [FromServices] ICommandHandler<DeleteItemCommand> handler,
-        CancellationToken ct)
+    public async Task<IActionResult> DeleteItem([FromRoute] Guid itemGuid, CancellationToken ct)
     {
-        var command = new DeleteItemCommand(ItemId.From(itemGuid));
-        await handler.HandleAsync(command, ct);
+        var request = new DeleteItemRequest(itemGuid);
+        await sender.Send(request, ct);
         return NoContent();
     }
 }

@@ -1,10 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Nimbo.Wms.Contracts.MasterData.Http;
+using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Contracts.Stock.Dtos;
-using Nimbo.Wms.Contracts.Stock.Http;
-using Nimbo.Wms.Contracts.Topology.Http;
+using Nimbo.Wms.Contracts.Stock.Requests;
+using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Domain.ValueObject;
 using Nimbo.Wms.Tests.Common.Attributes;
@@ -28,23 +28,25 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
 
         var createWarehouseResponse = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
         var createdWarehouse = (await createWarehouseResponse.Content.ReadFromJsonAsync<CreateWarehouseResponse>())!;
-        var warehouseId = createdWarehouse.Id;
+        var warehouseGuid = createdWarehouse.Id;
 
         var addZoneRequest = new AddZoneRequest(
+            warehouseGuid,
             Code: "Z-TEST",
             Name: "Test Zone",
-            Type: ZoneType.Storage);
+            ZoneType.Storage);
 
-        var addZoneResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/zones", addZoneRequest);
+        var addZoneResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
         var createdZone = (await addZoneResponse.Content.ReadFromJsonAsync<AddZoneResponse>())!;
-        var zoneId = createdZone.ZoneId;
+        var zoneGuid = createdZone.ZoneId;
 
         var addLocationRequest = new AddLocationRequest(
-            ZoneId: zoneId,
+            warehouseGuid,
+            zoneGuid,
             Code: "A-01-01-01",
             Type: LocationType.Shelf);
 
-        var addLocationResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseId}/locations", addLocationRequest);
+        var addLocationResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/locations", addLocationRequest);
         var createdLocation = (await addLocationResponse.Content.ReadFromJsonAsync<AddLocationResponse>())!;
         var locationId = createdLocation.LocationId;
 
@@ -56,12 +58,12 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
 
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemId = createdItem.Id;
+        var itemId = createdItem.ItemGuid;
 
         // 1) Create inventory item
         var createInventoryItemRequest = new CreateInventoryItemRequest(
             ItemId: itemId,
-            WarehouseId: warehouseId,
+            WarehouseId: warehouseGuid,
             LocationId: locationId,
             Quantity: new Quantity(100m, UnitOfMeasure.Kilogram),
             Status: InventoryStatus.Available,
@@ -82,7 +84,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         inventoryItemDto.Should().NotBeNull();
         inventoryItemDto.Id.Should().Be(inventoryItemId);
         inventoryItemDto.ItemId.Should().Be(itemId);
-        inventoryItemDto.WarehouseId.Should().Be(warehouseId);
+        inventoryItemDto.WarehouseId.Should().Be(warehouseGuid);
         inventoryItemDto.LocationId.Should().Be(locationId);
         inventoryItemDto.Quantity.Value.Should().Be(100m);
         inventoryItemDto.Quantity.Uom.Should().Be(nameof(UnitOfMeasure.Kilogram));
@@ -91,13 +93,13 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         inventoryItemDto.UnitCost.Should().Be(25.50m);
 
         // 3) List inventory items with filter
-        var inventoryItems = await Client.GetFromJsonAsync<IReadOnlyList<InventoryItemDto>>($"/api/stock/inventory-items?warehouseGuid={warehouseId}&itemGuid={itemId}");
+        var inventoryItems = await Client.GetFromJsonAsync<IReadOnlyList<InventoryItemDto>>($"/api/stock/inventory-items?warehouseGuid={warehouseGuid}&itemGuid={itemId}");
 
         inventoryItems.Should().NotBeNullOrEmpty();
 
         var listedInventoryItem = inventoryItems.Single(i => i.Id == inventoryItemId);
         listedInventoryItem.ItemId.Should().Be(itemId);
-        listedInventoryItem.WarehouseId.Should().Be(warehouseId);
+        listedInventoryItem.WarehouseId.Should().Be(warehouseGuid);
         listedInventoryItem.Quantity.Value.Should().Be(100m);
         listedInventoryItem.Status.Should().Be(nameof(InventoryStatus.Available));
     }

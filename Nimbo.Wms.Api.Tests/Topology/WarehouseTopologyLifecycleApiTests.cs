@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Nimbo.Wms.Contracts.Topology.Dtos;
-using Nimbo.Wms.Contracts.Topology.Http;
+using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
@@ -36,9 +36,10 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
 
         // 2) Add zone
         var addZone = new AddZoneRequest(
+            warehouseGuid,
             Code: "Z-A",
             Name: "Zone A",
-            Type: ZoneType.Storage);
+            ZoneType.Storage);
 
         var addZoneResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZone);
 
@@ -50,9 +51,10 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
 
         // 3) Add location
         var addLocation = new AddLocationRequest(
+            warehouseGuid,
             zoneGuid,
             Code: "A-01-01-01",
-            Type: LocationType.Shelf);
+            LocationType.Shelf);
 
         var addLocationResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/locations", addLocation);
 
