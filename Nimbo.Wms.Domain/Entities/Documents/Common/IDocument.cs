@@ -2,7 +2,7 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Domain.Entities.Documents.Common;
 
-public interface IDocument
+public interface IDocument : IDomainEventsContainer
 {
     IEntityId Id { get; }
 
