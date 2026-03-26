@@ -88,3 +88,16 @@ Whether you want to contribute to the core ledger, discuss the decentralized sto
 Founder & Lead Architect: [Alex Morgunov](https://github.com/therealmoronto)
 
 **Vision:** Decentralizing logistics for a better SME future.
+
+## 📄 License & Compliance
+
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
+
+## 🛡 Anti-Piracy & Audit
+
+To protect the ecosystem and our contributors, we actively monitor the industry for unauthorized commercial use.
+
+* **SaaS Requirement:** If you run Nimbo as a network service, you **must** make your entire source code available to your users under the same AGPL license.
+* **Architecture Fingerprinting:** We utilize specific architectural patterns (e.g., our proprietary Stock Ledger implementation) as unique identifiers for compliance auditing.
+
+For commercial licensing inquiries that do not require code disclosure, please contact the founder.
