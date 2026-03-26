@@ -10,6 +10,8 @@ namespace Nimbo.Wms.Infrastructure.Services;
 
 internal sealed class OutboxBackgroundService : BackgroundService
 {
+    public const int OutboxRetryCount = 5;
+
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<OutboxBackgroundService> _logger;
 
@@ -64,9 +66,10 @@ internal sealed class OutboxBackgroundService : BackgroundService
                 _logger.LogError(e, "Error processing message {MessageId}", message.Id);
                 message.Error = e.Message;
                 message.RetryCount++;
-                if (message.RetryCount == 6)
+                if (message.RetryCount >= OutboxRetryCount)
                 {
                     message.IsDeadLetter = true;
+                    _logger.LogError(e, "Message {MessageId} is dead lettered", message.Id);
                 }
             }
         }

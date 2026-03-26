@@ -46,8 +46,8 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
             services.AddHttpClient<IErpIntegrationService, ErpIntegrationService>()
-                .AddPolicyHandler(GetRetryPolicy())
-                .AddPolicyHandler(GetCircuitBreakerPolicy());
+                .AddPolicyHandler(IServiceCollection.GetRetryPolicy())
+                .AddPolicyHandler(IServiceCollection.GetCircuitBreakerPolicy());
 
             services.AddHostedService<OutboxBackgroundService>();
 
@@ -122,7 +122,7 @@ public static class ServiceCollectionExtensions
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .WaitAndRetryAsync(
-                    retryCount: 6,
+                    retryCount: OutboxBackgroundService.OutboxRetryCount,
                     sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)) + TimeSpan.FromMilliseconds(random.Next(0, 100)));
         }
 
