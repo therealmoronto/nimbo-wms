@@ -71,7 +71,7 @@ Nimbo is designed for ease of development and deployment. The core system is bui
    dotnet run --project Nimbo.Wms
    ```
 
-Refer to docs/development.md for a detailed engineering guide.
+Refer to [docs/development.md](./docs/development.md) for a detailed engineering guide.
 
 ## 🤝 Community & Philosophy
 
