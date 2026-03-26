@@ -22,12 +22,17 @@ using Nimbo.Wms.Domain.Entities.Documents.Shipment;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Domain.Entities.Topology;
+using Nimbo.Wms.Infrastructure.Integrations;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Documents;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Stock;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Topology;
+using Nimbo.Wms.Infrastructure.Services;
+using Polly;
+using Polly.Extensions.Http;
+using Polly.Retry;
 
 namespace Nimbo.Wms.Infrastructure.DependencyInjection;
 
@@ -39,6 +44,12 @@ public static class ServiceCollectionExtensions
         public IServiceCollection AddInfrastructure()
         {
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+
+            services.AddHttpClient<IErpIntegrationService, ErpIntegrationService>()
+                .AddPolicyHandler(GetRetryPolicy())
+                .AddPolicyHandler(GetCircuitBreakerPolicy());
+
+            services.AddHostedService<OutboxBackgroundService>();
 
             services.AddTopology();
             services.AddMasterData();
@@ -103,6 +114,23 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IStockLedgerEntryRepository, EfStockLedgerEntryRepository>();
 
             return services;
+        }
+
+        private static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            var random = new Random();
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .WaitAndRetryAsync(
+                    retryCount: 6,
+                    sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)) + TimeSpan.FromMilliseconds(random.Next(0, 100)));
+        }
+
+        private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
         }
     }
 }
