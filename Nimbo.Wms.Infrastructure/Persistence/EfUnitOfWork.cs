@@ -5,23 +5,17 @@ using Nimbo.Wms.Infrastructure.Persistence.Outbox;
 
 namespace Nimbo.Wms.Infrastructure.Persistence;
 
-internal sealed class EfUnitOfWork : IUnitOfWork
+internal sealed class EfUnitOfWork(NimboWmsDbContext dbContext) : IUnitOfWork
 {
-    private readonly NimboWmsDbContext _dbContext;
-
-    public EfUnitOfWork(NimboWmsDbContext dbContext)
+    public async Task CommitAsync(CancellationToken ct = default)
     {
-        _dbContext = dbContext;
+        await ConvertDomainEventsToOutboxMessages(ct);
+        await dbContext.SaveChangesAsync(ct);
     }
 
-    public Task CommitAsync(CancellationToken ct = default)
+    private async Task ConvertDomainEventsToOutboxMessages(CancellationToken ct = default)
     {
-        return _dbContext.SaveChangesAsync(ct);
-    }
-
-    private void ConvertDomainEventsToOutboxMessages()
-    {
-        var entitiesWithEvents = _dbContext.ChangeTracker
+        var entitiesWithEvents = dbContext.ChangeTracker
             .Entries<IDomainEventsContainer>()
             .Where(x => x.Entity.DomainEvents.Any())
             .ToList();
@@ -42,6 +36,6 @@ internal sealed class EfUnitOfWork : IUnitOfWork
             })
             .ToList();
 
-        _dbContext.Set<OutboxMessage>().AddRange(outboxMessages);
+        await dbContext.Set<OutboxMessage>().AddRangeAsync(outboxMessages, ct);
     }
 }
