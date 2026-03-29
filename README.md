@@ -1,3 +1,10 @@
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
+[![.NET 8](https://img.shields.io/badge/.NET-8.0-512bd4.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
+[![Architecture: DDD/Clean](https://img.shields.io/badge/Architecture-DDD%20%2F%20Clean-green.svg)](#-engineering-excellence)
+[![Build Status](https://github.com/therealmoronto/nimbo-wms/actions/workflows/build-solution.yml/badge.svg)](https://github.com/therealmoronto/nimbo-wms/actions)
+
+> **Empowering regional brands to reclaim independence through high-precision logistics. Nimbo unifies a professional Storefront and a Double-Entry WMS into a single, "no-sync" ecosystem.**
+
 # 🌐 Nimbo Ecosystem: Decentralizing Logistics for SME
 
 ![Nimbo Preview](socials_preview.png)
@@ -9,7 +16,7 @@
 
 We are building more than just a Warehouse Management System; we are creating a foundation for professional logistics and independent commerce. Our mission is to provide a robust alternative to the "dictatorship" of global marketplaces, returning control, transparency, and data sovereignty back to regional brands and suppliers.
 
-## 🛠 Engineering Excellence
+## 🛠 Engineering Excellence (The "Unfair Advantage")
 
 Nimbo is built on a "Zero-Compromise" architectural foundation. Every line of code follows the principles of long-term maintainability and system stability, essential for mature enterprise systems.
 
@@ -89,15 +96,20 @@ Founder & Lead Architect: [Alex Morgunov](https://github.com/therealmoronto)
 
 **Vision:** Decentralizing logistics for a better SME future.
 
-## 📄 License & Compliance
+## 📄 License & Audit Notice
 
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. 
 
-## 🛡 Anti-Piracy & Audit
+### 🛡 AGPL-3.0 Compliance (Network Trigger)
 
-To protect the ecosystem and our contributors, we actively monitor the industry for unauthorized commercial use.
+If you run Nimbo as a network service (SaaS), the AGPL-3.0 requires you to make your entire source code available to all users under the same license. This ensures the ecosystem remains open and prevents "private forking" for commercial gain.
 
-* **SaaS Requirement:** If you run Nimbo as a network service, you **must** make your entire source code available to your users under the same AGPL license.
-* **Architecture Fingerprinting:** We utilize specific architectural patterns (e.g., our proprietary Stock Ledger implementation) as unique identifiers for compliance auditing.
+### 🔍 Architectural Auditability & IP Protection
 
-For commercial licensing inquiries that do not require code disclosure, please contact the founder.
+To protect the integrity of the project and our contributors, we actively monitor for unauthorized commercial use:
+* **Digital Fingerprinting:** We utilize specific architectural patterns (including our proprietary **Stock Ledger** logic and DDD aggregates) as unique identifiers to track compliance.
+* **Fork Monitoring:** Even partial or obfuscated derivatives of the Nimbo codebase are subject to audit and AGPL-3.0 enforcement.
+
+### 💼 Commercial Licensing
+
+For enterprises or startups requiring a private, closed-source deployment (Commercial License) without the disclosure requirements of the AGPL, please reach out to the founder directly.
