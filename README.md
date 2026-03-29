@@ -55,6 +55,11 @@ Nimbo is evolving in four strategic phases, moving from a rock-solid warehouse e
 * **Distributed Logistics Network:** Features to enable SME warehouses to collaborate as a single decentralized logistics grid.
 * **Predictive Analytics:** AI-driven stock optimization to help small brands manage cash flow effectively.
 
+### Phase 5: Last-Mile Orchestration & End-to-End Visibility
+* **Focus:** Developing orchestration protocols for transport management and delivery service integration.
+* **Vision:** Closing the retail loop by connecting warehouse operations directly to the customer's doorstep.
+* **Impact:** Unified "Last Mile" control and total supply chain transparency, providing SMEs with the same logistics power as global monopolies.
+
 ## 🛠 Getting Started
 
 Nimbo is designed for ease of development and deployment. The core system is built with **.NET 8** and **PostgreSQL**.
