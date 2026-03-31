@@ -1,5 +1,5 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
-[![.NET 8](https://img.shields.io/badge/.NET-8.0-512bd4.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
+[![.NET 8](https://img.shields.io/badge/.NET-10.0-512bd4.svg)](https://dotnet.microsoft.com/download/dotnet/10.0)
 [![Architecture: DDD/Clean](https://img.shields.io/badge/Architecture-DDD%20%2F%20Clean-green.svg)](#-engineering-excellence)
 [![Build Status](https://github.com/therealmoronto/nimbo-wms/actions/workflows/build-solution.yml/badge.svg)](https://github.com/therealmoronto/nimbo-wms/actions)
 
