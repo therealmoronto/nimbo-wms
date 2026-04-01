@@ -31,7 +31,7 @@ public class SupplierItemConfiguration : IEntityTypeConfiguration<SupplierItem>
             .HasMaxLength(SupplierItem.SupplierBarcodeMaxLength);
 
         builder.Property(x => x.DefaultPurchasePrice);
-        builder.Property(x => x.PurchaseUomCode);
+        builder.Property(x => x.PurchaseUomCode).HasMaxLength(SupplierItem.PurchaseUomCodeMaxLength);
         builder.Property(x => x.UnitsPerPurchaseUom);
         builder.Property(x => x.LeadTimeDays);
         builder.Property(x => x.MinOrderQty);

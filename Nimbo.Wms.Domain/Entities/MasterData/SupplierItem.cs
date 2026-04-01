@@ -6,6 +6,7 @@ public class SupplierItem : BaseEntity<SupplierItemId>
 {
     public const int SupplierSkuMaxLength = 128;
     public const int SupplierBarcodeMaxLength = 64;
+    public const int PurchaseUomCodeMaxLength = 16;
 
     // ReSharper disable once UnusedMember.Global
     public SupplierItem()

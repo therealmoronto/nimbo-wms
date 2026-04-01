@@ -18,8 +18,4 @@
       <PackageReference Include="Riok.Mapperly" Version="5.0.0-next.2" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Common\Validators\" />
-    </ItemGroup>
-
 </Project>
