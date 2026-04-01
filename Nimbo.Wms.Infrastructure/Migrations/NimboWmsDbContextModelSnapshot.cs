@@ -196,8 +196,7 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Notes")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
+                        .HasColumnType("text");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "ActualQuantity", "Nimbo.Wms.Domain.Entities.Documents.CycleCount.CycleCountDocumentLine.ActualQuantity#Quantity", b1 =>
                         {
@@ -649,8 +648,6 @@ namespace Nimbo.Wms.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SourceDocumentId");
-
                     b.HasIndex("InventoryItemId", "OccurredAt");
 
                     b.HasIndex("ItemId", "LocationId");
@@ -677,8 +674,8 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("character varying(512)");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -689,8 +686,8 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("character varying(128)");
 
                     b.Property<string>("Phone")
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("TaxId")
                         .HasMaxLength(64)
@@ -753,8 +750,8 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -778,8 +775,8 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("character varying(128)");
 
                     b.Property<string>("Phone")
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("TaxId")
                         .HasMaxLength(64)
@@ -1019,8 +1016,8 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("Code")
                         .IsRequired()
