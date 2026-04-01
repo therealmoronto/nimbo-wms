@@ -91,22 +91,11 @@ namespace Nimbo.Wms.Migrations
                 oldType: "character varying(16)",
                 oldMaxLength: 16,
                 oldNullable: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_stock_ledger_entries_SourceDocumentId",
-                schema: "nimbo",
-                table: "stock_ledger_entries",
-                column: "SourceDocumentId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_stock_ledger_entries_SourceDocumentId",
-                schema: "nimbo",
-                table: "stock_ledger_entries");
-
             migrationBuilder.AlterColumn<string>(
                 name: "Address",
                 schema: "nimbo",
