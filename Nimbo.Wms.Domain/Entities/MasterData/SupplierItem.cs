@@ -4,6 +4,9 @@ namespace Nimbo.Wms.Domain.Entities.MasterData;
 
 public class SupplierItem : BaseEntity<SupplierItemId>
 {
+    public const int SupplierSkuMaxLength = 128;
+    public const int SupplierBarcodeMaxLength = 64;
+
     // ReSharper disable once UnusedMember.Global
     public SupplierItem()
     {

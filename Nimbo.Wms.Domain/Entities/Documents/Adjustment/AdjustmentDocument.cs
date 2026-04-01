@@ -9,6 +9,9 @@ namespace Nimbo.Wms.Domain.Entities.Documents.Adjustment;
 [PublicAPI]
 public sealed class AdjustmentDocument : DocumentBase<AdjustmentDocumentId, AdjustmentStatus, AdjustmentDocumentLine>
 {
+    public const int ReasonCodeMaxLength = 64;
+    public const int ReasonTextMaxLength = 256;
+
     private AdjustmentDocument()
     {
         // Required by EF Core

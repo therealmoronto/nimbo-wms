@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Entities.Documents.Shipment;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 
@@ -45,7 +46,7 @@ public class ShipmentPickLineConfiguration : IEntityTypeConfiguration<ShipmentPi
             });
 
         builder.Property(x => x.Notes)
-            .HasMaxLength(512);
+            .HasMaxLength(IDocumentLine.NotesMaxLength);
 
         builder.HasIndex(x => x.DocumentId);
         builder.HasIndex(x => new { x.DocumentId, x.ItemId, x.FromLocation });

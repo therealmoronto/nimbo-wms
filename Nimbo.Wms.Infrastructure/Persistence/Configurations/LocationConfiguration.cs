@@ -25,20 +25,20 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .IsRequired();
         
         builder.Property(x => x.Code)
-            .HasMaxLength(32)
+            .HasMaxLength(Location.CodeMaxLength)
             .IsRequired();
         
         builder.Property(x => x.Aisle)
-            .HasMaxLength(16);
+            .HasMaxLength(Location.AisleMaxLength);
         
         builder.Property(x => x.Rack)
-            .HasMaxLength(16);
+            .HasMaxLength(Location.RackMaxLength);
         
         builder.Property(x => x.Level)
-            .HasMaxLength(16);
+            .HasMaxLength(Location.LevelMaxLength);
         
         builder.Property(x => x.Position)
-            .HasMaxLength(16);
+            .HasMaxLength(Location.PositionMaxLength);
         
         builder.Property(x => x.Type)
             .HasConversion<string>()

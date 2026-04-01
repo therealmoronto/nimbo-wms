@@ -5,7 +5,13 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Domain.Entities.Documents.Common;
 
 [PublicAPI]
-public abstract class DocumentLineBase<TDocumentId>
+public interface IDocumentLine
+{
+    public const int NotesMaxLength = 512;
+}
+
+[PublicAPI]
+public abstract class DocumentLineBase<TDocumentId> : IDocumentLine
     where TDocumentId : struct, IEntityId
 {
     protected DocumentLineBase()

@@ -17,18 +17,18 @@ public class WarehouseConfiguration : IEntityTypeConfiguration<Warehouse>
             .HasEntityIdConversion();
         
         builder.Property(x => x.Code)
-            .HasMaxLength(32)
+            .HasMaxLength(Warehouse.CodeMaxLength)
             .IsRequired();
         
         builder.Property(x => x.Name)
-            .HasMaxLength(128)
+            .HasMaxLength(Warehouse.NameMaxLength)
             .IsRequired();
 
         builder.Property(x => x.Address)
-            .HasMaxLength(256);
+            .HasMaxLength(Warehouse.AddressMaxLength);
 
         builder.Property(x => x.Description)
-            .HasMaxLength(512);
+            .HasMaxLength(Warehouse.DescriptionMaxLength);
 
         builder.Property(x => x.IsActive)
             .IsRequired();

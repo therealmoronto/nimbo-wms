@@ -1,5 +1,7 @@
+using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
+using Nimbo.Wms.Application;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Ledger;
@@ -46,6 +48,7 @@ public static class ServiceCollectionExtensions
             services.AddStock();
             services.AddDocuments();
 
+            services.AddValidatorsFromAssembly(typeof(IApplicationMarker).Assembly);
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly);

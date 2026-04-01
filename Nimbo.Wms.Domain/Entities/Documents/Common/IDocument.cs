@@ -4,6 +4,10 @@ namespace Nimbo.Wms.Domain.Entities.Documents.Common;
 
 public interface IDocument
 {
+    public const int CodeMaxLength = 32;
+    public const int TitleMaxLength = 128;
+    public const int NotesMaxLength = 512;
+
     IEntityId Id { get; }
 
     string Code { get; }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Entities.Documents.Shipment;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
@@ -26,7 +27,7 @@ public class ShipmentDocumentLineConfiguration : IEntityTypeConfiguration<Shipme
             .IsRequired();
 
         builder.Property(x => x.Notes)
-            .HasMaxLength(512);
+            .HasMaxLength(IDocumentLine.NotesMaxLength);
 
         // base.Quantity == RequestedQuantity
         builder.ComplexProperty(
