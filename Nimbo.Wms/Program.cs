@@ -7,6 +7,8 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<UtcDateTimeValidationFilter>();
@@ -26,6 +28,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
