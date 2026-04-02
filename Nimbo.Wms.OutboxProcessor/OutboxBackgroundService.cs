@@ -1,12 +1,10 @@
+using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Nimbo.Wms.Infrastructure.Integrations;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Outbox;
 
-namespace Nimbo.Wms.Infrastructure.Services;
+namespace Nimbo.Wms.OutboxProcessor;
 
 internal sealed class OutboxBackgroundService : BackgroundService
 {
@@ -15,7 +13,10 @@ internal sealed class OutboxBackgroundService : BackgroundService
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<OutboxBackgroundService> _logger;
 
-    public OutboxBackgroundService(IServiceProvider serviceProvider, ILogger<OutboxBackgroundService> logger)
+    public OutboxBackgroundService(
+        IServiceProvider serviceProvider,
+        ILogger<OutboxBackgroundService> logger,
+        IProducer<string, string> producer)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;

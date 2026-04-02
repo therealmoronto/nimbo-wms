@@ -29,7 +29,6 @@ using Nimbo.Wms.Infrastructure.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Stock;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Topology;
-using Nimbo.Wms.Infrastructure.Services;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Retry;
@@ -48,8 +47,6 @@ public static class ServiceCollectionExtensions
             services.AddHttpClient<IErpIntegrationService, ErpIntegrationService>()
                 .AddPolicyHandler(IServiceCollection.GetRetryPolicy())
                 .AddPolicyHandler(IServiceCollection.GetCircuitBreakerPolicy());
-
-            services.AddHostedService<OutboxBackgroundService>();
 
             services.AddTopology();
             services.AddMasterData();
@@ -122,7 +119,7 @@ public static class ServiceCollectionExtensions
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .WaitAndRetryAsync(
-                    retryCount: OutboxBackgroundService.OutboxRetryCount,
+                    retryCount: 5,
                     sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)) + TimeSpan.FromMilliseconds(random.Next(0, 100)));
         }
 

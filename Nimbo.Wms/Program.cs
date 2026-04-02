@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+builder.AddKafkaProducer<string, string>("kafka");
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<UtcDateTimeValidationFilter>();

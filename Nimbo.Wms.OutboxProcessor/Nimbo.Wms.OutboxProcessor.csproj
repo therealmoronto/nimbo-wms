@@ -8,6 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Aspire.Confluent.Kafka" Version="13.2.1" />
+        <PackageReference Include="Confluent.Kafka" Version="2.13.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Nimbo.Wms.Infrastructure\Nimbo.Wms.Infrastructure.csproj" />
+      <ProjectReference Include="..\NimboWMS.ServiceDefaults\NimboWMS.ServiceDefaults.csproj" />
     </ItemGroup>
 </Project>

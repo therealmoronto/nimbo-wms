@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Nimbo.Wms\Nimbo.Wms.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.Kafka" Version="13.2.1" />
+  </ItemGroup>
+
 </Project>
