@@ -1,10 +1,9 @@
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi;
 using Nimbo.Wms.Filters;
 using Nimbo.Wms.Http;
 using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,29 +22,18 @@ builder.Services.AddDbContext<NimboWmsDbContext>(
 builder.Services.AddInfrastructure();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
-    c.SwaggerDoc(
-        "v1",
-        new OpenApiInfo
-        {
-            Title = "Nimbo.Wms",
-            Version = "v1"
-        });
-});
+
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nimbo WMS API v1");
-        c.RoutePrefix = "swagger";
+        options.WithTitle("Nimbo WMS API");
+        options.WithTheme(ScalarTheme.Laserwave); // Можно поиграться с темами
     });
 }
 
