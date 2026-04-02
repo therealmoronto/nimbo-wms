@@ -6,6 +6,11 @@ namespace Nimbo.Wms.Domain.Entities.Topology;
 
 public sealed class Warehouse : BaseEntity<WarehouseId>
 {
+    public const int CodeMaxLength = 32;
+    public const int NameMaxLength = 128;
+    public const int AddressMaxLength = 512;
+    public const int DescriptionMaxLength = 512;
+
     private readonly List<Zone> _zones = new();
     private readonly List<Location> _locations = new();
 

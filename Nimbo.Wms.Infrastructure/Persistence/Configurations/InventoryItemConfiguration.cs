@@ -34,7 +34,7 @@ public class InventoryItemConfiguration : IEntityTypeConfiguration<InventoryItem
             .HasEntityIdConversion();
 
         builder.Property(x => x.SerialNumber)
-            .HasMaxLength(128);
+            .HasMaxLength(InventoryItem.SerialNumberMaxLength);
 
         builder.Property(x => x.Status)
             .HasConversion<string>()

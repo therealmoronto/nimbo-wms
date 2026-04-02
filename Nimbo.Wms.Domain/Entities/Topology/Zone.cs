@@ -5,6 +5,9 @@ namespace Nimbo.Wms.Domain.Entities.Topology;
 
 public sealed class Zone : BaseEntity<ZoneId>
 {
+    public const int CodeMaxLength = 32;
+    public const int NameMaxLength = 128;
+
     // ReSharper disable once UnusedMember.Global
     public Zone()
     {

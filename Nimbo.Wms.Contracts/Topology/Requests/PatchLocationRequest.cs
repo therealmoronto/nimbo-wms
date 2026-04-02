@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Contracts.Topology.Requests;
@@ -26,4 +27,4 @@ public sealed record PatchLocationRequest(
     string? Rack = null,
     string? Level = null,
     string? Position = null
-) : IRequest;
+) : IRequest, ITxRequest;

@@ -1,0 +1,18 @@
+using FluentValidation;
+using JetBrains.Annotations;
+using Nimbo.Wms.Contracts.Topology.Requests;
+using Nimbo.Wms.Domain.Entities.Topology;
+
+namespace Nimbo.Wms.Application.Common.Validators.Togology;
+
+[PublicAPI]
+public class AddLocationRequestValidator : AbstractValidator<AddLocationRequest>
+{
+    public AddLocationRequestValidator()
+    {
+        RuleFor(x => x.Code)
+            .NotNull()
+            .NotEmpty()
+            .MaximumLength(Location.CodeMaxLength);
+    }
+}

@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Topology.Requests;
@@ -12,12 +11,10 @@ namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 internal sealed class PatchLocationRequestHandler : IRequestHandler<PatchLocationRequest>
 {
     private readonly IWarehouseRepository _repository;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public PatchLocationRequestHandler(IWarehouseRepository repository, IUnitOfWork unitOfWork)
+    public PatchLocationRequestHandler(IWarehouseRepository repository)
     {
         _repository = repository;
-        _unitOfWork = unitOfWork;
     }
 
     public async Task Handle(PatchLocationRequest request, CancellationToken ct = default)
@@ -80,7 +77,5 @@ internal sealed class PatchLocationRequestHandler : IRequestHandler<PatchLocatio
             if (request.IsBlocked.Value) location.Block();
             else location.Unblock();
         }
-
-        await _unitOfWork.CommitAsync(ct);
     }
 }

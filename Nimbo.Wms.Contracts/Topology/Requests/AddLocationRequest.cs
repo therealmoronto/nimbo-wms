@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 
@@ -11,7 +12,7 @@ public sealed record AddLocationRequest(
     Guid ZoneGuid,
     string Code,
     LocationType Type
-) : IRequest<LocationId>;
+) : IRequest<LocationId>, ITxRequest;
 
 [PublicAPI]
 public sealed record AddLocationResponse(Guid LocationId);

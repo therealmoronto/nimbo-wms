@@ -95,7 +95,7 @@ public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
         Touch();
     }
 
-    protected void ChangeLineNotes(Guid lineId, string? notes)
+    public void ChangeLineNotes(Guid lineId, string? notes)
     {
         EnsureCanBeEdited();
         var line = GetLine(lineId);

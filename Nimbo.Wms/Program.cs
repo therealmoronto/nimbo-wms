@@ -1,56 +1,73 @@
 using System.Reflection;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using Nimbo.Wms.Application;
 using Nimbo.Wms.Filters;
-using Nimbo.Wms.Http;
 using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
+using Nimbo.Wms.Middlewares;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers(options =>
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+try
 {
-    options.Filters.Add<UtcDateTimeValidationFilter>();
-});
+    builder.Services.AddControllers(options => { options.Filters.Add<UtcDateTimeValidationFilter>(); });
 
-builder.Services.AddDbContext<NimboWmsDbContext>(
-    options =>
-{
-    var cs = builder.Configuration.GetConnectionString("NimboWmsDb");
-    options.UseNpgsql(cs, npgsql => npgsql.MigrationsAssembly("Nimbo.Wms.Infrastructure"));
-});
-
-builder.Services.AddInfrastructure();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
-    c.SwaggerDoc(
-        "v1",
-        new OpenApiInfo
-        {
-            Title = "Nimbo.Wms",
-            Version = "v1"
-        });
-});
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    builder.Services.AddDbContext<NimboWmsDbContext>(options =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nimbo WMS API v1");
-        c.RoutePrefix = "swagger";
+        var cs = builder.Configuration.GetConnectionString("NimboWmsDb");
+        options.UseNpgsql(cs, npgsql => npgsql.MigrationsAssembly("Nimbo.Wms.Infrastructure"));
     });
+
+    builder.Services.AddValidatorsFromAssembly(typeof(IApplicationMarker).Assembly);
+    builder.Services.AddInfrastructure();
+
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(c =>
+    {
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+        c.SwaggerDoc(
+            "v1",
+            new OpenApiInfo
+            {
+                Title = "Nimbo.Wms",
+                Version = "v1"
+            });
+    });
+
+    var app = builder.Build();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nimbo WMS API v1");
+            c.RoutePrefix = "swagger";
+        });
+    }
+
+    app.UseMiddleware<ProblemDetailsExceptionMiddleware>();
+    app.UseHttpsRedirection();
+    app.MapControllers();
+
+    app.Run();
 }
-
-app.UseMiddleware<ProblemDetailsExceptionMiddleware>();
-app.UseHttpsRedirection();
-app.MapControllers();
-
-app.Run();
+catch (Exception e)
+{
+    Log.Fatal(e, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

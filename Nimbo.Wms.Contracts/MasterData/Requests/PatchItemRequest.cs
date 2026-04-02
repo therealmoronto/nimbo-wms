@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Contracts.MasterData.Requests;
@@ -14,4 +15,4 @@ public sealed record PatchItemRequest(
     string? Manufacturer = null,
     decimal? WeightKg = null,
     decimal? VolumeM3 = null
-) : IRequest;
+) : IRequest, ITxRequest;

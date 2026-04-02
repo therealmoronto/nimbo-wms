@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.MasterData.Requests;
@@ -12,12 +11,10 @@ namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 internal sealed class DeleteItemRequestHandler : IRequestHandler<DeleteItemRequest>
 {
     private readonly IItemRepository _repository;
-    private readonly IUnitOfWork _uow;
 
-    public DeleteItemRequestHandler(IItemRepository repository, IUnitOfWork uow)
+    public DeleteItemRequestHandler(IItemRepository repository)
     {
         _repository = repository;
-        _uow = uow;
     }
 
     public async Task Handle(DeleteItemRequest request, CancellationToken ct = default)
@@ -28,6 +25,5 @@ internal sealed class DeleteItemRequestHandler : IRequestHandler<DeleteItemReque
             throw new NotFoundException($"Item with id {itemId} not found");
 
         await _repository.DeleteAsync(item, ct);
-        await _uow.CommitAsync(ct);
     }
 }

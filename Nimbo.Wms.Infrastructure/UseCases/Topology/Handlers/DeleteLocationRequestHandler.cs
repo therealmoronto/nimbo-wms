@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Topology.Requests;
@@ -12,12 +11,10 @@ namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 internal sealed class DeleteLocationRequestHandler : IRequestHandler<DeleteLocationRequest>
 {
     private readonly IWarehouseRepository _repository;
-    private readonly IUnitOfWork _uow;
 
-    public DeleteLocationRequestHandler(IWarehouseRepository repository, IUnitOfWork uow)
+    public DeleteLocationRequestHandler(IWarehouseRepository repository)
     {
         _repository = repository;
-        _uow = uow;
     }
 
     public async Task Handle(DeleteLocationRequest request, CancellationToken ct = default)
@@ -28,7 +25,5 @@ internal sealed class DeleteLocationRequestHandler : IRequestHandler<DeleteLocat
             throw new NotFoundException($"Warehouse with location id {request.LocationGuid} does not exist");
 
         warehouse.RemoveLocation(locationId);
-
-        await _uow.CommitAsync(ct);
     }
 }

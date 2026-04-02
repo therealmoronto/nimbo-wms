@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Entities.Documents.Relocation;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Domain.Entities.Topology;
@@ -34,9 +35,6 @@ public class RelocationDocumentLineConfiguration : IEntityTypeConfiguration<Relo
             .HasEntityIdConversion()
             .IsRequired();
 
-        builder.Property(x => x.Notes)
-            .HasMaxLength(512);
-
         builder.ComplexProperty(
             x => x.Quantity,
             q =>
@@ -52,6 +50,9 @@ public class RelocationDocumentLineConfiguration : IEntityTypeConfiguration<Relo
                     .HasMaxLength(16)
                     .IsRequired();
             });
+
+        builder.Property(x => x.Notes)
+            .HasMaxLength(IDocumentLine.NotesMaxLength);
 
         builder.HasOne<Item>()
             .WithMany()

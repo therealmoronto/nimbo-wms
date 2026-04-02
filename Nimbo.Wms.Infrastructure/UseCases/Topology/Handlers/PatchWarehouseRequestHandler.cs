@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Topology.Requests;
@@ -12,12 +11,10 @@ namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 internal sealed class PatchWarehouseRequestHandler : IRequestHandler<PatchWarehouseRequest>
 {
     private readonly IWarehouseRepository _repository;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public PatchWarehouseRequestHandler(IWarehouseRepository repository, IUnitOfWork unitOfWork)
+    public PatchWarehouseRequestHandler(IWarehouseRepository repository)
     {
         _repository = repository;
-        _unitOfWork = unitOfWork;
     }
 
 
@@ -32,7 +29,5 @@ internal sealed class PatchWarehouseRequestHandler : IRequestHandler<PatchWareho
         warehouse.ChangeCode(request.Code ?? warehouse.Code);
         warehouse.ChangeAddress(request.Address ?? warehouse.Address);
         warehouse.ChangeDescription(request.Description ?? warehouse.Description);
-
-        await _unitOfWork.CommitAsync(ct);
     }
 }

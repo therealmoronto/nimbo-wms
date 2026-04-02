@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Entities.Documents.Shipment;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 
@@ -21,11 +22,11 @@ public class ShipmentDocumentConfiguration : IEntityTypeConfiguration<ShipmentDo
             .IsRequired();
 
         builder.Property(x => x.Code)
-            .HasMaxLength(32)
+            .HasMaxLength(IDocument.CodeMaxLength)
             .IsRequired();
 
         builder.Property(x => x.Title)
-            .HasMaxLength(128)
+            .HasMaxLength(IDocument.TitleMaxLength)
             .IsRequired();
 
         builder.Property(x => x.Status)
@@ -43,7 +44,7 @@ public class ShipmentDocumentConfiguration : IEntityTypeConfiguration<ShipmentDo
         builder.Property(x => x.Version).IsRequired();
 
         builder.Property(x => x.Notes)
-            .HasMaxLength(512);
+            .HasMaxLength(IDocument.NotesMaxLength);
 
         builder.HasMany(x => x.Lines)
             .WithOne()

@@ -5,6 +5,14 @@ namespace Nimbo.Wms.Domain.Entities.MasterData;
 
 public class Supplier : BaseEntity<SupplierId>
 {
+    public const int CodeMaxLength = 32;
+    public const int NameMaxLength = 128;
+    public const int TaxIdMaxLength = 64;
+    public const int AddressMaxLength = 512;
+    public const int ContactNameMaxLength = 512;
+    public const int PhoneMaxLength = 16;
+    public const int EmailMaxLength = 512;
+
     private readonly List<SupplierItem> _items = new();
 
     // ReSharper disable once UnusedMember.Global

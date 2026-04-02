@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
+using Nimbo.Wms.Contracts.Common;
 
 namespace Nimbo.Wms.Contracts.Topology.Requests;
 
@@ -10,4 +11,4 @@ public sealed record PatchWarehouseRequest(
     string? Name = null,
     string? Address = null,
     string? Description = null
-) : IRequest;
+) : IRequest, ITxRequest;

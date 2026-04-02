@@ -17,27 +17,27 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
             .HasEntityIdConversion();
         
         builder.Property(x => x.Code)
-            .HasMaxLength(32)
+            .HasMaxLength(Supplier.CodeMaxLength)
             .IsRequired();
         
         builder.Property(x => x.Name)
-            .HasMaxLength(128)
+            .HasMaxLength(Supplier.NameMaxLength)
             .IsRequired();
         
         builder.Property(x => x.TaxId)
-            .HasMaxLength(64);
+            .HasMaxLength(Supplier.TaxIdMaxLength);
 
         builder.Property(x => x.Address)
-            .HasMaxLength(1024);
+            .HasMaxLength(Supplier.AddressMaxLength);
 
         builder.Property(x => x.ContactName)
-            .HasMaxLength(512);
+            .HasMaxLength(Supplier.ContactNameMaxLength);
 
         builder.Property(x => x.Phone)
-            .HasMaxLength(64);
+            .HasMaxLength(Supplier.PhoneMaxLength);
 
         builder.Property(x => x.Email)
-            .HasMaxLength(512);
+            .HasMaxLength(Supplier.EmailMaxLength);
 
         builder.Property(x => x.IsActive)
             .IsRequired();

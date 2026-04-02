@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.MasterData.Requests;
@@ -12,12 +11,10 @@ namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 internal sealed class PatchSupplierItemRequestHandler : IRequestHandler<PatchSupplierItemRequest>
 {
     private readonly ISupplierRepository _repository;
-    private readonly IUnitOfWork _uow;
 
-    public PatchSupplierItemRequestHandler(ISupplierRepository repository, IUnitOfWork uow)
+    public PatchSupplierItemRequestHandler(ISupplierRepository repository)
     {
         _repository = repository;
-        _uow = uow;
     }
     
     public async Task Handle(PatchSupplierItemRequest request, CancellationToken ct = default)
@@ -61,7 +58,5 @@ internal sealed class PatchSupplierItemRequestHandler : IRequestHandler<PatchSup
             else
                 item.UnmarkPreferred();
         }
-
-        await _uow.CommitAsync(ct);
     }
 }

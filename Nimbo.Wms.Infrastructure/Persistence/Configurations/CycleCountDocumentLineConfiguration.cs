@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Entities.Documents.CycleCount;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 
@@ -57,6 +58,9 @@ public class CycleCountDocumentLineConfiguration : IEntityTypeConfiguration<Cycl
                     .HasConversion<string>()
                     .HasMaxLength(16);
             });
+
+        builder.Property(x => x.Notes)
+            .HasMaxLength(IDocumentLine.NotesMaxLength);
 
         builder.HasIndex(x => x.DocumentId);
         builder.HasIndex(x => new { x.DocumentId, x.ItemId, x.LocationId }).IsUnique();

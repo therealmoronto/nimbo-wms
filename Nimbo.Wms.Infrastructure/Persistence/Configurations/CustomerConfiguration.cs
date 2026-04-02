@@ -17,27 +17,27 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .HasEntityIdConversion();
         
         builder.Property(x => x.Code)
-            .HasMaxLength(32)
+            .HasMaxLength(Customer.CodeMaxLength)
             .IsRequired();
         
         builder.Property(x => x.Name)
-            .HasMaxLength(128)
+            .HasMaxLength(Customer.NameMaxLength)
             .IsRequired();
         
         builder.Property(x => x.TaxId)
-            .HasMaxLength(64);
+            .HasMaxLength(Customer.TaxIdMaxLength);
         
         builder.Property(x => x.Address)
-            .HasMaxLength(512);
+            .HasMaxLength(Customer.AddressMaxLength);
         
         builder.Property(x => x.ContactName)
-            .HasMaxLength(512);
+            .HasMaxLength(Customer.ContactNameMaxLength);
 
         builder.Property(x => x.Phone)
-            .HasMaxLength(64);
+            .HasMaxLength(Customer.PhoneMaxLength);
 
         builder.Property(x => x.Email)
-            .HasMaxLength(16);
+            .HasMaxLength(Customer.EmailMaxLength);
 
         builder.Property(x => x.IsActive)
             .IsRequired();

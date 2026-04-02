@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Contracts.Stock.Requests;
@@ -13,7 +14,7 @@ public sealed record CreateBatchRequest(
     DateTimeOffset? ExpiryDate,
     DateTimeOffset? ReceivedAt,
     string? Notes
-) : IRequest<BatchId>;
+) : IRequest<BatchId>, ITxRequest;
 
 [PublicAPI]
 public sealed record CreateBatchResponse(Guid Id);

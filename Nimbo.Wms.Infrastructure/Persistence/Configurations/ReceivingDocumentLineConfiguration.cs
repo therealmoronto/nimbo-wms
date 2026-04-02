@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Entities.Documents.Receiving;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
@@ -28,9 +29,6 @@ public class ReceivingDocumentLineConfiguration : IEntityTypeConfiguration<Recei
         builder.Property(x => x.ToLocationId)
             .HasEntityIdConversion()
             .IsRequired();
-
-        builder.Property(x => x.Notes)
-            .HasMaxLength(512);
 
         builder.ComplexProperty(
             x => x.Quantity,
@@ -63,6 +61,9 @@ public class ReceivingDocumentLineConfiguration : IEntityTypeConfiguration<Recei
                     .HasMaxLength(16)
                     .IsRequired();
             });
+
+        builder.Property(x => x.Notes)
+            .HasMaxLength(IDocumentLine.NotesMaxLength);
 
         builder.HasOne<Item>()
             .WithMany()

@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Topology.Requests;
@@ -12,12 +11,10 @@ namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 internal sealed class AddZoneRequestHandler : IRequestHandler<AddZoneRequest, ZoneId>
 {
     private readonly IWarehouseRepository _repository;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public AddZoneRequestHandler(IWarehouseRepository repository, IUnitOfWork unitOfWork)
+    public AddZoneRequestHandler(IWarehouseRepository repository)
     {
         _repository = repository;
-        _unitOfWork = unitOfWork;
     }
 
     public async Task<ZoneId> Handle(AddZoneRequest request, CancellationToken ct = default)
@@ -29,8 +26,6 @@ internal sealed class AddZoneRequestHandler : IRequestHandler<AddZoneRequest, Zo
 
         var zoneId = ZoneId.New();
         warehouse.AddZone(zoneId, request.Code, request.Name, request.Type);
-
-        await _unitOfWork.CommitAsync(ct);
 
         return zoneId;
     }

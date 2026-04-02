@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Contracts.Topology.Requests;
@@ -17,4 +18,4 @@ public sealed record PatchZoneRequest(
 
     bool? IsQuarantine = null,
     bool? IsDamagedArea = null
-) : IRequest;
+) : IRequest, ITxRequest;
