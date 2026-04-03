@@ -14,7 +14,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<UtcDateTimeValidationFilter>();
 });
 
-builder.AddNpgsqlDbContext<NimboWmsDbContext>("postgres");
+builder.AddNpgsqlDbContext<NimboWmsDbContext>("nimboDb");
 
 builder.Services.AddInfrastructure();
 
