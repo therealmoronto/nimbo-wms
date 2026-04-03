@@ -9,19 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.AddKafkaProducer<string, string>("kafka");
-
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<UtcDateTimeValidationFilter>();
 });
 
-builder.Services.AddDbContext<NimboWmsDbContext>(
-    options =>
-{
-    var cs = builder.Configuration.GetConnectionString("NimboWmsDb");
-    options.UseNpgsql(cs, npgsql => npgsql.MigrationsAssembly("Nimbo.Wms.Infrastructure"));
-});
+builder.AddNpgsqlDbContext<NimboWmsDbContext>("postgres");
 
 builder.Services.AddInfrastructure();
 
@@ -31,6 +24,24 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("RunMigrationsOnStartup"))
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<NimboWmsDbContext>();
+
+    try
+    {
+        app.Logger.LogInformation("Applying database migrations...");
+        await context.Database.MigrateAsync();
+        app.Logger.LogInformation("Database migrations applied successfully");
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "Error applying database migrations");
+        throw; // Приложение не должно запускаться без БД
+    }
+}
+
 app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
@@ -38,7 +49,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
-        options.WithTitle("Nimbo WMS API");
+        options.WithTitle("Nimbo API");
         options.WithTheme(ScalarTheme.Laserwave); // Можно поиграться с темами
     });
 }

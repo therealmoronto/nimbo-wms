@@ -8,12 +8,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
 builder.AddKafkaProducer<string, string>("kafka");
-
-builder.Services.AddDbContext<NimboWmsDbContext>(options =>
-{
-    var cs = builder.Configuration.GetConnectionString("NimboWmsDb");
-    options.UseNpgsql(cs, npgsql => npgsql.MigrationsAssembly("Nimbo.Wms.Infrastructure"));
-});
+builder.AddNpgsqlDbContext<NimboWmsDbContext>("postgres");
 
 builder.Services.AddInfrastructure();
 

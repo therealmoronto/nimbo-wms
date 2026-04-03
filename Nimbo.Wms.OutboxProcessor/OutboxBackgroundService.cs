@@ -12,6 +12,7 @@ internal sealed class OutboxBackgroundService : BackgroundService
 
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<OutboxBackgroundService> _logger;
+    private readonly IProducer<string, string> _producer;
 
     public OutboxBackgroundService(
         IServiceProvider serviceProvider,
@@ -20,6 +21,7 @@ internal sealed class OutboxBackgroundService : BackgroundService
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
+        _producer = producer;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -29,6 +31,11 @@ internal sealed class OutboxBackgroundService : BackgroundService
             try
             {
                 await ProcessMessagesAsync(stoppingToken);
+            }
+            catch (KafkaException kafkaEx)
+            {
+                _logger.LogWarning("Kafka is not available: {Error}. Retrying in 30 seconds...", kafkaEx.Message);
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
             catch (Exception e)
             {

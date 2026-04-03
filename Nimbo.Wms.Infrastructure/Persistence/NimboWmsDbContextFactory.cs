@@ -11,7 +11,7 @@ public sealed class NimboWmsDbContextFactory : IDesignTimeDbContextFactory<Nimbo
     public NimboWmsDbContext CreateDbContext(string[] args)
     {
         // 1) CI / explicit override
-        var envConn = Environment.GetEnvironmentVariable("NIMBO_WMS_CONNECTION_STRING");
+        var envConn = Environment.GetEnvironmentVariable("ConnectionStrings__postgres");
         if (!string.IsNullOrWhiteSpace(envConn))
             return Create(envConn);
         
@@ -27,7 +27,7 @@ public sealed class NimboWmsDbContextFactory : IDesignTimeDbContextFactory<Nimbo
             .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: false)
             .AddEnvironmentVariables()
             .Build();
-        
+
         var conn = configuration.GetConnectionString("NimboWmsDb");
         if (string.IsNullOrWhiteSpace(conn))
             throw new InvalidOperationException(
