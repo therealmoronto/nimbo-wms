@@ -1,12 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi;
-using Nimbo.Wms.Application;
 using Nimbo.Wms.Filters;
-using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
+using Nimbo.Wms.Middlewares;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,9 +19,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi();
 
-    app.UseMiddleware<ProblemDetailsExceptionMiddleware>();
-    app.UseHttpsRedirection();
-    app.MapControllers();
+var app = builder.Build();
+
 
 if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("RunMigrationsOnStartup"))
 {
@@ -46,6 +40,9 @@ if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("RunMigr
     }
 }
 
+app.UseMiddleware<ProblemDetailsExceptionMiddleware>();
+app.UseHttpsRedirection();
+app.MapControllers();
 app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())

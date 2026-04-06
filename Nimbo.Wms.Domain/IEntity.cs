@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Nimbo.Wms.Domain.Identification;
+using Riok.Mapperly.Abstractions;
 
 namespace Nimbo.Wms.Domain;
 
@@ -40,6 +41,7 @@ public abstract class BaseEntity<TId> : IEntity<TId>, IDomainEventsContainer
 
     public TId Id { get; protected set; }
 
+    [MapperIgnore]
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     public void ClearEvents() => _domainEvents.Clear();
