@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-Nimbo.Wms.OutboxProcessor-14085e2f-cbb1-4772-960a-9313c271f8f6</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Confluent.Kafka" Version="13.2.1" />
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.2.1" />
+        <PackageReference Include="Confluent.Kafka" Version="2.13.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Nimbo.Wms.Infrastructure\Nimbo.Wms.Infrastructure.csproj" />
+      <ProjectReference Include="..\NimboWMS.ServiceDefaults\NimboWMS.ServiceDefaults.csproj" />
+    </ItemGroup>
+</Project>

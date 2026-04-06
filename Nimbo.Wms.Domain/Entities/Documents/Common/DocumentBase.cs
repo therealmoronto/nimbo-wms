@@ -12,6 +12,7 @@ public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
     where TLine : DocumentLineBase<TId>
 {
     private readonly List<TLine> _lines = new();
+    private readonly List<IDomainEvent> _domainEvents = new();
 
     protected DocumentBase()
     {
@@ -50,6 +51,10 @@ public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
     public string? Notes { get; private set; }
 
     public IReadOnlyCollection<TLine> Lines => _lines.AsReadOnly();
+
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    public void ClearEvents() => _domainEvents.Clear();
 
     public virtual bool IsEditable() => Status.ToString() == "Draft";
 
@@ -162,4 +167,6 @@ public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
         if (_lines.Count == 0)
             throw new DomainException("Document must have at least one line.");
     }
+
+    protected void RaiseDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Nimbo.Wms.Migrations
 {
     [DbContext(typeof(NimboWmsDbContext))]
-    partial class NimboWmsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260326163407_OutboxPattern")]
+    partial class OutboxPattern
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,8 +199,7 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Notes")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
+                        .HasColumnType("text");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "ActualQuantity", "Nimbo.Wms.Domain.Entities.Documents.CycleCount.CycleCountDocumentLine.ActualQuantity#Quantity", b1 =>
                         {
@@ -677,8 +679,8 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("character varying(512)");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -689,8 +691,8 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("character varying(128)");
 
                     b.Property<string>("Phone")
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("TaxId")
                         .HasMaxLength(64)
@@ -753,8 +755,8 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -778,8 +780,8 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("character varying(128)");
 
                     b.Property<string>("Phone")
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("TaxId")
                         .HasMaxLength(64)
@@ -816,8 +818,7 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("PurchaseUomCode")
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
+                        .HasColumnType("text");
 
                     b.Property<string>("SupplierBarcode")
                         .HasMaxLength(64)
@@ -1020,8 +1021,8 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("Code")
                         .IsRequired()

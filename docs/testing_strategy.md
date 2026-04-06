@@ -18,11 +18,23 @@ This document is the source of truth for how tests are executed in this reposito
 
 ## 3. Integration testing approach
 
-- Execution: integration tests create ephemeral PostgreSQL instances via Testcontainers (or equivalent) during the test run.
-- Schema provisioning: tests run `Database.Migrate()` at container startup; migrations are the canonical schema source for tests.
-- Seeding: tests seed only the minimal data required for the scenario; shared global seed data is avoided.
-- Isolation: tests must not rely on shared, long-lived database instances; containers are disposed at test end.
-- Determinism: tests avoid time-based or flakey assertions; retry logic is limited and explicitly documented per-test when necessary.
+- **Framework:** Integration tests use `WebApplicationFactory` with Testcontainers for database provisioning. We explicitly do **NOT** use `Aspire.Hosting.Testing` to maintain strict test isolation and avoid DI conflicts.
+- **EF Core DbContext pooling workaround:** Aspire's native DbContext pooling in the DI container can cause Scoped vs. Singleton lifetime conflicts when using `WebApplicationFactory`. To prevent this:
+  - In the `WebApplicationFactory<T>` constructor, set the test database connection string directly via environment variable:
+  ```csharp
+  public NimboWmsApiFactory()
+  {
+      var testContainer = // ... acquire test PostgreSQL container
+      var connectionString = testContainer.GetConnectionString();
+      Environment.SetEnvironmentVariable("ConnectionStrings__nimboDb", connectionString);
+  }
+  ```
+  - This injects the test database without modifying the DI container, avoiding pooling conflicts.
+- **Execution:** Integration tests create ephemeral PostgreSQL instances via Testcontainers during the test run.
+- **Schema provisioning:** tests run `Database.Migrate()` at container startup; migrations are the canonical schema source for tests.
+- **Seeding:** tests seed only the minimal data required for the scenario; shared global seed data is avoided.
+- **Isolation:** tests must not rely on shared, long-lived database instances; containers are disposed at test end.
+- **Determinism:** tests avoid time-based or flakey assertions; retry logic is limited and explicitly documented per-test when necessary.
 
 ## 4. Database strategy for tests
 
@@ -97,6 +109,9 @@ public class ReceivingDocumentPostingSmokeTests
 - Skipping: integration tests can be skipped locally via test filters or categories, but CI must run the full integration suite on every merge/PR.
 
 ## 8. Non-goals and forbidden approaches
+
+- **Aspire.Hosting.Testing:** Integration tests must not use `Aspire.Hosting.Testing` because it introduces complexity with AppHost service orchestration and can cause DI lifetime conflicts. Use `WebApplicationFactory` + Testcontainers instead.
+- **Modifying the DI container in tests:** Do not alter the application's DI configuration to work around test constraints. Instead, inject dependencies via environment variables (e.g., connection strings) or use factory overrides for infrastructure adapters.
 
 - Do not use SQLite for persistence validation or to assert EF Core/Postgres behavior.
 - Do not use `EnsureCreated()` in tests that aim to validate migrations or production schema compatibility.

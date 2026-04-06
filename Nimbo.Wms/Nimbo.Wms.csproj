@@ -7,8 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Aspire.Confluent.Kafka" Version="13.2.1" />
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.2.1" />
         <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.13.18" />
         <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
         <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.1-dev-02330" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
@@ -17,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Nimbo.Wms.Infrastructure\Nimbo.Wms.Infrastructure.csproj" />
+      <ProjectReference Include="..\NimboWMS.ServiceDefaults\NimboWMS.ServiceDefaults.csproj" />
     </ItemGroup>
 
     <PropertyGroup>

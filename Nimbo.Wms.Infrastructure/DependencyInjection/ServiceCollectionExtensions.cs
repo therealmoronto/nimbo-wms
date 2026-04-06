@@ -1,3 +1,4 @@
+using Confluent.Kafka;
 using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +32,10 @@ using Nimbo.Wms.Infrastructure.Persistence.Repositories.Ledger;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Stock;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Topology;
+using Polly;
+using Polly.CircuitBreaker;
+using Polly.Extensions.Http;
+using Polly.Retry;
 
 namespace Nimbo.Wms.Infrastructure.DependencyInjection;
 
@@ -42,6 +47,19 @@ public static class ServiceCollectionExtensions
         public IServiceCollection AddInfrastructure()
         {
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+
+            services.AddResiliencePipeline("kafka-cb", builder =>
+            {
+                var options = new CircuitBreakerStrategyOptions
+                {
+                    ShouldHandle = new PredicateBuilder().Handle<ProduceException<string, string>>(),
+                    FailureRatio = 0.5,
+                    SamplingDuration = TimeSpan.FromSeconds(30),
+                    BreakDuration = TimeSpan.FromSeconds(30),
+                };
+
+                builder.AddCircuitBreaker(options);
+            });
 
             services.AddTopology();
             services.AddMasterData();
@@ -111,6 +129,23 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IStockLedgerEntryRepository, EfStockLedgerEntryRepository>();
 
             return services;
+        }
+
+        private static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            var random = new Random();
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .WaitAndRetryAsync(
+                    retryCount: 5,
+                    sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)) + TimeSpan.FromMilliseconds(random.Next(0, 100)));
+        }
+
+        private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
         }
     }
 }

@@ -53,19 +53,31 @@ This document is the architectural contract for contributors. It lists stable, p
 - Integration tests: validate persistence and mappings against PostgreSQL (Docker/Testcontainers). Do not rely on SQLite for persistence validation.
 - Migrations: test migrations by applying `Database.Migrate()` in integration tests (smoke tests) to ensure schema compatibility.
 
-## 9. Cross-cutting Concerns (current + future)
+## 9. Outbox Pattern for Asynchronous Messaging
+
+- **Purpose:** Ensures reliable, at-least-once delivery of domain events to external message brokers (Kafka). Prevents dual-write issues and guarantees eventual consistency.
+- **Pattern:** Domain events and integration events are not published directly to a broker. Instead:
+  1. Events are serialized into `OutboxMessage` entities and persisted within the same EF Core transaction as the domain state change.
+  2. The transaction is atomic: either the domain state and the outbox record both commit, or both roll back.
+  3. The `OutboxBackgroundService` continuously polls the `OutboxMessage` table for unprocessed records and dispatches them to Kafka.
+  4. Once successfully published, the outbox record is marked as processed (or deleted).
+- **Guarantees:** This ensures that every domain state change that should trigger an event will eventually publish that event, even if the application crashes between the database commit and broker publish.
+- **Implementation location:** Use `EfUnitOfWork` to save outbox messages during command handling; the `OutboxBackgroundService` (running in `Nimbo.Wms.OutboxProcessor`) handles async dispatch to Kafka.
+
+## 10. Cross-cutting Concerns (current + future)
 
 - Logging & observability: centralized via Infrastructure adapters; controllers and application code emit structured events.
 - Health checks: lightweight health endpoints in API layer; infrastructure readiness checks for DB and external services.
 - Transactions & concurrency: optimistic concurrency is the planned approach; domain models may include versioning when required.
 - Background processing/events: background workers and eventual consistency are planned; consider an outbox pattern when integrating with external systems.
 
-## 10. Decision Log (non-negotiable)
+## 11. Decision Log (non-negotiable)
 
 - DDD rich domain with typed IDs is mandatory.
 - EF Core used only as persistence; mappings are explicit via `IEntityTypeConfiguration<T>`.
 - PostgreSQL is the production database and the target for integration tests.
 - Lazy loading is forbidden; loading is always explicit.
+- **Outbox pattern is mandatory for all cross-boundary integration events.** No direct message broker publishing from use cases, repositories, or the unit of work.
 
 ---
 
