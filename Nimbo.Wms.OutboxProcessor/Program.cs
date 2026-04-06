@@ -7,7 +7,11 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.AddKafkaProducer<string, string>("kafka");
+builder.AddKafkaProducer<string, string>("kafka", settings =>
+{
+    settings.Config.MessageSendMaxRetries = 3;
+    settings.Config.MessageTimeoutMs = 500;
+});
 builder.AddNpgsqlDbContext<NimboWmsDbContext>("nimboDb");
 
 builder.Services.AddInfrastructure();

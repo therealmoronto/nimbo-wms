@@ -1,3 +1,4 @@
+using Confluent.Kafka;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Nimbo.Wms.Application.Abstractions.Persistence;
@@ -22,7 +23,6 @@ using Nimbo.Wms.Domain.Entities.Documents.Shipment;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Domain.Entities.Topology;
-using Nimbo.Wms.Infrastructure.Integrations;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Documents;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Ledger;
@@ -30,6 +30,7 @@ using Nimbo.Wms.Infrastructure.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Stock;
 using Nimbo.Wms.Infrastructure.Persistence.Repositories.Topology;
 using Polly;
+using Polly.CircuitBreaker;
 using Polly.Extensions.Http;
 using Polly.Retry;
 
@@ -44,9 +45,18 @@ public static class ServiceCollectionExtensions
         {
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
-            services.AddHttpClient<IErpIntegrationService, ErpIntegrationService>()
-                .AddPolicyHandler(IServiceCollection.GetRetryPolicy())
-                .AddPolicyHandler(IServiceCollection.GetCircuitBreakerPolicy());
+            services.AddResiliencePipeline("kafka_cb", builder =>
+            {
+                var options = new CircuitBreakerStrategyOptions
+                {
+                    ShouldHandle = new PredicateBuilder().Handle<ProduceException<string, string>>(),
+                    FailureRatio = 0.5,
+                    SamplingDuration = TimeSpan.FromSeconds(30),
+                    BreakDuration = TimeSpan.FromSeconds(30),
+                };
+
+                builder.AddCircuitBreaker(options);
+            });
 
             services.AddTopology();
             services.AddMasterData();
