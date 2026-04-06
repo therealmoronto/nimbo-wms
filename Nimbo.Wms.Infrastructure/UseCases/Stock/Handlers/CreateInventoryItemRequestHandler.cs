@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
@@ -18,20 +17,17 @@ internal sealed class CreateInventoryItemRequestHandler : IRequestHandler<Create
     private readonly IItemRepository _itemRepository;
     private readonly IBatchRepository _batchRepository;
     private readonly IInventoryItemRepository _inventoryItemRepository;
-    private readonly IUnitOfWork _uow;
 
     public CreateInventoryItemRequestHandler(
         IWarehouseRepository warehouseRepository,
         IItemRepository itemRepository,
         IBatchRepository batchRepository,
-        IInventoryItemRepository inventoryItemRepository,
-        IUnitOfWork uow)
+        IInventoryItemRepository inventoryItemRepository)
     {
         _warehouseRepository = warehouseRepository;
         _itemRepository = itemRepository;
         _batchRepository = batchRepository;
         _inventoryItemRepository = inventoryItemRepository;
-        _uow = uow;
     }
 
     public async Task<InventoryItemId> Handle(CreateInventoryItemRequest request, CancellationToken ct = default)
@@ -74,7 +70,6 @@ internal sealed class CreateInventoryItemRequestHandler : IRequestHandler<Create
             request.UnitCost);
 
         await _inventoryItemRepository.AddAsync(inventoryItem, ct);
-        await _uow.CommitAsync(ct);
 
         return inventoryItemId;
     }

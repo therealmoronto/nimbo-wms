@@ -25,13 +25,13 @@ public class SupplierItemConfiguration : IEntityTypeConfiguration<SupplierItem>
             .IsRequired();
 
         builder.Property(x => x.SupplierSku)
-            .HasMaxLength(128);
+            .HasMaxLength(SupplierItem.SupplierSkuMaxLength);
         
         builder.Property(x => x.SupplierBarcode)
-            .HasMaxLength(64);
+            .HasMaxLength(SupplierItem.SupplierBarcodeMaxLength);
 
         builder.Property(x => x.DefaultPurchasePrice);
-        builder.Property(x => x.PurchaseUomCode);
+        builder.Property(x => x.PurchaseUomCode).HasMaxLength(SupplierItem.PurchaseUomCodeMaxLength);
         builder.Property(x => x.UnitsPerPurchaseUom);
         builder.Property(x => x.LeadTimeDays);
         builder.Property(x => x.MinOrderQty);

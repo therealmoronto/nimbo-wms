@@ -22,7 +22,7 @@ public class BatchConfiguration : IEntityTypeConfiguration<Batch>
             .IsRequired();
 
         builder.Property(x => x.BatchNumber)
-            .HasMaxLength(128)
+            .HasMaxLength(Batch.BatchNumberMaxLength)
             .IsRequired();
 
         builder.Property(x => x.SupplierId)
@@ -33,7 +33,7 @@ public class BatchConfiguration : IEntityTypeConfiguration<Batch>
         builder.Property(x => x.ReceivedAt);
 
         builder.Property(x => x.Notes)
-            .HasMaxLength(512);
+            .HasMaxLength(Batch.NotesMaxLength);
 
         // FK to Item (no navigation in domain)
         builder.HasOne<Item>()

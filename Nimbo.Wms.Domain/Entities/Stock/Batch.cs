@@ -4,6 +4,9 @@ namespace Nimbo.Wms.Domain.Entities.Stock;
 
 public class Batch : BaseEntity<BatchId>
 {
+    public const int BatchNumberMaxLength = 128;
+    public const int NotesMaxLength = 512;
+
     // ReSharper disable once UnusedMember.Global
     public Batch()
     {

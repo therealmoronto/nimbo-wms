@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Entities.Documents.Relocation;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 
@@ -22,11 +23,11 @@ public class RelocationDocumentConfiguration : IEntityTypeConfiguration<Relocati
             .IsRequired();
 
         builder.Property(x => x.Code)
-            .HasMaxLength(32)
+            .HasMaxLength(IDocument.CodeMaxLength)
             .IsRequired();
 
         builder.Property(x => x.Title)
-            .HasMaxLength(128)
+            .HasMaxLength(IDocument.TitleMaxLength)
             .IsRequired();
 
         builder.Property(x => x.Status)
@@ -41,7 +42,7 @@ public class RelocationDocumentConfiguration : IEntityTypeConfiguration<Relocati
         builder.Property(x => x.Version).IsRequired();
 
         builder.Property(x => x.Notes)
-            .HasMaxLength(512);
+            .HasMaxLength(IDocument.NotesMaxLength);
 
         builder.HasMany(x => x.Lines)
             .WithOne()

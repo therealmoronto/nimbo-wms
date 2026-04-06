@@ -1,0 +1,34 @@
+using FluentValidation;
+using JetBrains.Annotations;
+using Nimbo.Wms.Contracts.MasterData.Requests;
+using Nimbo.Wms.Domain.Entities.MasterData;
+
+namespace Nimbo.Wms.Application.Common.Validators.MasterData;
+
+[PublicAPI]
+public class PatchSupplierRequestValidator : AbstractValidator<PatchSupplierRequest>
+{
+    public PatchSupplierRequestValidator()
+    {
+        RuleFor(x => x.Code)
+            .MaximumLength(Supplier.CodeMaxLength);
+
+        RuleFor(x => x.Name)
+            .MaximumLength(Supplier.NameMaxLength);
+
+        RuleFor(x => x.TaxId)
+            .MaximumLength(Supplier.TaxIdMaxLength);
+
+        RuleFor(x => x.Address)
+            .MaximumLength(Supplier.AddressMaxLength);
+
+        RuleFor(x => x.ContactName)
+            .MaximumLength(Supplier.ContactNameMaxLength);
+
+        RuleFor(x => x.Phone)
+            .MaximumLength(Supplier.PhoneMaxLength);
+
+        RuleFor(x => x.Email)
+            .MaximumLength(Supplier.EmailMaxLength);
+    }
+}

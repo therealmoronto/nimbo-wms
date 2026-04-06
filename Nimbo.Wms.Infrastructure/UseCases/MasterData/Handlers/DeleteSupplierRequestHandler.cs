@@ -14,10 +14,9 @@ internal sealed class DeleteSupplierRequestHandler : IRequestHandler<DeleteSuppl
     private readonly ISupplierRepository _repository;
     private readonly IUnitOfWork _uow;
 
-    public DeleteSupplierRequestHandler(ISupplierRepository repository, IUnitOfWork uow)
+    public DeleteSupplierRequestHandler(ISupplierRepository repository)
     {
         _repository = repository;
-        _uow = uow;
     }
 
     public async Task Handle(DeleteSupplierRequest request, CancellationToken ct = default)
@@ -28,6 +27,5 @@ internal sealed class DeleteSupplierRequestHandler : IRequestHandler<DeleteSuppl
             throw new NotFoundException("Supplier not found");
 
         await _repository.DeleteAsync(supplier, ct);
-        await _uow.CommitAsync(ct);
     }
 }

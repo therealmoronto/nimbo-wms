@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Topology.Requests;
@@ -12,12 +11,10 @@ namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 internal sealed class PatchZoneRequestHandler : IRequestHandler<PatchZoneRequest>
 {
     private readonly IWarehouseRepository _repository;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public PatchZoneRequestHandler(IWarehouseRepository repository, IUnitOfWork unitOfWork)
+    public PatchZoneRequestHandler(IWarehouseRepository repository)
     {
         _repository = repository;
-        _unitOfWork = unitOfWork;
     }
     
     public async Task Handle(PatchZoneRequest request, CancellationToken ct = default)
@@ -50,7 +47,5 @@ internal sealed class PatchZoneRequestHandler : IRequestHandler<PatchZoneRequest
             var isDamagedArea = request.IsDamagedArea ?? zone.IsDamagedArea;
             zone.SetAreaFlags(isQuarantine, isDamagedArea);
         }
-
-        await _unitOfWork.CommitAsync(ct);
     }
 }

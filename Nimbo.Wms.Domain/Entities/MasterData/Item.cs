@@ -5,6 +5,11 @@ namespace Nimbo.Wms.Domain.Entities.MasterData;
 
 public class Item : BaseEntity<ItemId>
 {
+    public const int NameMaxLength = 512;
+    public const int InternalSkuMaxLength = 128;
+    public const int BarcodeMaxLength = 64;
+    public const int ManufacturerMaxLength = 128;
+
     // ReSharper disable once UnusedMember.Global
     public Item()
     {

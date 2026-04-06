@@ -21,11 +21,11 @@ public class ZoneConfiguration : IEntityTypeConfiguration<Zone>
             .IsRequired();
 
         builder.Property(x => x.Code)
-            .HasMaxLength(32)
+            .HasMaxLength(Zone.CodeMaxLength)
             .IsRequired();
 
         builder.Property(x => x.Name)
-            .HasMaxLength(128)
+            .HasMaxLength(Zone.NameMaxLength)
             .IsRequired();
 
         builder.Property(x => x.Type)

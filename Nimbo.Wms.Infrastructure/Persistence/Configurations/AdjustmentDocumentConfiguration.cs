@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nimbo.Wms.Domain.Entities.Documents.Adjustment;
+using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Configurations;
@@ -22,11 +23,11 @@ public class AdjustmentDocumentConfiguration : IEntityTypeConfiguration<Adjustme
             .IsRequired();
 
         builder.Property(x => x.Code)
-            .HasMaxLength(32)
+            .HasMaxLength(IDocument.CodeMaxLength)
             .IsRequired();
 
         builder.Property(x => x.Title)
-            .HasMaxLength(128)
+            .HasMaxLength(IDocument.TitleMaxLength)
             .IsRequired();
 
         builder.Property(x => x.Status)
@@ -40,14 +41,15 @@ public class AdjustmentDocumentConfiguration : IEntityTypeConfiguration<Adjustme
 
         builder.Property(x => x.Version).IsRequired();
 
-        builder.Property(x => x.Notes).HasMaxLength(512);
+        builder.Property(x => x.Notes)
+            .HasMaxLength(IDocument.NotesMaxLength);
 
         builder.Property(x => x.ReasonCode)
-            .HasMaxLength(64)
+            .HasMaxLength(AdjustmentDocument.ReasonCodeMaxLength)
             .IsRequired();
 
         builder.Property(x => x.ReasonText)
-            .HasMaxLength(256);
+            .HasMaxLength(AdjustmentDocument.ReasonTextMaxLength);
 
         builder.HasMany(x => x.Lines)
             .WithOne()

@@ -17,23 +17,23 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
             .HasEntityIdConversion();
         
         builder.Property(x => x.Name)
-            .HasMaxLength(512)
+            .HasMaxLength(Item.NameMaxLength)
             .IsRequired();
         
         builder.Property(x => x.InternalSku)
-            .HasMaxLength(128)
+            .HasMaxLength(Item.InternalSkuMaxLength)
             .IsRequired();
 
         builder.Property(x => x.Barcode)
-            .HasMaxLength(64)
+            .HasMaxLength(Item.BarcodeMaxLength)
             .IsRequired();
         
         builder.Property(x => x.BaseUomCode)
             .IsRequired();
 
         builder.Property(x => x.Manufacturer)
-            .HasMaxLength(128);
-        
+            .HasMaxLength(Item.ManufacturerMaxLength);
+
         builder.Property(x => x.WeightKg);
         builder.Property(x => x.VolumeM3);
         

@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
+using Nimbo.Wms.Application;
 using Nimbo.Wms.Filters;
-using Nimbo.Wms.Http;
 using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Scalar.AspNetCore;
@@ -16,13 +20,13 @@ builder.Services.AddControllers(options =>
 
 builder.AddNpgsqlDbContext<NimboWmsDbContext>("nimboDb");
 
-builder.Services.AddInfrastructure();
-
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi();
 
-var app = builder.Build();
+    app.UseMiddleware<ProblemDetailsExceptionMiddleware>();
+    app.UseHttpsRedirection();
+    app.MapControllers();
 
 if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("RunMigrationsOnStartup"))
 {
@@ -53,9 +57,3 @@ if (app.Environment.IsDevelopment())
         options.WithTheme(ScalarTheme.Laserwave); // Можно поиграться с темами
     });
 }
-
-app.UseMiddleware<ProblemDetailsExceptionMiddleware>();
-app.UseHttpsRedirection();
-app.MapControllers();
-
-app.Run();

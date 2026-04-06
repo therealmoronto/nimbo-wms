@@ -14,10 +14,9 @@ internal sealed class CreateSupplierRequestHandler : IRequestHandler<CreateSuppl
     private readonly ISupplierRepository _repository;
     private readonly IUnitOfWork _uow;
 
-    public CreateSupplierRequestHandler(ISupplierRepository repository, IUnitOfWork uow)
+    public CreateSupplierRequestHandler(ISupplierRepository repository)
     {
         _repository = repository;
-        _uow = uow;
     }
 
     public async Task<SupplierId> Handle(CreateSupplierRequest request, CancellationToken ct = default)
@@ -26,7 +25,6 @@ internal sealed class CreateSupplierRequestHandler : IRequestHandler<CreateSuppl
         var supplier = new Supplier(supplerId, request.Code, request.Name);
         
         await _repository.AddAsync(supplier, ct);
-        await _uow.CommitAsync(ct);
 
         return supplerId;
     }

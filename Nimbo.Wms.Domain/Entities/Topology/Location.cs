@@ -5,6 +5,12 @@ namespace Nimbo.Wms.Domain.Entities.Topology;
 
 public sealed class Location : BaseEntity<LocationId>
 {
+    public const int CodeMaxLength = 32;
+    public const int AisleMaxLength = 16;
+    public const int RackMaxLength = 16;
+    public const int LevelMaxLength = 16;
+    public const int PositionMaxLength = 16;
+
     // ReSharper disable once UnusedMember.Global
     public Location()
     {

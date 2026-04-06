@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nimbo.Wms.Domain.Entities.Documents.Adjustment;
+using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Configurations;
@@ -28,9 +29,6 @@ public class AdjustmentDocumentLineConfiguration : IEntityTypeConfiguration<Adju
             .HasEntityIdConversion()
             .IsRequired();
 
-        builder.Property(x => x.Notes)
-            .HasMaxLength(512);
-        
         builder.Ignore(x => x.Quantity);
 
         builder.ComplexProperty(
@@ -48,6 +46,9 @@ public class AdjustmentDocumentLineConfiguration : IEntityTypeConfiguration<Adju
                     .HasMaxLength(16)
                     .IsRequired();
             });
+
+        builder.Property(x => x.Notes)
+            .HasMaxLength(IDocumentLine.NotesMaxLength);
 
         builder.HasIndex(x => x.DocumentId);
         builder.HasIndex(x => new { x.DocumentId, x.ItemId, x.LocationId });

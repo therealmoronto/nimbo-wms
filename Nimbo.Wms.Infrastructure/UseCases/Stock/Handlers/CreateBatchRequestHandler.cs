@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Common;
@@ -16,18 +15,15 @@ internal sealed class CreateBatchRequestHandler : IRequestHandler<CreateBatchReq
     private readonly IItemRepository _itemRepository;
     private readonly ISupplierRepository _supplierRepository;
     private readonly IBatchRepository _batchRepository;
-    private readonly IUnitOfWork _uow;
 
     public CreateBatchRequestHandler(
         IItemRepository itemRepository,
         ISupplierRepository supplierRepository,
-        IBatchRepository batchRepository,
-        IUnitOfWork uow)
+        IBatchRepository batchRepository)
     {
         _itemRepository = itemRepository;
         _supplierRepository = supplierRepository;
         _batchRepository = batchRepository;
-        _uow = uow;
     }
 
     public async Task<BatchId> Handle(CreateBatchRequest request, CancellationToken ct = default)
@@ -58,7 +54,6 @@ internal sealed class CreateBatchRequestHandler : IRequestHandler<CreateBatchReq
             request.Notes);
 
         await _batchRepository.AddAsync(batch, ct);
-        await _uow.CommitAsync(ct);
 
         return batchId;
     }

@@ -4,6 +4,14 @@ namespace Nimbo.Wms.Domain.Entities.MasterData;
 
 public class Customer : BaseEntity<CustomerId>
 {
+    public const int CodeMaxLength = 32;
+    public const int NameMaxLength = 128;
+    public const int TaxIdMaxLength = 64;
+    public const int AddressMaxLength = 512;
+    public const int ContactNameMaxLength = 512;
+    public const int PhoneMaxLength = 16;
+    public const int EmailMaxLength = 256;
+
     // ReSharper disable once UnusedMember.Global
     public Customer()
     {

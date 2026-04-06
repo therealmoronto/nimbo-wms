@@ -1,7 +1,8 @@
 using JetBrains.Annotations;
 using MediatR;
+using Nimbo.Wms.Contracts.Common;
 
 namespace Nimbo.Wms.Contracts.MasterData.Requests;
 
 [PublicAPI]
-public sealed record DeleteItemRequest(Guid ItemGuid) : IRequest;
+public sealed record DeleteItemRequest(Guid ItemGuid) : IRequest, ITxRequest;

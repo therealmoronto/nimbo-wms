@@ -7,6 +7,8 @@ namespace Nimbo.Wms.Domain.Entities.Stock;
 
 public class InventoryItem : BaseEntity<InventoryItemId>
 {
+    public const int SerialNumberMaxLength = 128;
+
     // ReSharper disable once UnusedMember.Local
     private InventoryItem()
     {
