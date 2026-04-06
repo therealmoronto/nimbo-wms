@@ -48,7 +48,7 @@ public static class ServiceCollectionExtensions
         {
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
-            services.AddResiliencePipeline("kafka_cb", builder =>
+            services.AddResiliencePipeline("kafka-cb", builder =>
             {
                 var options = new CircuitBreakerStrategyOptions
                 {

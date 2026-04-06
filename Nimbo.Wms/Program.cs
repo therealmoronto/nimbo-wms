@@ -54,3 +54,5 @@ if (app.Environment.IsDevelopment())
         options.WithTheme(ScalarTheme.Laserwave); // Можно поиграться с темами
     });
 }
+
+app.Run();
