@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Tests.Common.Database;
 
@@ -19,22 +21,20 @@ public class NimboWmsApiFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        // Force in-memory hosting for tests to avoid binding to a real TCP port (e.g., 5281)
         builder.UseTestServer();
-
-        // Ensure we don't inherit a fixed port from launchSettings/ASPNETCORE_URLS
         builder.UseSetting("ASPNETCORE_URLS", string.Empty);
 
         builder.ConfigureServices(services =>
         {
-            // Remove existing DbContext registration
-            var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<NimboWmsDbContext>));
+            // 1. Clearing EF Core from pool that were added by Aspire
+            services.RemoveAll(typeof(DbContextOptions<NimboWmsDbContext>));
 
-            if (descriptor is not null)
-                services.Remove(descriptor);
+            // NOTE It's not safe so FIXME
+            services.RemoveAll(typeof(IDbContextPool<NimboWmsDbContext>));
+            services.RemoveAll(typeof(IScopedDbContextLease<NimboWmsDbContext>));
 
-            // Re-register DbContext with container connection string
-            services.AddDbContext<NimboWmsDbContext>(options =>
+            // 2. Register back via pool to repeat real life behavior of Program.cs
+            services.AddDbContextPool<NimboWmsDbContext>(options =>
             {
                 options.UseNpgsql(
                     _postgres.ConnectionString,

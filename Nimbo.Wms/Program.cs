@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Filters;
+using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Middlewares;
 using Scalar.AspNetCore;
@@ -18,6 +19,8 @@ builder.AddNpgsqlDbContext<NimboWmsDbContext>("nimboDb");
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi();
+
+builder.Services.AddInfrastructure();
 
 var app = builder.Build();
 
