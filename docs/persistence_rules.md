@@ -70,6 +70,13 @@ This document is the source of truth describing how persistence is handled in th
 - **SQLite is not sufficient:** SQLite must not be used for persistence validation tests because its SQL dialect and behavior differ from PostgreSQL.
 - **Testable rules:** Persistence rules and mappings must be verifiable by automated integration tests (schema, mapping, conversions, owned types, collection behavior, and value comparers).
 
+## Message Publishing and Outbox Pattern
+
+- **Prohibition:** UseCases, Repositories, and `EfUnitOfWork` MUST NEVER publish messages directly to a message broker.
+- **Outbox requirement:** All cross-boundary integration events (domain events that trigger external system changes) MUST be saved as `OutboxMessage` entities within the current database transaction.
+- **Atomic persistence:** Outbox messages are saved alongside the domain state change in a single EF Core SaveChanges() call. The transaction either commits both, or neither.
+- **Deferred dispatch:** The `OutboxBackgroundService` is solely responsible for reading outbox records and publishing them asynchronously to Kafka. Application code does not touch the broker directly.
+
 ## Mapping and Reliability Notes
 
 - **Converters & comparers:** Any non-primitive mapping (typed IDs, lists, enums stored as text/integers) must provide both a `ValueConverter` and a `ValueComparer` when necessary so EF change tracking works reliably.
@@ -79,7 +86,7 @@ This document is the source of truth describing how persistence is handled in th
 
 ## Enforcement and Review
 
-- **Code review checks:** Follow these rules in all pull requests that introduce or modify persistence mappings. Mapping changes must include tests demonstrating correctness (materialization, save/load, change detection).
+- **Code review checks:** Follow these rules in all pull requests that introduce or modify persistence mappings or cross-boundary events. Mapping changes must include tests demonstrating correctness (materialization, save/load, change detection). Outbox integration must be verified by integration tests that simulate message dispatch.
 
 ---
 

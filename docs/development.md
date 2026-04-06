@@ -2,34 +2,27 @@
 
 This document is the source of truth for local development and debugging of Nimbo WMS. It lists the stable, project-specific commands and configuration used today.
 
-## 1. Docker compose for PostgreSQL
+## 1. .NET Aspire 9.0 AppHost Entry Point
 
-- Recommended file: `docker-compose.postgres.yml` (place next to repository root). The project expects a local Postgres database named `nimbo_wms` with user `nimbo_admin` by default (see `appsettings.Development.json`).
-- Minimal service (example):
-
-```yaml
-version: '3.8'
-services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: nimbo_wms
-      POSTGRES_USER: nimbo_admin
-      POSTGRES_PASSWORD: nimbo_password
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-volumes:
-  pgdata:
-```
-
-- Start/stop:
+- **Primary entry point:** `Nimbo.Wms.AppHost` is the orchestration container for local development.
+- **Orchestrated services:** The AppHost automatically provisions and manages:
+  - PostgreSQL database
+  - Apache Kafka broker
+  - Kafka UI (for topic and message inspection)
+  - Nimbo WMS API (`Nimbo.Wms`)
+  - Outbox background processor (`Nimbo.Wms.OutboxProcessor`)
+- **Starting the local environment:** Run the AppHost project:
 
 ```bash
-docker compose -f docker-compose.postgres.yml up -d
-docker compose -f docker-compose.postgres.yml down -v
+dotnet run --project Nimbo.Wms.AppHost
 ```
+
+- **Aspire Dashboard:** Open the Aspire Dashboard (typically `https://localhost:17360`) to access:
+  - Real-time service logs and output
+  - Environment variables and configuration
+  - Distributed traces and telemetry
+
+The Dashboard is the primary tool for debugging, observability, and monitoring during local development.
 
 ## 2. Env vars and Appsettings
 
@@ -64,7 +57,13 @@ dotnet ef database update --project Nimbo.Wms.Infrastructure --startup-project N
 dotnet build NimboWMS.sln
 ```
 
-- Run the API locally (uses `appsettings.Development.json` when `ASPNETCORE_ENVIRONMENT=Development`):
+- Run the AppHost orchestrator (recommended; replaces direct `dotnet run` for the API):
+
+```bash
+dotnet run --project Nimbo.Wms.AppHost
+```
+
+- Run the API directly (bypasses AppHost; for debugging specific API issues only):
 
 ```bash
 dotnet run --project Nimbo.Wms
@@ -85,9 +84,10 @@ dotnet ef database update --project Nimbo.Wms.Infrastructure --startup-project N
 
 ## Notes and constraints
 
-- Docker is required locally to run integration tests that validate persistence. CI runs integration tests in Docker as well.
-- The repository includes `appsettings.Development.json` with a default connection string for local development; overriding via environment variables is the supported approach for per-developer credentials.
+- Docker is required locally to run integration tests that validate persistence and to run the AppHost. CI runs integration tests in Docker as well.
+- The repository includes `appsettings.Development.json` with a default connection string for local development; the AppHost manages service provisioning and connection strings automatically.
 - `EnsureCreated()` is not used for validating migrations or production-like schemas.
+- The AppHost orchestrator is the recommended entry point; direct `dotnet run` on individual projects is for development debugging only.
 
 ---
 
