@@ -62,26 +62,32 @@ Nimbo is evolving in four strategic phases, moving from a rock-solid warehouse e
 
 ## 🛠 Getting Started
 
-Nimbo is designed for ease of development and deployment. The core system is built with **.NET 8** and **PostgreSQL**.
+Nimbo is designed for a seamless developer experience using **.NET Aspire**. You don't need to manually configure infrastructure — the system orchestrates it for you.
+
+### 📋 Prerequisites
+* **.NET 10.0 SDK** (or newer)
+* **Docker Desktop** or **Podman** (required for containerized resources like PostgreSQL)
 
 ### 🏗 Local Setup
+
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/therealmoronto/nimbo-wms.git
+   git clone [https://github.com/therealmoronto/nimbo-wms.git](https://github.com/therealmoronto/nimbo-wms.git)
+   cd nimbo-wms
    ```
-2. Initialize the environment:
-   We provide automation scripts to set up your local infrastructure:
+2. Run the ecosystem via Aspire:
+   This command automatically starts PostgreSQL and launches the API:
    ```bash
-   # Initialize PostgreSQL and core settings
-   ./ef_pg_init.sh
-   # Apply latest migrations
-   ./ef_update.sh
+   dotnet run --project Nimbo.Wms.AppHost
    ```
-3. Run the solution:
-   Open NimboWMS.sln in your preferred IDE or run:
-   ```bash
-   dotnet run --project Nimbo.Wms
-   ```
+3. Access the Dashboard:
+   Once running, follow the link to the Aspire Dashboard (typically localhost:18888) to monitor services, logs, and endpoints.
+
+### 🗄 Manual Database Management (Optional)
+
+If you need to initialize the environment or apply migrations manually without using the AppHost, use the provided automation scripts:
+- `./ef_pg_init.sh` &mdash; Initialize PostgreSQL settings.
+- `./ef_update.sh` &mdash; Apply the latest EF Core migrations.
 
 Refer to [docs/development.md](./docs/development.md) for a detailed engineering guide.
 
