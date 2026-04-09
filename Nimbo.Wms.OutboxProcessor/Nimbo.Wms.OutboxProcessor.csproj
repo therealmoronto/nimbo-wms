@@ -16,6 +16,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Nimbo.Wms.Infrastructure\Nimbo.Wms.Infrastructure.csproj" />
-      <ProjectReference Include="..\NimboWMS.ServiceDefaults\NimboWMS.ServiceDefaults.csproj" />
+      <ProjectReference Include="..\Nimbo.Wms.ServiceDefaults\Nimbo.Wms.ServiceDefaults.csproj" />
     </ItemGroup>
 </Project>

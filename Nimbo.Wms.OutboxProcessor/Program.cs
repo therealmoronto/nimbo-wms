@@ -1,7 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.OutboxProcessor;
+using Nimbo.Wms.ServiceDefaults;
 
 var builder = Host.CreateApplicationBuilder(args);
 
