@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Requests;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 
@@ -54,7 +53,7 @@ public class ItemsController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<ItemDto> GetItem([FromRoute] Guid itemGuid, CancellationToken ct)
     {
-        var request = new GetItemRequest(ItemId.From(itemGuid));
+        var request = new GetItemRequest(itemGuid);
         return await sender.Send(request, ct);
     }
 

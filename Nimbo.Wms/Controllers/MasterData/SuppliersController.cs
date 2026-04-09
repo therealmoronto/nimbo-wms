@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Requests;
-using Nimbo.Wms.Contracts.Topology.Dtos;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 
