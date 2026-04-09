@@ -13,6 +13,8 @@ public class OutboxMessage
 
     public Guid Id { get; } = Guid.NewGuid();
 
+    public Guid AggregateId { get; init; }
+
     public string Type { get; init; }
 
     public string Content { get; init; }

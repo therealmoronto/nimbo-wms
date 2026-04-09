@@ -13,6 +13,7 @@ public class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id).ValueGeneratedNever();
+        builder.Property(x => x.AggregateId).ValueGeneratedNever().IsRequired();
         builder.Property(x => x.Type).IsRequired();
         builder.Property(x => x.Content).IsRequired();
         builder.Property(x => x.Error);

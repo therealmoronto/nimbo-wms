@@ -6,7 +6,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Domain.Entities.Documents.Common;
 
 [PublicAPI]
-public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
+public abstract class DocumentBase<TId, TStatus, TLine> : AggregateRoot<TId>, IDocument
     where TId : struct, IEntityId
     where TStatus : struct, Enum
     where TLine : DocumentLineBase<TId>
@@ -30,7 +30,8 @@ public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
     }
 
     IEntityId IDocument.Id => Id;
-    public TId Id { get; }
+
+    public override TId Id { get; }
 
     public string Code { get; private set; } = null!;
 
@@ -51,10 +52,6 @@ public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
     public string? Notes { get; private set; }
 
     public IReadOnlyCollection<TLine> Lines => _lines.AsReadOnly();
-
-    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
-
-    public void ClearEvents() => _domainEvents.Clear();
 
     public virtual bool IsEditable() => Status.ToString() == "Draft";
 
@@ -167,6 +164,4 @@ public abstract class DocumentBase<TId, TStatus, TLine> : IDocument
         if (_lines.Count == 0)
             throw new DomainException("Document must have at least one line.");
     }
-
-    protected void RaiseDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 }

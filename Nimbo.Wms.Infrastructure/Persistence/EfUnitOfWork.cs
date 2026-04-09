@@ -16,9 +16,11 @@ internal sealed class EfUnitOfWork(NimboWmsDbContext dbContext) : IUnitOfWork
     private async Task ConvertDomainEventsToOutboxMessages(CancellationToken ct = default)
     {
         var entitiesWithEvents = dbContext.ChangeTracker
-            .Entries<IDomainEventsContainer>()
+            .Entries<IAggregateRoot>()
             .Where(x => x.Entity.DomainEvents.Any())
             .ToList();
+
+        // FIXME нужны ID объектов в OutboxMessage
 
         var domainEvents = entitiesWithEvents
             .SelectMany(x =>
@@ -29,8 +31,9 @@ internal sealed class EfUnitOfWork(NimboWmsDbContext dbContext) : IUnitOfWork
             })
             .ToList();
 
-        var outboxMessages = domainEvents.Select(e => new OutboxMessage()
+        var outboxMessages = domainEvents.Select(e => new OutboxMessage
             {
+                AggregateId = e.AggregateId,
                 Type = e.GetType().Name,
                 Content = JsonSerializer.Serialize(e, e.GetType()),
             })
