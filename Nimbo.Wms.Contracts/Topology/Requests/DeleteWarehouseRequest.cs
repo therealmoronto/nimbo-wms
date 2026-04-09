@@ -1,9 +1,8 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Contracts.Common;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Contracts.Topology.Requests;
 
 [PublicAPI]
-public sealed record DeleteWarehouseRequest(WarehouseId WarehouseId) : IRequest, ITxRequest;
+public sealed record DeleteWarehouseRequest(Guid WarehouseId) : IRequest, ITxRequest;

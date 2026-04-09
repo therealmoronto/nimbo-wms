@@ -43,7 +43,7 @@ public class SupplierLifecycleApiTests : ApiTestBase
             "SUPPLIER-ITEM-001",
             "SI-001",
             "00100245",
-            UnitOfMeasure.Kilogram);
+            nameof(UnitOfMeasure.Kilogram));
         
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;

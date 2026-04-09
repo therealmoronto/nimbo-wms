@@ -30,12 +30,12 @@ public class InventoryItemsController : ControllerBase
         [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var invetoryItemId = await mediator.Send(request, ct);
+        var inventoryItemGuid = await mediator.Send(request, ct);
         return CreatedAtAction(
             nameof(GetInventoryItem),
             "InventoryItems",
-            new { inventoryItemGuid = invetoryItemId.Value },
-            new CreateInventoryItemResponse(invetoryItemId.Value));
+            new { inventoryItemGuid = inventoryItemGuid },
+            new CreateInventoryItemResponse(inventoryItemGuid));
     }
 
     /// <summary>

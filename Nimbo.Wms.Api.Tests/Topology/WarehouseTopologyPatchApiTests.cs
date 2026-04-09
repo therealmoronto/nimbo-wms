@@ -54,7 +54,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         var warehouseGuid = wh.Id;
 
         // add zone
-        var addZoneRequest = new AddZoneRequest(warehouseGuid, "Z-A", "Zone A", ZoneType.Storage);
+        var addZoneRequest = new AddZoneRequest(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
         var zRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
 
         zRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -94,7 +94,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         var warehouseGuid = wh.Id;
 
         // add zone
-        var addZoneRequest = new AddZoneRequest(warehouseGuid, "Z-A", "Zone A", ZoneType.Storage);
+        var addZoneRequest = new AddZoneRequest(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
         var zRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
 
         zRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -102,7 +102,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         var zoneGuid = zone.ZoneId;
 
         // add location
-        var addLocationRequest = new AddLocationRequest(warehouseGuid, zoneGuid, "A-01-01-01", LocationType.Shelf);
+        var addLocationRequest = new AddLocationRequest(warehouseGuid, zoneGuid, "A-01-01-01", nameof(LocationType.Shelf));
         var lRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/locations", addLocationRequest);
 
         lRes.StatusCode.Should().Be(HttpStatusCode.Created);

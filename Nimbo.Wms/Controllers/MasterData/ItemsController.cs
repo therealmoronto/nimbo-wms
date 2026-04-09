@@ -21,11 +21,11 @@ public class ItemsController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<IActionResult> Createitem([FromBody] CreateItemRequest request, CancellationToken ct)
     {
-        var itemId = await sender.Send(request, ct);
+        var itemGuid = await sender.Send(request, ct);
         return CreatedAtAction(
             actionName: nameof(GetItem),
-            new { itemGuid = itemId.Value },
-            new CreateItemResponse(itemId.Value));
+            new { itemGuid = itemGuid },
+            new CreateItemResponse(itemGuid));
     }
 
     /// <summary>

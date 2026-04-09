@@ -39,7 +39,7 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
             warehouseGuid,
             Code: "Z-A",
             Name: "Zone A",
-            ZoneType.Storage);
+            nameof(ZoneType.Storage));
 
         var addZoneResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZone);
 
@@ -54,7 +54,7 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
             warehouseGuid,
             zoneGuid,
             Code: "A-01-01-01",
-            LocationType.Shelf);
+            nameof(LocationType.Shelf));
 
         var addLocationResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/locations", addLocation);
 

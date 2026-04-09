@@ -28,13 +28,13 @@ public class SupplierItemsController(ISender sender) : ControllerBase
         CancellationToken ct)
     {
         var supplierId = SupplierId.From(supplierGuid);
-        var supplierItemId = await sender.Send(request with { SupplierGuid = supplierId }, ct);
+        var supplierItemGuid = await sender.Send(request with { SupplierGuid = supplierId }, ct);
 
         return CreatedAtAction(
             actionName: nameof(SuppliersController.GetSupplier),
             controllerName: "Suppliers",
             routeValues: new { supplierGuid },
-            value: new AddSupplierItemResponse(supplierItemId.Value));
+            value: new AddSupplierItemResponse(supplierItemGuid));
     }
 
     /// <summary>

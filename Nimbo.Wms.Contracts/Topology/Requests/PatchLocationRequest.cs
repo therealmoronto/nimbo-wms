@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Contracts.Common;
-using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Contracts.Topology.Requests;
 
@@ -10,7 +9,7 @@ public sealed record PatchLocationRequest(
     Guid LocationGuid,
 
     string? Code = null,
-    LocationType? Type = null,
+    string? Type = null,
 
     decimal? MaxWeightKg = null,
     decimal? MaxVolumeM3 = null,

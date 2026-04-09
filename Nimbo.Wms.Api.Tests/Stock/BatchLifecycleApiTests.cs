@@ -24,7 +24,7 @@ public class BatchLifecycleApiTests : ApiTestBase
             "BATCH-TEST-ITEM",
             "BTI-001",
             "00100999",
-            UnitOfMeasure.Kilogram);
+            nameof(UnitOfMeasure.Kilogram));
 
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;

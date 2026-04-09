@@ -53,13 +53,13 @@ public sealed class WarehousesController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<ActionResult<CreateWarehouseResponse>> CreateWarehouse([FromBody] CreateWarehouseRequest request, CancellationToken ct)
     {
-        var warehouseId = await sender.Send(request, ct);
+        var warehouseGuid = await sender.Send(request, ct);
 
         return CreatedAtAction(
             actionName: nameof(WarehousesController.GetWarehouseTopology),
             controllerName: "Warehouses",
-            routeValues: new { warehouseGuid = warehouseId.Value },
-            value: new CreateWarehouseResponse(warehouseId.Value));
+            routeValues: new { warehouseGuid = warehouseGuid },
+            value: new CreateWarehouseResponse(warehouseGuid));
     }
 
     /// <summary>

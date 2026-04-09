@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Contracts.Common;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Contracts.Topology.Requests;
 
@@ -9,7 +8,7 @@ namespace Nimbo.Wms.Contracts.Topology.Requests;
 public sealed record CreateWarehouseRequest(
     string Code,
     string Name
-) : IRequest<WarehouseId>, ITxRequest;
+) : IRequest<Guid>, ITxRequest;
 
 [PublicAPI]
 public sealed record CreateWarehouseResponse(Guid Id);
