@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.Api.Tests", "Nimb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.AppHost", "Nimbo.Wms.AppHost\Nimbo.Wms.AppHost.csproj", "{34940D5B-B8A1-4AB6-85F0-80A8A1E41063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NimboWMS.ServiceDefaults", "NimboWMS.ServiceDefaults\NimboWMS.ServiceDefaults.csproj", "{CE54C162-F783-4B27-A2F2-929621631F78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.ServiceDefaults", "Nimbo.Wms.ServiceDefaults\Nimbo.Wms.ServiceDefaults.csproj", "{CE54C162-F783-4B27-A2F2-929621631F78}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nimbo.Wms.OutboxProcessor", "Nimbo.Wms.OutboxProcessor\Nimbo.Wms.OutboxProcessor.csproj", "{B6C8EDA6-B809-4181-8AAA-106A03B393B6}"
 EndProject
