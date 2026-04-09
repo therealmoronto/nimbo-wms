@@ -28,11 +28,9 @@ public sealed class NimboWmsDbContextFactory : IDesignTimeDbContextFactory<Nimbo
             .AddEnvironmentVariables()
             .Build();
 
-        var conn = configuration.GetConnectionString("NimboWmsDb");
-        if (string.IsNullOrWhiteSpace(conn))
-            throw new InvalidOperationException(
-                "Connection string 'ConnectionStrings:NimboWmsDb' was not found. " +
-                "Check Nimbo.Wms/appsettings*.json or set NIMBO_WMS_CONNECTION_STRING.");
+        var conn = configuration.GetConnectionString("nimboDb")
+            ?? Environment.GetEnvironmentVariable("NIMBO_WMS_CONNECTION_STRING")
+            ?? "Host=localhost;Database=nimbo_dummy;Username=postgres;Password=postgres";
 
         return Create(conn);
     }
