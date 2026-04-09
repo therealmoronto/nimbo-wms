@@ -3,6 +3,7 @@ using Nimbo.Wms.Filters;
 using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Middlewares;
+using Nimbo.Wms.ServiceDefaults;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
