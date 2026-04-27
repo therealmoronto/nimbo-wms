@@ -26,7 +26,7 @@ public interface IAggregateRoot
 }
 
 [PublicAPI]
-public abstract class AggregateRoot<TId> : IEntity<TId>
+public abstract class AggregateRoot<TId> : IEntity<TId>, IAggregateRoot
     where TId : struct, IEntityId
 {
     private readonly List<IDomainEvent> _domainEvents = new();
