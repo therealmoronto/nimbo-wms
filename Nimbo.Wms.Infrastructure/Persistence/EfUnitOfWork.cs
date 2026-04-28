@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Domain;
+using Nimbo.Wms.Domain.Entities;
 using Nimbo.Wms.Infrastructure.Persistence.Outbox;
 
 namespace Nimbo.Wms.Infrastructure.Persistence;

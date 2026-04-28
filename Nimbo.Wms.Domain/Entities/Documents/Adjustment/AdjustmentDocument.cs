@@ -86,6 +86,7 @@ public sealed class AdjustmentDocument : DocumentBase<AdjustmentDocumentId, Adju
         EnsureLinesAreValid();
         TransitionTo(AdjustmentStatus.Posted);
         MarkPosted();
+        RaiseEvent(new AdjustmentDocumentPostedEvent(Id, Code, Title, Version));
     }
 
     protected override void ValidateTransition(AdjustmentStatus currentStatus, AdjustmentStatus newStatus)

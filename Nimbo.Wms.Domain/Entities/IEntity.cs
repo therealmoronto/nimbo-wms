@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Nimbo.Wms.Domain.Identification;
 
-namespace Nimbo.Wms.Domain;
+namespace Nimbo.Wms.Domain.Entities;
 
 [PublicAPI]
 public interface IEntity

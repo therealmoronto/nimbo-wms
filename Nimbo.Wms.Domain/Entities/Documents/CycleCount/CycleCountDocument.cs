@@ -60,9 +60,9 @@ public sealed class CycleCountDocument : DocumentBase<CycleCountDocumentId, Cycl
     public void Post()
     {
         EnsureAllLinesCounted();
-
         TransitionTo(CycleCountStatus.Posted);
         MarkPosted();
+        RaiseEvent(new CycleCountDocumentPostedEvent(Id, Code, Title, Version));
     }
 
     public void Cancel() => TransitionTo(CycleCountStatus.Cancelled);

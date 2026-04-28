@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories;
 using Nimbo.Wms.Domain;
+using Nimbo.Wms.Domain.Entities;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.Persistence.Repositories;

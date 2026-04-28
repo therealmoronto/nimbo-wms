@@ -66,6 +66,7 @@ public sealed class ReceivingDocument : DocumentBase<ReceivingDocumentId, Receiv
         EnsureLinesAreValid();
         TransitionTo(ReceivingStatus.Posted);
         MarkPosted();
+        RaiseEvent(new ReceivingDocumentPostedEvent(Id, Code, Title, Version));
     }
 
     protected override void ValidateTransition(ReceivingStatus currentStatus, ReceivingStatus newStatus)

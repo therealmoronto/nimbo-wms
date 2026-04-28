@@ -2,20 +2,7 @@ using JetBrains.Annotations;
 using Nimbo.Wms.Domain.Identification;
 using Riok.Mapperly.Abstractions;
 
-namespace Nimbo.Wms.Domain;
-
-/// <summary>
-/// Marker interface for domain events.
-/// </summary>
-[PublicAPI]
-public interface IDomainEvent
-{
-    Guid Id { get; }
-
-    Guid AggregateId { get; }
-
-    DateTime OccurredAt { get; }
-}
+namespace Nimbo.Wms.Domain.Entities;
 
 [PublicAPI]
 public interface IAggregateRoot
