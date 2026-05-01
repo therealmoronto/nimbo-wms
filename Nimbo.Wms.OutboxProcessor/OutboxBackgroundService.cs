@@ -1,7 +1,9 @@
 using System.Text.Json;
 using Confluent.Kafka;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Domain;
+using Nimbo.Wms.Domain.Entities.Documents;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Outbox;
 using Polly;
@@ -15,19 +17,16 @@ internal sealed class OutboxBackgroundService : BackgroundService
 
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<OutboxBackgroundService> _logger;
-    private readonly IProducer<string, string> _producer;
-    private readonly ResiliencePipeline _pipeline;
+    private readonly ITopicProducer<string, IDocumentPostedEvent> _topicProducer;
 
     public OutboxBackgroundService(
         IServiceProvider serviceProvider,
         ILogger<OutboxBackgroundService> logger,
-        IProducer<string, string> producer,
-        ResiliencePipelineProvider<string> pipelineProvider)
+        ITopicProducer<string, IDocumentPostedEvent> topicProducer)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
-        _producer = producer;
-        _pipeline = pipelineProvider.GetPipeline("kafka-cb");
+        _topicProducer = topicProducer;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -71,43 +70,15 @@ internal sealed class OutboxBackgroundService : BackgroundService
         {
             try
             {
-                var domainEventId = JsonSerializer.Deserialize<IDomainEvent>(message.Content);
-                if (domainEventId is null)
+                var domainEvent = JsonSerializer.Deserialize<IDomainEvent>(message.Content);
+                if (domainEvent is null)
                     continue;
 
-                var kafkaMessage = new Message<string, string>
-                {
-                    Key = domainEventId.AggregateId.ToString(),
-                    Value = message.Content,
-                    Timestamp = new Timestamp(DateTime.UtcNow),
-                };
-
-                var state = new { _producer, kafkaMessage };
-                var deliveryResult = await _pipeline.ExecuteAsync(
-                    static async (stateArgs, ct) => await stateArgs._producer.ProduceAsync("outbox-topic", stateArgs.kafkaMessage, ct),
-                    state,
-                    stoppingToken);
+                await _topicProducer.Produce(domainEvent.AggregateId.ToString(), domainEvent, stoppingToken);
 
                 message.ProcessedAt = DateTime.UtcNow;
                 if (_logger.IsEnabled(LogLevel.Debug))
-                    _logger.LogDebug(
-                        "Message {MessageId} delivered to {Topic} at offset {Offset}",
-                        message.Id,
-                        deliveryResult.Topic,
-                        deliveryResult.Offset);
-            }
-            catch (ProduceException<string, string> e)
-            {
-                _logger.LogError(e, "Kafka delivery failed for message {MessageId}. Reason: {Reason}", message.Id, e.Error.Reason);
-
-                message.Error = e.Error.Reason;
-                message.RetryCount++;
-
-                if (message.RetryCount >= OutboxRetryCount)
-                {
-                    message.IsDeadLetter = true;
-                    _logger.LogError(e, "Message {MessageId} is dead lettered", message.Id);
-                }
+                    _logger.LogDebug("Message {MessageId} delivered", message.Id);
             }
             catch (Exception e)
             {

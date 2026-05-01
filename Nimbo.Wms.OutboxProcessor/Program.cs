@@ -9,19 +9,13 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.AddKafkaProducer<string, string>("kafka", settings =>
-{
-    settings.Config.MessageSendMaxRetries = 3;
-    settings.Config.MessageTimeoutMs = 500;
-});
-
 builder.Services.AddMassTransit(config =>
 {
     config.UsingInMemory();
 
     config.AddRider(rider =>
     {
-        rider.AddProducer<IDocumentPostedEvent>("document-events");
+        rider.AddProducer<string, IDocumentPostedEvent>("document-events");
 
         rider.UsingKafka((_, cfg) =>
         {
