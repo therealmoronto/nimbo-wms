@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-Nimbo.Wms.DummyConsumer-eadf0f68-a726-4f9d-a05e-c08350ffa418</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MassTransit.Kafka" Version="9.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Nimbo.Wms.Domain\Nimbo.Wms.Domain.csproj" />
+    </ItemGroup>
+</Project>

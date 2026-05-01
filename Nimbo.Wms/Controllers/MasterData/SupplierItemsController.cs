@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.MasterData.Requests;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 
@@ -27,14 +26,13 @@ public class SupplierItemsController(ISender sender) : ControllerBase
         [FromBody] AddSupplierItemRequest request,
         CancellationToken ct)
     {
-        var supplierId = SupplierId.From(supplierGuid);
-        var supplierItemId = await sender.Send(request with { SupplierGuid = supplierId }, ct);
+        var supplierItemGuid = await sender.Send(request with { SupplierGuid = supplierGuid }, ct);
 
         return CreatedAtAction(
             actionName: nameof(SuppliersController.GetSupplier),
             controllerName: "Suppliers",
-            routeValues: new { supplierGuid },
-            value: new AddSupplierItemResponse(supplierItemId.Value));
+            routeValues: new { supplierGuid = supplierItemGuid },
+            value: new AddSupplierItemResponse(supplierItemGuid));
     }
 
     /// <summary>

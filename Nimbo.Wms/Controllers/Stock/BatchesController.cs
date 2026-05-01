@@ -26,12 +26,12 @@ public class BatchesController : ControllerBase
         [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var batchId = await mediator.Send(request, ct);
+        var batchGuid = await mediator.Send(request, ct);
         return CreatedAtAction(
             nameof(GetBatch),
             "Batches",
-            new { batchGuid = batchId.Value },
-            new CreateBatchResponse(batchId));
+            new { batchGuid = batchGuid },
+            new CreateBatchResponse(batchGuid));
     }
 
     /// <summary>

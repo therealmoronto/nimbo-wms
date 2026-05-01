@@ -1,3 +1,5 @@
+using MassTransit;
+using Nimbo.Wms.Domain.Entities.Documents;
 using Nimbo.Wms.Infrastructure.DependencyInjection;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.OutboxProcessor;
@@ -7,11 +9,21 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.AddKafkaProducer<string, string>("kafka", settings =>
+builder.Services.AddMassTransit(config =>
 {
-    settings.Config.MessageSendMaxRetries = 3;
-    settings.Config.MessageTimeoutMs = 500;
+    config.UsingInMemory();
+
+    config.AddRider(rider =>
+    {
+        rider.AddProducer<string, IDocumentPostedEvent>("document-events");
+
+        rider.UsingKafka((_, cfg) =>
+        {
+            cfg.Host(builder.Configuration.GetConnectionString("kafka"));
+        });
+    });
 });
+
 builder.AddNpgsqlDbContext<NimboWmsDbContext>("nimboDb");
 
 builder.Services.AddInfrastructure();

@@ -84,6 +84,7 @@ public sealed class RelocationDocument : DocumentBase<RelocationDocumentId, Relo
         EnsureLinesAreValid();
         TransitionTo(RelocationStatus.Posted);
         MarkPosted();
+        RaiseEvent(new RelocationDocumentPostedEvent(Id, Code, Title, Version));
     }
 
     protected override void EnsureLinesAreValid()

@@ -4,6 +4,7 @@ using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.Identification;
+using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
@@ -32,9 +33,9 @@ internal sealed class PatchItemRequestHandler : IRequestHandler<PatchItemRequest
         
         if (!string.IsNullOrWhiteSpace(request.Barcode))
             item.ChangeBarcode(request.Barcode);
-        
-        if (request.BaseUom is not null)
-            item.ChangeBaseUom(request.BaseUom.Value);
+
+        if (!string.IsNullOrEmpty(request.BaseUom) && Enum.TryParse(request.BaseUom, out UnitOfMeasure baseUom))
+            item.ChangeBaseUom(baseUom);
 
         if (!string.IsNullOrWhiteSpace(request.Manufacturer))
             item.ChangeManufacturer(request.Manufacturer);

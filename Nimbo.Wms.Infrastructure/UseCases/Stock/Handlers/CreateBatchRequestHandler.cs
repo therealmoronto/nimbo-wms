@@ -10,7 +10,7 @@ using Nimbo.Wms.Domain.Identification;
 namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
 [PublicAPI]
-internal sealed class CreateBatchRequestHandler : IRequestHandler<CreateBatchRequest, BatchId>
+internal sealed class CreateBatchRequestHandler : IRequestHandler<CreateBatchRequest, Guid>
 {
     private readonly IItemRepository _itemRepository;
     private readonly ISupplierRepository _supplierRepository;
@@ -26,7 +26,7 @@ internal sealed class CreateBatchRequestHandler : IRequestHandler<CreateBatchReq
         _batchRepository = batchRepository;
     }
 
-    public async Task<BatchId> Handle(CreateBatchRequest request, CancellationToken ct = default)
+    public async Task<Guid> Handle(CreateBatchRequest request, CancellationToken ct = default)
     {
         var itemId = ItemId.From(request.ItemId);
         var item = await _itemRepository.GetByIdAsync(itemId, ct);

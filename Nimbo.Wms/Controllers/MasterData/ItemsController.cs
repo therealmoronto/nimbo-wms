@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Requests;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 
@@ -21,11 +20,11 @@ public class ItemsController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<IActionResult> Createitem([FromBody] CreateItemRequest request, CancellationToken ct)
     {
-        var itemId = await sender.Send(request, ct);
+        var itemGuid = await sender.Send(request, ct);
         return CreatedAtAction(
             actionName: nameof(GetItem),
-            new { itemGuid = itemId.Value },
-            new CreateItemResponse(itemId.Value));
+            new { itemGuid = itemGuid },
+            new CreateItemResponse(itemGuid));
     }
 
     /// <summary>
@@ -54,7 +53,7 @@ public class ItemsController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<ItemDto> GetItem([FromRoute] Guid itemGuid, CancellationToken ct)
     {
-        var request = new GetItemRequest(ItemId.From(itemGuid));
+        var request = new GetItemRequest(itemGuid);
         return await sender.Send(request, ct);
     }
 

@@ -128,6 +128,7 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
         EnsureReadyToPost();
         TransitionTo(ShipmentStatus.Posted);
         MarkPosted();
+        RaiseEvent(new ShipmentDocumentPostedEvent(Id, Code, Title, Version));
     }
 
     protected override void EnsureLinesAreValid()

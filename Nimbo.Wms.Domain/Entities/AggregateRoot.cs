@@ -1,17 +1,11 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Nimbo.Wms.Domain.Identification;
 using Riok.Mapperly.Abstractions;
 
-namespace Nimbo.Wms.Domain;
-
-/// <summary>
-/// Marker interface for domain events.
-/// </summary>
-[PublicAPI]
-public interface IDomainEvent;
+namespace Nimbo.Wms.Domain.Entities;
 
 [PublicAPI]
-public interface IDomainEventsContainer
+public interface IAggregateRoot
 {
     IReadOnlyList<IDomainEvent> DomainEvents { get; }
 
@@ -19,27 +13,14 @@ public interface IDomainEventsContainer
 }
 
 [PublicAPI]
-public interface IEntity
-{
-    IEntityId Id { get; }
-}
-
-[PublicAPI]
-public interface IEntity<out TId> : IEntity
-    where TId : struct, IEntityId
-{
-    new TId Id { get; }
-}
-
-[PublicAPI]
-public abstract class BaseEntity<TId> : IEntity<TId>, IDomainEventsContainer
+public abstract class AggregateRoot<TId> : IEntity<TId>, IAggregateRoot
     where TId : struct, IEntityId
 {
     private readonly List<IDomainEvent> _domainEvents = new();
 
     IEntityId IEntity.Id => Id;
 
-    public TId Id { get; protected set; }
+    public abstract TId Id { get; }
 
     [MapperIgnore]
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();

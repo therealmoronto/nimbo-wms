@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Requests;
-using Nimbo.Wms.Contracts.Topology.Dtos;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 
@@ -20,13 +19,13 @@ public class SuppliersController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<IActionResult> CreateSupplier([FromBody] CreateSupplierRequest request, CancellationToken ct)
     {
-        var supplierId = await sender.Send(request, ct);
+        var supplierGuid = await sender.Send(request, ct);
         
         return CreatedAtAction(
             actionName: nameof(GetSupplier),
             controllerName: "Suppliers",
-            routeValues: new { supplierGuid = supplierId.Value },
-            value: new CreateSupplierResponse(supplierId.Value));
+            routeValues: new { supplierGuid = supplierGuid },
+            value: new CreateSupplierResponse(supplierGuid));
     }
 
     /// <summary>

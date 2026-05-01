@@ -4,6 +4,7 @@ using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.Identification;
+using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 
@@ -31,8 +32,8 @@ internal sealed class PatchZoneRequestHandler : IRequestHandler<PatchZoneRequest
         if (request.Code is not null)
             zone.ChangeCode(request.Code);
         
-        if (request.Type is not null)
-            zone.ChangeType(request.Type.Value);
+        if (!string.IsNullOrEmpty(request.Type) && Enum.TryParse(request.Type, out ZoneType zoneType))
+            zone.ChangeType(zoneType);
 
         if (request.MaxWeightKg is not null || request.MaxVolumeM3 is not null)
         {

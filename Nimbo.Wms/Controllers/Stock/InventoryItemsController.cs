@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Requests;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.Stock;
 
@@ -30,12 +29,12 @@ public class InventoryItemsController : ControllerBase
         [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var invetoryItemId = await mediator.Send(request, ct);
+        var inventoryItemGuid = await mediator.Send(request, ct);
         return CreatedAtAction(
             nameof(GetInventoryItem),
             "InventoryItems",
-            new { inventoryItemGuid = invetoryItemId.Value },
-            new CreateInventoryItemResponse(invetoryItemId.Value));
+            new { inventoryItemGuid = inventoryItemGuid },
+            new CreateInventoryItemResponse(inventoryItemGuid));
     }
 
     /// <summary>
@@ -59,7 +58,7 @@ public class InventoryItemsController : ControllerBase
         [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var query = new GetInventoryItemRequest(InventoryItemId.From(inventoryItemGuid));
+        var query = new GetInventoryItemRequest(inventoryItemGuid);
         return await mediator.Send(query, ct);
     }
 

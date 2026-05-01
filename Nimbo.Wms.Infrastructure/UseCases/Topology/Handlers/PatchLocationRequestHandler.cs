@@ -4,6 +4,7 @@ using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.Identification;
+using Nimbo.Wms.Domain.References;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 
@@ -29,8 +30,8 @@ internal sealed class PatchLocationRequestHandler : IRequestHandler<PatchLocatio
         if (request.Code is not null)
             location.ChangeCode(request.Code);
 
-        if (request.Type.HasValue)
-            location.ChangeType(request.Type.Value);
+        if (!string.IsNullOrEmpty(request.Type) && Enum.TryParse(request.Type, out LocationType locationType))
+            location.ChangeType(locationType);
         
         // Capacity: apply only fields that are present; keep others unchanged
         if (request.MaxWeightKg is not null || request.MaxVolumeM3 is not null)

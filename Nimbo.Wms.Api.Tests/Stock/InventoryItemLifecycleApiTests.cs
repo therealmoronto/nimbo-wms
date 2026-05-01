@@ -34,7 +34,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
             warehouseGuid,
             Code: "Z-TEST",
             Name: "Test Zone",
-            ZoneType.Storage);
+            nameof(ZoneType.Storage));
 
         var addZoneResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
         var createdZone = (await addZoneResponse.Content.ReadFromJsonAsync<AddZoneResponse>())!;
@@ -44,7 +44,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
             warehouseGuid,
             zoneGuid,
             Code: "A-01-01-01",
-            Type: LocationType.Shelf);
+            Type: nameof(LocationType.Shelf));
 
         var addLocationResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/locations", addLocationRequest);
         var createdLocation = (await addLocationResponse.Content.ReadFromJsonAsync<AddLocationResponse>())!;
@@ -54,7 +54,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
             "INV-TEST-ITEM",
             "ITI-001",
             "00101234",
-            UnitOfMeasure.Kilogram);
+            nameof(UnitOfMeasure.Kilogram));
 
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
@@ -65,8 +65,9 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
             ItemId: itemId,
             WarehouseId: warehouseGuid,
             LocationId: locationId,
-            Quantity: new Quantity(100m, UnitOfMeasure.Kilogram),
-            Status: InventoryStatus.Available,
+            Quantity: 100m,
+            QuantityUom: nameof(UnitOfMeasure.Kilogram),
+            Status: nameof(InventoryStatus.Available),
             BatchId: null,
             SerialNumber: null,
             UnitCost: 25.50m);

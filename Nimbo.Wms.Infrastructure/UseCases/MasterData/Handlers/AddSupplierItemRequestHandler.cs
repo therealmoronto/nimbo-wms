@@ -8,7 +8,7 @@ using Nimbo.Wms.Domain.Identification;
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
 [PublicAPI]
-internal sealed class AddSupplierItemRequestHandler : IRequestHandler<AddSupplierItemRequest, SupplierItemId>
+internal sealed class AddSupplierItemRequestHandler : IRequestHandler<AddSupplierItemRequest, Guid>
 {
     private readonly ISupplierRepository _repository;
 
@@ -17,7 +17,7 @@ internal sealed class AddSupplierItemRequestHandler : IRequestHandler<AddSupplie
         _repository = repository;
     }
 
-    public async Task<SupplierItemId> Handle(AddSupplierItemRequest request, CancellationToken ct = default)
+    public async Task<Guid> Handle(AddSupplierItemRequest request, CancellationToken ct = default)
     {
         var supplierId = SupplierId.From(request.SupplierGuid);
         var supplier = await _repository.GetByIdWithItemsAsync(supplierId, ct);

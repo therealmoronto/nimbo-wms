@@ -23,7 +23,7 @@ public class ItemsLifecycleApiTests : ApiTestBase
             "ITEM-001",
             "I-001",
             "00100245",
-            UnitOfMeasure.Kilogram);
+            nameof(UnitOfMeasure.Kilogram));
 
         var createResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
 
@@ -47,7 +47,7 @@ public class ItemsLifecycleApiTests : ApiTestBase
             Name = "ITEM-003",
             InternalSku = "I-003",
             Barcode = "00100147",
-            BaseUom = UnitOfMeasure.Gram,
+            BaseUom = nameof(UnitOfMeasure.Gram),
             Manufacturer = "MF-17",
             WeightKg = 1234.56m,
             VolumeM3 = 78.9m

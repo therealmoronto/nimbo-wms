@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Topology.Requests;
-using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Controllers.Topology;
 
@@ -53,13 +52,13 @@ public sealed class WarehousesController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<ActionResult<CreateWarehouseResponse>> CreateWarehouse([FromBody] CreateWarehouseRequest request, CancellationToken ct)
     {
-        var warehouseId = await sender.Send(request, ct);
+        var warehouseGuid = await sender.Send(request, ct);
 
         return CreatedAtAction(
             actionName: nameof(WarehousesController.GetWarehouseTopology),
             controllerName: "Warehouses",
-            routeValues: new { warehouseGuid = warehouseId.Value },
-            value: new CreateWarehouseResponse(warehouseId.Value));
+            routeValues: new { warehouseGuid = warehouseGuid },
+            value: new CreateWarehouseResponse(warehouseGuid));
     }
 
     /// <summary>
@@ -90,8 +89,7 @@ public sealed class WarehousesController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteWarehouse([FromRoute] Guid warehouseGuid, CancellationToken ct)
     {
-        var warehouseId = WarehouseId.From(warehouseGuid);
-        await sender.Send(new DeleteWarehouseRequest(warehouseId), ct);
+        await sender.Send(new DeleteWarehouseRequest(warehouseGuid), ct);
         return NoContent();
     }
 }

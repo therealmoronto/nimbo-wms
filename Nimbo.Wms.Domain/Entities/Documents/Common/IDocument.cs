@@ -2,7 +2,7 @@ using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Domain.Entities.Documents.Common;
 
-public interface IDocument : IDomainEventsContainer
+public interface IDocument
 {
     public const int CodeMaxLength = 32;
     public const int TitleMaxLength = 128;

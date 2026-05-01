@@ -1,9 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Contracts.Common;
-using Nimbo.Wms.Domain.Identification;
-using Nimbo.Wms.Domain.References;
-using Nimbo.Wms.Domain.ValueObject;
 
 namespace Nimbo.Wms.Contracts.Stock.Requests;
 
@@ -12,12 +9,13 @@ public sealed record CreateInventoryItemRequest(
     Guid ItemId,
     Guid WarehouseId,
     Guid LocationId,
-    Quantity Quantity,
-    InventoryStatus Status,
+    decimal Quantity,
+    string QuantityUom,
+    string Status,
     Guid? BatchId,
     string? SerialNumber,
     decimal? UnitCost
-) : IRequest<InventoryItemId>, ITxRequest;
+) : IRequest<Guid>, ITxRequest;
 
 [PublicAPI]
 public sealed record CreateInventoryItemResponse(Guid Id);

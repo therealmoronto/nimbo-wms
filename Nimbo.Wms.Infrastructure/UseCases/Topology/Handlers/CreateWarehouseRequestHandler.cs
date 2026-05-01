@@ -8,7 +8,7 @@ using Nimbo.Wms.Domain.Identification;
 namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 
 [PublicAPI]
-internal sealed class CreateWarehouseRequestHandler : IRequestHandler<CreateWarehouseRequest, WarehouseId>
+internal sealed class CreateWarehouseRequestHandler : IRequestHandler<CreateWarehouseRequest, Guid>
 {
     private readonly IWarehouseRepository _repository;
 
@@ -17,7 +17,7 @@ internal sealed class CreateWarehouseRequestHandler : IRequestHandler<CreateWare
         _repository = repository;
     }
 
-    public async Task<WarehouseId> Handle(CreateWarehouseRequest request, CancellationToken ct = default)
+    public async Task<Guid> Handle(CreateWarehouseRequest request, CancellationToken ct = default)
     {
         var id = WarehouseId.New();
         var warehouse = new Warehouse(id, request.Code, request.Name);

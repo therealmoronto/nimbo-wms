@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using Nimbo.Wms.Domain;
+using Nimbo.Wms.Domain.Entities;
 using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Identification;
 

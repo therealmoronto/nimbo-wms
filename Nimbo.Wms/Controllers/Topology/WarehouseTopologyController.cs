@@ -22,14 +22,14 @@ public class WarehouseTopologyController(ISender sender) : ControllerBase
         [FromBody] AddZoneRequest request,
         CancellationToken ct)
     {
-        var zoneId = await sender.Send(request with { WarehouseGuid = warehouseGuid }, ct);
+        var zoneGuid = await sender.Send(request with { WarehouseGuid = warehouseGuid }, ct);
 
         // Location header points to warehouse topology
         return CreatedAtAction(
             actionName: nameof(WarehousesController.GetWarehouseTopology),
             controllerName: "Warehouses",
             routeValues: new { warehouseGuid },
-            value: new AddZoneResponse(zoneId.Value));
+            value: new AddZoneResponse(zoneGuid));
     }
 
     /// <summary>
@@ -46,12 +46,12 @@ public class WarehouseTopologyController(ISender sender) : ControllerBase
         [FromBody] AddLocationRequest request,
         CancellationToken ct)
     {
-        var locationId = await sender.Send(request with { WarehouseGuid = warehouseGuid}, ct);
+        var locationGuid = await sender.Send(request with { WarehouseGuid = warehouseGuid}, ct);
 
         return CreatedAtAction(
             actionName: nameof(WarehousesController.GetWarehouseTopology),
             controllerName: "Warehouses",
             routeValues: new { warehouseGuid },
-            value: new AddLocationResponse(locationId.Value));
+            value: new AddLocationResponse(locationGuid));
     }
 }
