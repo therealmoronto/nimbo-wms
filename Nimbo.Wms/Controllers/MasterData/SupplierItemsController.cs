@@ -31,7 +31,7 @@ public class SupplierItemsController(ISender sender) : ControllerBase
         return CreatedAtAction(
             actionName: nameof(SuppliersController.GetSupplier),
             controllerName: "Suppliers",
-            routeValues: new { supplierItemGuid },
+            routeValues: new { supplierGuid = supplierItemGuid },
             value: new AddSupplierItemResponse(supplierItemGuid));
     }
 
