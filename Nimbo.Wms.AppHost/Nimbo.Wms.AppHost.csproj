@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Nimbo.Wms.DummyConsumer\Nimbo.Wms.DummyConsumer.csproj" />
     <ProjectReference Include="..\Nimbo.Wms.OutboxProcessor\Nimbo.Wms.OutboxProcessor.csproj" />
     <ProjectReference Include="..\Nimbo.Wms\Nimbo.Wms.csproj" />
   </ItemGroup>

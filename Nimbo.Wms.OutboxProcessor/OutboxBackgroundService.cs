@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
+using Nimbo.Wms.Domain;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Outbox;
 using Polly;
@@ -69,10 +71,13 @@ internal sealed class OutboxBackgroundService : BackgroundService
         {
             try
             {
-                // FIXME generate topics, add IEntityId as a key from outbox message
-                var kafkaMessage = new Message<string, string>()
+                var domainEventId = JsonSerializer.Deserialize<IDomainEvent>(message.Content);
+                if (domainEventId is null)
+                    continue;
+
+                var kafkaMessage = new Message<string, string>
                 {
-                    Key = message.Id.ToString(),
+                    Key = domainEventId.AggregateId.ToString(),
                     Value = message.Content,
                     Timestamp = new Timestamp(DateTime.UtcNow),
                 };
@@ -93,11 +98,7 @@ internal sealed class OutboxBackgroundService : BackgroundService
             }
             catch (ProduceException<string, string> e)
             {
-                _logger.LogError(
-                    e,
-                    "Kafka delivery failed for message {MessageId}. Reason: {Reason}",
-                    message.Id,
-                    e.Error.Reason);
+                _logger.LogError(e, "Kafka delivery failed for message {MessageId}. Reason: {Reason}", message.Id, e.Error.Reason);
 
                 message.Error = e.Error.Reason;
                 message.RetryCount++;

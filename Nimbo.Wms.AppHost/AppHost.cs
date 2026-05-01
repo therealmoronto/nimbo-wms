@@ -52,4 +52,10 @@ builder.AddProject<Projects.Nimbo_Wms_OutboxProcessor>("outbox-processor")
     .WaitFor(kafka)
     .WaitFor(postgres);
 
+builder.AddProject<Projects.Nimbo_Wms_DummyConsumer>("dummy-consumer")
+    .WithReference(kafka)
+    .WithReference(nimboDb)
+    .WaitFor(kafka)
+    .WaitFor(postgres);
+
 builder.Build().Run();
