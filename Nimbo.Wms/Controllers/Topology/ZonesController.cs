@@ -1,8 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Topology.Requests;
-using DeleteZoneRequest = Nimbo.Wms.Models.Topology.DeleteZoneRequest;
-using PatchZoneRequest = Nimbo.Wms.Models.Topology.PatchZoneRequest;
+using Nimbo.Wms.Models.Topology;
 
 namespace Nimbo.Wms.Controllers.Topology;
 
@@ -28,7 +27,17 @@ public class ZonesController(ISender sender) : ControllerBase
         [FromBody] PatchZoneRequest request,
         CancellationToken ct)
     {
-        await sender.Send(request with { ZoneGuid = zoneGuid }, ct);
+        var command = new PatchZoneCommand(
+            zoneGuid,
+            request.Code,
+            request.Name,
+            request.Type,
+            request.MaxWeightKg,
+            request.MaxVolumeM3,
+            request.IsQuarantine,
+            request.IsDamagedArea);
+
+        await sender.Send(command, ct);
         return NoContent();
     }
 
@@ -49,7 +58,7 @@ public class ZonesController(ISender sender) : ControllerBase
         [FromRoute] Guid zoneGuid,
         CancellationToken ct)
     {
-        await sender.Send(new DeleteZoneRequest(zoneGuid), ct);
+        await sender.Send(new DeleteZoneCommand(zoneGuid), ct);
         return NoContent();
     }
 }
