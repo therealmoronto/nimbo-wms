@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Contracts.MasterData.Requests;
+using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;

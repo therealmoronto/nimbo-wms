@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Contracts.MasterData.Requests;
+using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Models.MasterData;
 
 namespace Nimbo.Wms.Controllers.MasterData;

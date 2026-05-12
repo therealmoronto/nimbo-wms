@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.Topology.Dtos;
-using Nimbo.Wms.Contracts.Topology.Requests;
+using Nimbo.Wms.Contracts.Topology.Queries;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Infrastructure.Persistence;
 

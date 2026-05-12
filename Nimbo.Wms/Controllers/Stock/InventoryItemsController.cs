@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Nimbo.Wms.Contracts.Stock.Commands;
 using Nimbo.Wms.Contracts.Stock.Dtos;
-using Nimbo.Wms.Contracts.Stock.Requests;
 using Nimbo.Wms.Models.Stock;
 
 namespace Nimbo.Wms.Controllers.Stock;

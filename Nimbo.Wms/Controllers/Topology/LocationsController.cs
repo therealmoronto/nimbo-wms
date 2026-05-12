@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Contracts.Topology.Requests;
+using Nimbo.Wms.Contracts.Topology.Commands;
 using Nimbo.Wms.Models.Topology;
 
 namespace Nimbo.Wms.Controllers.Topology;

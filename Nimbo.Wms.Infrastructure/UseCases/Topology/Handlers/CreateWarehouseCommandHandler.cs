@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
-using Nimbo.Wms.Contracts.Topology.Requests;
+using Nimbo.Wms.Contracts.Topology.Commands;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Domain.Identification;
 

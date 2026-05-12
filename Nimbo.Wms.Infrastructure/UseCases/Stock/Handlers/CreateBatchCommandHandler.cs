@@ -3,7 +3,7 @@ using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Contracts.Stock.Requests;
+using Nimbo.Wms.Contracts.Stock.Commands;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Domain.Identification;
 

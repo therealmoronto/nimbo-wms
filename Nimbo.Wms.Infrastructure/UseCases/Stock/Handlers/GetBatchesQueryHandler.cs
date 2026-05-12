@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.Stock.Dtos;
-using Nimbo.Wms.Contracts.Stock.Requests;
+using Nimbo.Wms.Contracts.Stock.Queries;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Infrastructure.Persistence;
 

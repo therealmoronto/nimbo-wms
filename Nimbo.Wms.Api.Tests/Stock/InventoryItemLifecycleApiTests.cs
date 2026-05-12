@@ -1,10 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Nimbo.Wms.Contracts.MasterData.Requests;
+using Nimbo.Wms.Contracts.MasterData.Commands;
+using Nimbo.Wms.Contracts.Stock.Commands;
 using Nimbo.Wms.Contracts.Stock.Dtos;
-using Nimbo.Wms.Contracts.Stock.Requests;
-using Nimbo.Wms.Contracts.Topology.Requests;
+using Nimbo.Wms.Contracts.Topology.Commands;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Models.MasterData;
 using Nimbo.Wms.Models.Stock;
