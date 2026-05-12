@@ -2,6 +2,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Requests;
+using CreateBatchRequest = Nimbo.Wms.Models.Stock.CreateBatchRequest;
+using CreateBatchResponse = Nimbo.Wms.Models.Stock.CreateBatchResponse;
+using GetBatchesRequest = Nimbo.Wms.Models.Stock.GetBatchesRequest;
+using GetBatchRequest = Nimbo.Wms.Models.Stock.GetBatchRequest;
 
 namespace Nimbo.Wms.Controllers.Stock;
 

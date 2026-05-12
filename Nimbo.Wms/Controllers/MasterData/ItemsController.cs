@@ -2,6 +2,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Requests;
+using Nimbo.Wms.Models.MasterData;
+using DeleteItemRequest = Nimbo.Wms.Models.MasterData.DeleteItemRequest;
+using GetItemRequest = Nimbo.Wms.Models.MasterData.GetItemRequest;
+using GetItemsRequest = Nimbo.Wms.Models.MasterData.GetItemsRequest;
+using PatchItemRequest = Nimbo.Wms.Models.MasterData.PatchItemRequest;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 

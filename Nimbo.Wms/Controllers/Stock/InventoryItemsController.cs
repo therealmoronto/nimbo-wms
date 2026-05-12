@@ -2,6 +2,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Requests;
+using CreateInventoryItemRequest = Nimbo.Wms.Models.Stock.CreateInventoryItemRequest;
+using CreateInventoryItemResponse = Nimbo.Wms.Models.Stock.CreateInventoryItemResponse;
+using GetInventoryItemRequest = Nimbo.Wms.Models.Stock.GetInventoryItemRequest;
+using GetInventoryItemsRequest = Nimbo.Wms.Models.Stock.GetInventoryItemsRequest;
 
 namespace Nimbo.Wms.Controllers.Stock;
 

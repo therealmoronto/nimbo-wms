@@ -5,6 +5,8 @@ using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Requests;
 using Nimbo.Wms.Domain.References;
+using Nimbo.Wms.Models.MasterData;
+using Nimbo.Wms.Models.Stock;
 using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
 
@@ -20,7 +22,7 @@ public class BatchLifecycleApiTests : ApiTestBase
     public async Task CreateBatch_GetById_ListBatches_Succeeds()
     {
         // Setup: Create an item first
-        var createItemRequest = new CreateItemRequest(
+        var createItemRequest = new CreateItemCommand(
             "BATCH-TEST-ITEM",
             "BTI-001",
             "00100999",
@@ -40,7 +42,7 @@ public class BatchLifecycleApiTests : ApiTestBase
         var receivedAt = new DateTime(2026, 2, 1);
         DateTime.SpecifyKind(receivedAt, DateTimeKind.Local);
 
-        var createBatchRequest = new CreateBatchRequest(
+        var createBatchRequest = new CreateBatchCommand(
             ItemId: itemId,
             BatchNumber: "BATCH-2026-001",
             SupplierId: null,

@@ -6,7 +6,7 @@ using Nimbo.Wms.Domain.Entities.Topology;
 namespace Nimbo.Wms.Application.Common.Validators.Togology;
 
 [PublicAPI]
-public class PatchLocationRequestValidator : AbstractValidator<PatchLocationRequest>
+public class PatchLocationRequestValidator : AbstractValidator<PatchLocationCommand>
 {
     public PatchLocationRequestValidator()
     {

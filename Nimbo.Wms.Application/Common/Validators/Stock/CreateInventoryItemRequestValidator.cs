@@ -6,7 +6,7 @@ using Nimbo.Wms.Domain.Entities.Stock;
 namespace Nimbo.Wms.Application.Common.Validators.Stock;
 
 [PublicAPI]
-public class CreateInventoryItemRequestValidator : AbstractValidator<CreateInventoryItemRequest>
+public class CreateInventoryItemRequestValidator : AbstractValidator<CreateInventoryItemCommand>
 {
     public CreateInventoryItemRequestValidator()
     {

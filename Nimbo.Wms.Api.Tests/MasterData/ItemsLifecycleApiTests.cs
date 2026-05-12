@@ -4,6 +4,7 @@ using FluentAssertions;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.References;
+using Nimbo.Wms.Models.MasterData;
 using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
 
@@ -19,7 +20,7 @@ public class ItemsLifecycleApiTests : ApiTestBase
     public async Task CreateItem_AndWholeLifecycle_Succeeds()
     {
         // 1) Create item
-        var createItemRequest = new CreateItemRequest(
+        var createItemRequest = new CreateItemCommand(
             "ITEM-001",
             "I-001",
             "00100245",

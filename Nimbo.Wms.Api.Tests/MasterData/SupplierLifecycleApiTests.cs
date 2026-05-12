@@ -4,6 +4,7 @@ using FluentAssertions;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Requests;
 using Nimbo.Wms.Domain.References;
+using Nimbo.Wms.Models.MasterData;
 using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
 
@@ -39,7 +40,7 @@ public class SupplierLifecycleApiTests : ApiTestBase
             "john@doe.com",
             false);
 
-        var createItemRequest = new CreateItemRequest(
+        var createItemRequest = new CreateItemCommand(
             "SUPPLIER-ITEM-001",
             "SI-001",
             "00100245",
@@ -49,7 +50,7 @@ public class SupplierLifecycleApiTests : ApiTestBase
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
         var itemGuid = createdItem.ItemGuid;
 
-        var addSupplierItemRequest = new AddSupplierItemRequest(supplierGuid, itemGuid);
+        var addSupplierItemRequest = new AddSupplierItemCommand(supplierGuid, itemGuid);
         var addedSupplierItemResponse = await Client.PostAsJsonAsync($"/api/suppliers/{supplierGuid}/items", addSupplierItemRequest);
         addedSupplierItemResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         

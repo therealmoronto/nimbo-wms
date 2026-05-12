@@ -2,6 +2,12 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Requests;
+using Nimbo.Wms.Models.MasterData;
+using CreateSupplierRequest = Nimbo.Wms.Contracts.MasterData.Requests.CreateSupplierRequest;
+using DeleteSupplierRequest = Nimbo.Wms.Models.MasterData.DeleteSupplierRequest;
+using GetSupplierRequest = Nimbo.Wms.Models.MasterData.GetSupplierRequest;
+using GetSuppliersRequest = Nimbo.Wms.Models.MasterData.GetSuppliersRequest;
+using PatchSupplierRequest = Nimbo.Wms.Models.MasterData.PatchSupplierRequest;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 

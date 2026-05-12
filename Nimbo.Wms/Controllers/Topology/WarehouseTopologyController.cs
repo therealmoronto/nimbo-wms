@@ -1,6 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Topology.Requests;
+using AddLocationRequest = Nimbo.Wms.Models.Topology.AddLocationRequest;
+using AddLocationResponse = Nimbo.Wms.Models.Topology.AddLocationResponse;
+using AddZoneRequest = Nimbo.Wms.Models.Topology.AddZoneRequest;
+using AddZoneResponse = Nimbo.Wms.Models.Topology.AddZoneResponse;
 
 namespace Nimbo.Wms.Controllers.Topology;
 

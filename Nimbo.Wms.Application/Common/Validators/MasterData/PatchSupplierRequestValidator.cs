@@ -6,7 +6,7 @@ using Nimbo.Wms.Domain.Entities.MasterData;
 namespace Nimbo.Wms.Application.Common.Validators.MasterData;
 
 [PublicAPI]
-public class PatchSupplierRequestValidator : AbstractValidator<PatchSupplierRequest>
+public class PatchSupplierRequestValidator : AbstractValidator<PatchSupplierCommand>
 {
     public PatchSupplierRequestValidator()
     {

@@ -2,6 +2,12 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Topology.Requests;
+using CreateWarehouseRequest = Nimbo.Wms.Models.Topology.CreateWarehouseRequest;
+using CreateWarehouseResponse = Nimbo.Wms.Models.Topology.CreateWarehouseResponse;
+using DeleteWarehouseRequest = Nimbo.Wms.Models.Topology.DeleteWarehouseRequest;
+using GetWarehousesRequest = Nimbo.Wms.Models.Topology.GetWarehousesRequest;
+using GetWarehouseTopologyRequest = Nimbo.Wms.Models.Topology.GetWarehouseTopologyRequest;
+using PatchWarehouseRequest = Nimbo.Wms.Models.Topology.PatchWarehouseRequest;
 
 namespace Nimbo.Wms.Controllers.Topology;
 

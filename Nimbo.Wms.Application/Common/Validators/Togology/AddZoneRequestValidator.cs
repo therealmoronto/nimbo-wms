@@ -6,7 +6,7 @@ using Nimbo.Wms.Domain.Entities.Topology;
 namespace Nimbo.Wms.Application.Common.Validators.Togology;
 
 [PublicAPI]
-public class AddZoneRequestValidator : AbstractValidator<AddZoneRequest>
+public class AddZoneRequestValidator : AbstractValidator<AddZoneCommand>
 {
     public AddZoneRequestValidator()
     {

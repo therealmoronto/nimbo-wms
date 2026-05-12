@@ -6,7 +6,7 @@ using Nimbo.Wms.Domain.Entities.MasterData;
 namespace Nimbo.Wms.Application.Common.Validators.MasterData;
 
 [PublicAPI]
-public class CreateItemRequestValidator : AbstractValidator<CreateItemRequest>
+public class CreateItemRequestValidator : AbstractValidator<CreateItemCommand>
 {
     public CreateItemRequestValidator()
     {

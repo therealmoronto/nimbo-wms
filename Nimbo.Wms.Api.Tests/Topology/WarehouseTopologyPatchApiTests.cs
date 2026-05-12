@@ -4,6 +4,7 @@ using FluentAssertions;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.References;
+using Nimbo.Wms.Models.Topology;
 using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
 
@@ -19,7 +20,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
     public async Task UpdateWarehouse_ChangesAreVisibleInTopology()
     {
         // create warehouse
-        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createWarehouseRequest = new CreateWarehouseCommand($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
         var createRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         createRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -27,7 +28,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         var warehouseGuid = created.Id;
 
         // update
-        var patchWarehouseRequest = new PatchWarehouseRequest(warehouseGuid, "WH-UPDATED", "Main Updated", "Address lane 1, 0015", "Test warehouse to test patch API");
+        var patchWarehouseRequest = new PatchWarehouseCommand(warehouseGuid, "WH-UPDATED", "Main Updated", "Address lane 1, 0015", "Test warehouse to test patch API");
         var updateRes = await Client.PatchAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}", patchWarehouseRequest);
 
         updateRes.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -46,7 +47,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
     public async Task PatchZone_UpdatesFields_VisibleInTopology()
     {
         // create warehouse
-        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createWarehouseRequest = new CreateWarehouseCommand($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
         var whRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         whRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -54,7 +55,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         var warehouseGuid = wh.Id;
 
         // add zone
-        var addZoneRequest = new AddZoneRequest(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
+        var addZoneRequest = new AddZoneCommand(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
         var zRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
 
         zRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -62,7 +63,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         var zoneGuid = zone.ZoneId;
 
         // patch zone
-        var patch = new PatchZoneRequest(
+        var patch = new PatchZoneCommand(
             zoneGuid,
             Name: "Zone A (Updated)",
             IsQuarantine: true,
@@ -86,7 +87,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
     public async Task PatchLocation_UpdatesFields_VisibleInTopology()
     {
         // create warehouse
-        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createWarehouseRequest = new CreateWarehouseCommand($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
         var whRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         whRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -94,7 +95,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         var warehouseGuid = wh.Id;
 
         // add zone
-        var addZoneRequest = new AddZoneRequest(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
+        var addZoneRequest = new AddZoneCommand(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
         var zRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
 
         zRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -102,7 +103,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         var zoneGuid = zone.ZoneId;
 
         // add location
-        var addLocationRequest = new AddLocationRequest(warehouseGuid, zoneGuid, "A-01-01-01", nameof(LocationType.Shelf));
+        var addLocationRequest = new AddLocationCommand(warehouseGuid, zoneGuid, "A-01-01-01", nameof(LocationType.Shelf));
         var lRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/locations", addLocationRequest);
 
         lRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -110,7 +111,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
         var locationGuid = loc.LocationId;
 
         // patch location
-        var patch = new PatchLocationRequest(
+        var patch = new PatchLocationCommand(
             locationGuid,
             IsPickingLocation: true,
             IsBlocked: true,

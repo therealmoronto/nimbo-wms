@@ -6,7 +6,7 @@ using Nimbo.Wms.Domain.Entities.Topology;
 namespace Nimbo.Wms.Application.Common.Validators.Togology;
 
 [PublicAPI]
-public class CreateWarehouseRequestValidator : AbstractValidator<CreateWarehouseRequest>
+public class CreateWarehouseRequestValidator : AbstractValidator<CreateWarehouseCommand>
 {
     public CreateWarehouseRequestValidator()
     {

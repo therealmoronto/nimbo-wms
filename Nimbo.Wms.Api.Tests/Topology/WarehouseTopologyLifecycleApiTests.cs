@@ -5,6 +5,7 @@ using FluentAssertions;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.References;
+using Nimbo.Wms.Models.Topology;
 using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
 
@@ -21,7 +22,7 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
     public async Task CreateWarehouse_AddZone_AddLocation_Then_GetTopology()
     {
         // 1) Create warehouse
-        var createWarehouse = new CreateWarehouseRequest(
+        var createWarehouse = new CreateWarehouseCommand(
             Code: $"WH-{Guid.NewGuid():N}".Substring(0, 10),
             Name: "Main Warehouse");
 
@@ -35,7 +36,7 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
         var warehouseGuid = createdWarehouse.Id;
 
         // 2) Add zone
-        var addZone = new AddZoneRequest(
+        var addZone = new AddZoneCommand(
             warehouseGuid,
             Code: "Z-A",
             Name: "Zone A",
@@ -50,7 +51,7 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
         var zoneGuid = createdZone.ZoneId;
 
         // 3) Add location
-        var addLocation = new AddLocationRequest(
+        var addLocation = new AddLocationCommand(
             warehouseGuid,
             zoneGuid,
             Code: "A-01-01-01",
