@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Contracts.Topology.Requests;
+using Nimbo.Wms.Contracts.Topology.Commands;
+using Nimbo.Wms.Models.Topology;
 
 namespace Nimbo.Wms.Controllers.Topology;
 
@@ -22,7 +23,8 @@ public class WarehouseTopologyController(ISender sender) : ControllerBase
         [FromBody] AddZoneRequest request,
         CancellationToken ct)
     {
-        var zoneGuid = await sender.Send(request with { WarehouseGuid = warehouseGuid }, ct);
+        var command  = new AddZoneCommand(warehouseGuid, request.Code, request.Name, request.Type);
+        var zoneGuid = await sender.Send(command, ct);
 
         // Location header points to warehouse topology
         return CreatedAtAction(
@@ -46,7 +48,8 @@ public class WarehouseTopologyController(ISender sender) : ControllerBase
         [FromBody] AddLocationRequest request,
         CancellationToken ct)
     {
-        var locationGuid = await sender.Send(request with { WarehouseGuid = warehouseGuid}, ct);
+        var command = new AddLocationCommand(warehouseGuid, request.ZoneGuid, request.Code, request.Type);
+        var locationGuid = await sender.Send(command, ct);
 
         return CreatedAtAction(
             actionName: nameof(WarehousesController.GetWarehouseTopology),

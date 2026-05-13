@@ -1,9 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Nimbo.Wms.Contracts.Topology.Commands;
 using Nimbo.Wms.Contracts.Topology.Dtos;
-using Nimbo.Wms.Contracts.Topology.Requests;
 using Nimbo.Wms.Domain.References;
+using Nimbo.Wms.Models.Topology;
 using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
 
@@ -19,7 +20,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
     [Fact]
     public async Task DeleteWarehouse_WhenEmpty_Returns204_AndGetReturns404()
     {
-        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createWarehouseRequest = new CreateWarehouseCommand($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
         var createRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         createRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -37,7 +38,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
     public async Task DeleteWarehouse_WhenNotEmpty_Returns400()
     {
         // Create warehouse
-        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createWarehouseRequest = new CreateWarehouseCommand($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
         var createRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         createRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -45,7 +46,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
         var warehouseGuid = created.Id;
 
         // Add zone -> warehouse becomes non-empty
-        var addZoneRequest = new AddZoneRequest(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
+        var addZoneRequest = new AddZoneCommand(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
         var zoneRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
 
         zoneRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -69,7 +70,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
     public async Task DeleteZone_WhenEmpty_Returns204_AndZoneDisappearsFromTopology()
     {
         // Create warehouse
-        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createWarehouseRequest = new CreateWarehouseCommand($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
         var whRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         whRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -77,7 +78,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
         var warehouseGuid = wh.Id;
 
         // Add zone
-        var addZoneRequest = new AddZoneRequest(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
+        var addZoneRequest = new AddZoneCommand(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
         var zoneRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
 
         zoneRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -99,7 +100,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
     public async Task DeleteZone_WhenHasLocations_Returns400()
     {
         // Create warehouse
-        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createWarehouseRequest = new CreateWarehouseCommand($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
         var whRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         whRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -107,7 +108,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
         var warehouseGuid = wh.Id;
 
         // Add zone
-        var addZoneRequest = new AddZoneRequest(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
+        var addZoneRequest = new AddZoneCommand(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
         var zoneRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
 
         zoneRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -115,7 +116,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
         var zoneGuid = zone.ZoneId;
 
         // Add location in that zone
-        var addLocationRequest = new AddLocationRequest(warehouseGuid, zoneGuid, "A-01-01-01", nameof(LocationType.Shelf));
+        var addLocationRequest = new AddLocationCommand(warehouseGuid, zoneGuid, "A-01-01-01", nameof(LocationType.Shelf));
         var locRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/locations", addLocationRequest);
 
         locRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -139,7 +140,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
     public async Task DeleteLocation_Returns204_AndLocationDisappearsFromTopology()
     {
         // Create warehouse
-        var createWarehouseRequest = new CreateWarehouseRequest($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
+        var createWarehouseRequest = new CreateWarehouseCommand($"WH-{Guid.NewGuid():N}".Substring(0, 10), "Main");
         var whRes = await Client.PostAsJsonAsync("/api/topology/warehouses", createWarehouseRequest);
 
         whRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -147,7 +148,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
         var warehouseGuid = wh.Id;
 
         // Add zone
-        var addZoneRequest = new AddZoneRequest(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
+        var addZoneRequest = new AddZoneCommand(warehouseGuid, "Z-A", "Zone A", nameof(ZoneType.Storage));
         var zoneRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
 
         zoneRes.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -155,7 +156,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
         var zoneGuid = zone.ZoneId;
 
         // Add location
-        var addLocationRequest = new AddLocationRequest(warehouseGuid, zoneGuid, "A-01-01-01", nameof(LocationType.Shelf));
+        var addLocationRequest = new AddLocationCommand(warehouseGuid, zoneGuid, "A-01-01-01", nameof(LocationType.Shelf));
         var locRes = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/locations", addLocationRequest);
 
         locRes.StatusCode.Should().Be(HttpStatusCode.Created);

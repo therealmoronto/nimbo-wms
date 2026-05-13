@@ -1,12 +1,14 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Nimbo.Wms.Contracts.MasterData.Requests;
+using Nimbo.Wms.Contracts.MasterData.Commands;
+using Nimbo.Wms.Contracts.Stock.Commands;
 using Nimbo.Wms.Contracts.Stock.Dtos;
-using Nimbo.Wms.Contracts.Stock.Requests;
-using Nimbo.Wms.Contracts.Topology.Requests;
+using Nimbo.Wms.Contracts.Topology.Commands;
 using Nimbo.Wms.Domain.References;
-using Nimbo.Wms.Domain.ValueObject;
+using Nimbo.Wms.Models.MasterData;
+using Nimbo.Wms.Models.Stock;
+using Nimbo.Wms.Models.Topology;
 using Nimbo.Wms.Tests.Common.Attributes;
 using Nimbo.Wms.Tests.Common.Database;
 
@@ -22,7 +24,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
     public async Task CreateInventoryItem_GetById_ListInventoryItems_Succeeds()
     {
         // Setup: Create warehouse, location, and item
-        var createWarehouseRequest = new CreateWarehouseRequest(
+        var createWarehouseRequest = new CreateWarehouseCommand(
             Code: $"WH-{Guid.NewGuid():N}".Substring(0, 10),
             Name: "Test Warehouse");
 
@@ -30,7 +32,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         var createdWarehouse = (await createWarehouseResponse.Content.ReadFromJsonAsync<CreateWarehouseResponse>())!;
         var warehouseGuid = createdWarehouse.Id;
 
-        var addZoneRequest = new AddZoneRequest(
+        var addZoneRequest = new AddZoneCommand(
             warehouseGuid,
             Code: "Z-TEST",
             Name: "Test Zone",
@@ -40,7 +42,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         var createdZone = (await addZoneResponse.Content.ReadFromJsonAsync<AddZoneResponse>())!;
         var zoneGuid = createdZone.ZoneId;
 
-        var addLocationRequest = new AddLocationRequest(
+        var addLocationRequest = new AddLocationCommand(
             warehouseGuid,
             zoneGuid,
             Code: "A-01-01-01",
@@ -50,7 +52,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         var createdLocation = (await addLocationResponse.Content.ReadFromJsonAsync<AddLocationResponse>())!;
         var locationId = createdLocation.LocationId;
 
-        var createItemRequest = new CreateItemRequest(
+        var createItemRequest = new CreateItemCommand(
             "INV-TEST-ITEM",
             "ITI-001",
             "00101234",
@@ -61,7 +63,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         var itemId = createdItem.ItemGuid;
 
         // 1) Create inventory item
-        var createInventoryItemRequest = new CreateInventoryItemRequest(
+        var createInventoryItemRequest = new CreateInventoryItemCommand(
             ItemId: itemId,
             WarehouseId: warehouseGuid,
             LocationId: locationId,
