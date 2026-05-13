@@ -23,6 +23,7 @@ public class BatchesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json")]
+    [Obsolete("Prohibited for production use.")]
     public async Task<IActionResult> CreateBatch(
         [FromBody] CreateBatchRequest request,
         [FromServices] IMediator mediator,

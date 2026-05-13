@@ -25,6 +25,7 @@ public class InventoryItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json")]
+    [Obsolete("Prohibited for production use.")]
     public async Task<IActionResult> CreateInventoryItem(
         [FromBody] CreateInventoryItemRequest request,
         [FromServices] IMediator mediator,

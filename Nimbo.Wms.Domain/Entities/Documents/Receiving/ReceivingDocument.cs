@@ -13,7 +13,7 @@ public sealed class ReceivingDocument : DocumentBase<ReceivingDocumentId, Receiv
     {
         // Required by EF Core
     }
-    
+
     public ReceivingDocument(ReceivingDocumentId id, WarehouseId warehouseId, string code, string title, DateTime createdAt)
         : base(id, code, title, createdAt)
     {
