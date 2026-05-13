@@ -1,7 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
-using Nimbo.Wms.Contracts.MasterData.Requests;
+using Nimbo.Wms.Contracts.MasterData.Queries;
+using Nimbo.Wms.Models.MasterData;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 
@@ -19,7 +21,8 @@ public class SuppliersController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<IActionResult> CreateSupplier([FromBody] CreateSupplierRequest request, CancellationToken ct)
     {
-        var supplierGuid = await sender.Send(request, ct);
+        var command = new CreateSupplierCommand(request.Code, request.Name);
+        var supplierGuid = await sender.Send(command, ct);
         
         return CreatedAtAction(
             actionName: nameof(GetSupplier),
@@ -38,8 +41,8 @@ public class SuppliersController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<SupplierDto> GetSupplier([FromRoute] Guid supplierGuid, CancellationToken ct)
     {
-        var request = new GetSupplierRequest(supplierGuid);
-        return await sender.Send(request, ct);
+        var query = new GetSupplierQuery(supplierGuid);
+        return await sender.Send(query, ct);
     }
 
     /// <summary>
@@ -51,7 +54,7 @@ public class SuppliersController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<IReadOnlyList<SupplierDto>> GetSuppliers(CancellationToken ct)
     {
-        return await sender.Send(new GetSuppliersRequest(), ct);
+        return await sender.Send(new GetSuppliersQuery(), ct);
     }
 
     /// <summary>
@@ -64,7 +67,18 @@ public class SuppliersController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> PatchSupplier([FromRoute] Guid supplierGuid, [FromBody] PatchSupplierRequest request, CancellationToken ct)
     {
-        await sender.Send(request with { SupplierId = supplierGuid }, ct);
+        var command = new PatchSupplierCommand(
+            supplierGuid,
+            request.Code,
+            request.Name,
+            request.TaxId,
+            request.Address,
+            request.ContactName,
+            request.Phone,
+            request.Email,
+            request.IsActive);
+
+        await sender.Send(command, ct);
         return NoContent();
     }
 
@@ -77,7 +91,7 @@ public class SuppliersController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteSupplier([FromRoute] Guid supplierGuid, CancellationToken ct)
     {
-        await sender.Send(new DeleteSupplierRequest(supplierGuid), ct);
+        await sender.Send(new DeleteSupplierCommand(supplierGuid), ct);
         return NoContent();
     }
 }

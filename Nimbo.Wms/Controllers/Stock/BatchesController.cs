@@ -1,7 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Nimbo.Wms.Contracts.Stock.Commands;
 using Nimbo.Wms.Contracts.Stock.Dtos;
-using Nimbo.Wms.Contracts.Stock.Requests;
+using Nimbo.Wms.Contracts.Stock.Queries;
+using Nimbo.Wms.Models.Stock;
 
 namespace Nimbo.Wms.Controllers.Stock;
 
@@ -21,12 +23,22 @@ public class BatchesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json")]
+    [Obsolete("Prohibited for production use.")]
     public async Task<IActionResult> CreateBatch(
         [FromBody] CreateBatchRequest request,
         [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var batchGuid = await mediator.Send(request, ct);
+        var command = new CreateBatchCommand(
+            request.ItemId,
+            request.SupplierId,
+            request.BatchNumber,
+            request.ManufacturedAt,
+            request.ExpiryDate,
+            request.ReceivedAt,
+            request.Notes);
+
+        var batchGuid = await mediator.Send(command, ct);
         return CreatedAtAction(
             nameof(GetBatch),
             "Batches",
@@ -50,7 +62,7 @@ public class BatchesController : ControllerBase
         [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var query = new GetBatchRequest(batchGuid);
+        var query = new GetBatchQuery(batchGuid);
         return await mediator.Send(query, ct);
     }
 
@@ -70,7 +82,7 @@ public class BatchesController : ControllerBase
         [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var query = new GetBatchesRequest(itemGuid, supplierGuid);
+        var query = new GetBatchesQuery(itemGuid, supplierGuid);
         return await mediator.Send(query, ct);
     }
 }

@@ -1,0 +1,41 @@
+using JetBrains.Annotations;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Nimbo.Wms.Contracts.MasterData.Dtos;
+using Nimbo.Wms.Contracts.MasterData.Queries;
+using Nimbo.Wms.Domain.Entities.MasterData;
+using Nimbo.Wms.Infrastructure.Persistence;
+
+namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
+
+[PublicAPI]
+internal class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, IReadOnlyList<SupplierDto>>
+{
+    private readonly NimboWmsDbContext _dbContext;
+
+    public GetSuppliersQueryHandler(NimboWmsDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<IReadOnlyList<SupplierDto>> Handle(GetSuppliersQuery query, CancellationToken ct = default)
+    {
+        var suppliers = await _dbContext.Set<Supplier>()
+            .AsNoTracking()
+            .Select(s => new SupplierDto(
+                s.Id.Value,
+                s.Code,
+                s.Name,
+                s.TaxId,
+                s.Address,
+                s.ContactName,
+                s.Phone,
+                s.Email,
+                s.IsActive,
+                new()
+            ))
+            .ToListAsync(ct);
+
+        return suppliers;
+    }
+}

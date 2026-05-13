@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Contracts.MasterData.Requests;
+using Nimbo.Wms.Contracts.MasterData.Commands;
+using Nimbo.Wms.Models.MasterData;
 
 namespace Nimbo.Wms.Controllers.MasterData;
 
@@ -26,7 +27,8 @@ public class SupplierItemsController(ISender sender) : ControllerBase
         [FromBody] AddSupplierItemRequest request,
         CancellationToken ct)
     {
-        var supplierItemGuid = await sender.Send(request with { SupplierGuid = supplierGuid }, ct);
+        var command = new AddSupplierItemCommand(supplierGuid, request.ItemGuid);
+        var supplierItemGuid = await sender.Send(command, ct);
 
         return CreatedAtAction(
             actionName: nameof(SuppliersController.GetSupplier),
@@ -53,7 +55,19 @@ public class SupplierItemsController(ISender sender) : ControllerBase
         [FromBody] PatchSupplierItemRequest request,
         CancellationToken ct)
     {
-        await sender.Send(request with { SupplierGuid = supplierGuid, SupplierItemGuid = supplierItemGuid }, ct);
+        var command = new PatchSupplierItemCommand(
+            supplierGuid,
+            supplierItemGuid,
+            request.SupplierSku,
+            request.SupplierBarcode,
+            request.DefaultPurchasePrice,
+            request.PurchaseUomCode,
+            request.UnitsPerPurchaseUom,
+            request.LeadTimeDays,
+            request.MinOrderQty,
+            request.IsPreferred);
+
+        await sender.Send(command, ct);
         return NoContent();
     }
 
@@ -73,7 +87,8 @@ public class SupplierItemsController(ISender sender) : ControllerBase
         [FromRoute] Guid supplierItemGuid,
         CancellationToken ct)
     {
-        await sender.Send(new DeleteSupplierItemRequest(supplierGuid, supplierItemGuid), ct);
+        var command = new DeleteSupplierItemCommand(supplierGuid, supplierItemGuid);
+        await sender.Send(command, ct);
         return NoContent();
     }
 }

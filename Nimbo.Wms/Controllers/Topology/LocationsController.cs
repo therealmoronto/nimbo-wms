@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Contracts.Topology.Requests;
-using PatchLocationRequest = Nimbo.Wms.Contracts.Topology.Requests.PatchLocationRequest;
+using Nimbo.Wms.Contracts.Topology.Commands;
+using Nimbo.Wms.Models.Topology;
 
 namespace Nimbo.Wms.Controllers.Topology;
 
@@ -20,7 +20,24 @@ public class LocationsController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> PatchLocation([FromRoute] Guid locationGuid, [FromBody] PatchLocationRequest request, CancellationToken ct)
     {
-        await sender.Send(request with { LocationGuid = locationGuid }, ct);
+        var command = new PatchLocationCommand(
+            locationGuid,
+            request.Code,
+            request.Type,
+            request.MaxWeightKg,
+            request.MaxVolumeM3,
+            request.IsSingleItemOnly,
+            request.IsPickingLocation,
+            request.IsReceivingLocation,
+            request.IsShippingLocation,
+            request.IsActive,
+            request.IsBlocked,
+            request.Aisle,
+            request.Rack,
+            request.Level,
+            request.Position);
+
+        await sender.Send(command, ct);
         return NoContent();
     }
 
@@ -34,7 +51,7 @@ public class LocationsController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteLocation([FromRoute] Guid locationGuid, CancellationToken ct)
     {
-        await sender.Send(new DeleteLocationRequest(locationGuid), ct);
+        await sender.Send(new DeleteLocationCommand(locationGuid), ct);
         return NoContent();
     }
 }

@@ -1,12 +1,12 @@
 using FluentValidation;
 using JetBrains.Annotations;
-using Nimbo.Wms.Contracts.Stock.Requests;
+using Nimbo.Wms.Contracts.Stock.Commands;
 using Nimbo.Wms.Domain.Entities.Stock;
 
 namespace Nimbo.Wms.Application.Common.Validators.Stock;
 
 [PublicAPI]
-public class CreateBatchRequestValidator : AbstractValidator<CreateBatchRequest>
+public class CreateBatchRequestValidator : AbstractValidator<CreateBatchCommand>
 {
     public CreateBatchRequestValidator()
     {
