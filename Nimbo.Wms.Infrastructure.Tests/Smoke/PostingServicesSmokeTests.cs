@@ -173,7 +173,7 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
         var item = new Item(ItemId.New(), "ITM-001", Guid.NewGuid().ToString()[..5], "12345678", UnitOfMeasure.Piece);
         await itemRepo.AddAsync(item);
 
-        var supplier = new Supplier(SupplierId.New(), "SUP-001", "Supplier #1", "Supplier Address");
+        var supplier = new Supplier(SupplierId.New(), $"SUP-{Guid.NewGuid().ToString()[..5]}", "Supplier #1", "Supplier Address");
         await supplierRepo.AddAsync(supplier);
 
         await uow.CommitAsync();
