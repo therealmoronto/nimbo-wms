@@ -20,5 +20,5 @@ public sealed record ReceivingDocumentBodyDto(
 public sealed record ReceivingDocumentDto(
     Guid Id,
     ReceivingDocumentBodyDto Body,
-    List<RecevingDocumentLineDto> Lines
+    List<ReceivingDocumentLineDto> Lines
 );
