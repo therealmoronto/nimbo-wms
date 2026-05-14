@@ -14,13 +14,23 @@ public sealed class ReceivingDocument : DocumentBase<ReceivingDocumentId, Receiv
         // Required by EF Core
     }
 
-    public ReceivingDocument(ReceivingDocumentId id, WarehouseId warehouseId, string code, string title, DateTime createdAt)
+    public ReceivingDocument(
+        ReceivingDocumentId id,
+        WarehouseId warehouseId,
+        SupplierId supplierId,
+        string code,
+        string title,
+        DateTime createdAt,
+        string? externalReference = null)
         : base(id, code, title, createdAt)
     {
         WarehouseId = warehouseId;
+        SupplierId = supplierId;
     }
 
-    public WarehouseId WarehouseId { get; } 
+    public WarehouseId WarehouseId { get; }
+
+    public SupplierId SupplierId { get; }
 
     public Guid AddLine(ItemId itemId, Quantity receivedQuantity, LocationId toLocationId, Quantity? expectedQuantity, string? notes)
     {

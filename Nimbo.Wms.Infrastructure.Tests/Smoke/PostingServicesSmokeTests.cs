@@ -32,14 +32,14 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
     public async Task ReceivingPost_ShouldUpdateStockAndCreateLedger()
     {
         // 1. Setup Master Data & Document
-        var (warehouseId, locationId, itemId) = await SeedRequiredData();
+        var (warehouseId, locationId, itemId, supplierId) = await SeedRequiredData();
         var receivingRepo = Scope.ServiceProvider.GetRequiredService<IReceivingDocumentRepository>();
         var postingService = Scope.ServiceProvider.GetRequiredService<IDocumentPostingService<ReceivingDocument>>();
         var uow = Scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
         var receivedQuantity = new Quantity(10, UnitOfMeasure.Piece);
         var expectedQuantity = new Quantity(10, UnitOfMeasure.Piece);
-        var doc = new ReceivingDocument(ReceivingDocumentId.New(), warehouseId, "REC-001", "REC", DateTime.UtcNow);
+        var doc = new ReceivingDocument(ReceivingDocumentId.New(), warehouseId, supplierId, "REC-001", "REC", DateTime.UtcNow);
         doc.AddLine(itemId, receivedQuantity, locationId, expectedQuantity, null);
         doc.Start(); // Ensure status is InProgress
 
@@ -71,7 +71,7 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
     public async Task RelocationPost_ShouldPerformDoubleEntry()
     {
         // 1. Setup: Create initial stock at Source
-        var (warehouseId, sourceLocId, itemId) = await SeedRequiredData();
+        var (warehouseId, sourceLocId, itemId, _) = await SeedRequiredData();
         var targetLocId = await SeedLocation(warehouseId, "LOC-TARGET");
 
         await SeedInitialStock(warehouseId, sourceLocId, itemId, 50);
@@ -113,7 +113,7 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
     public async Task CycleCountPost_ShouldCaptureDiscrepancy()
     {
         // 1. Setup: Seed initial stock (System thinks there are 10)
-        var (warehouseId, locationId, itemId) = await SeedRequiredData();
+        var (warehouseId, locationId, itemId, _) = await SeedRequiredData();
         await SeedInitialStock(warehouseId, locationId, itemId, 10);
 
         var cycleCountRepo = Scope.ServiceProvider.GetRequiredService<ICycleCountDocumentRepository>();
@@ -151,12 +151,13 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
         countEntry.SourceDocumentId.Should().Be(doc.Id.Value);
     }
 
-    private async Task<(WarehouseId WarehouseId, LocationId LocationId, ItemId ItemId)> SeedRequiredData()
+    private async Task<(WarehouseId WarehouseId, LocationId LocationId, ItemId ItemId, SupplierId supplierId)> SeedRequiredData()
     {
         await Fixture.EnsureMigratedAsync();
 
         var warehouseRepo = Scope.ServiceProvider.GetRequiredService<IWarehouseRepository>();
         var itemRepo = Scope.ServiceProvider.GetRequiredService<IItemRepository>();
+        var supplierRepo = Scope.ServiceProvider.GetRequiredService<ISupplierRepository>();
         var uow = Scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
         // 1. Create Warehouse
@@ -172,9 +173,12 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
         var item = new Item(ItemId.New(), "ITM-001", Guid.NewGuid().ToString()[..5], "12345678", UnitOfMeasure.Piece);
         await itemRepo.AddAsync(item);
 
+        var supplier = new Supplier(SupplierId.New(), $"SUP-{Guid.NewGuid().ToString()[..5]}", "Supplier #1", "Supplier Address");
+        await supplierRepo.AddAsync(supplier);
+
         await uow.CommitAsync();
 
-        return (warehouse.Id, location.Id, item.Id);
+        return (warehouse.Id, location.Id, item.Id, supplier.Id);
     }
 
     private async Task<LocationId> SeedLocation(WarehouseId warehouseId, string code)
