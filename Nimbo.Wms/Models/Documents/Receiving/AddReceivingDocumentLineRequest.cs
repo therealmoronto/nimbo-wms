@@ -1,16 +1,17 @@
 using JetBrains.Annotations;
-using MediatR;
-using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.Common.Dtos;
 
-namespace Nimbo.Wms.Contracts.Documents.Receiving.Commands;
+namespace Nimbo.Wms.Models.Documents.Receiving;
 
 [PublicAPI]
-public sealed record AddReceivingDocumentLineCommand(
+public sealed record AddReceivingDocumentLineRequest(
     Guid ReceivingDocumentId,
     Guid ToLocationId,
     QuantityDto RecievedQuantity,
     QuantityDto? ExpectedQuantity,
     string? Notes,
     long DocumentVersion
-) : IRequest<Guid>, ITxRequest;
+);
+
+[PublicAPI]
+public sealed record AddReceivingDocumentLineResponse(Guid Id);
