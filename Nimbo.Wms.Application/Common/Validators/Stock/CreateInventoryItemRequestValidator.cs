@@ -11,9 +11,11 @@ public class CreateInventoryItemRequestValidator : AbstractValidator<CreateInven
     public CreateInventoryItemRequestValidator()
     {
         RuleFor(x => x.SerialNumber)
-            .MaximumLength(InventoryItem.SerialNumberMaxLength);
+            .MaximumLength(InventoryItem.SerialNumberMaxLength)
+            .WithMessage($"Serial number cannot exceed {InventoryItem.SerialNumberMaxLength} characters");
 
         RuleFor(x => x.Quantity)
-            .NotNull();
+            .NotNull()
+            .WithMessage("Quantity is required");
     }
 }

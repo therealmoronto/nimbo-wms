@@ -13,9 +13,11 @@ public class CreateBatchRequestValidator : AbstractValidator<CreateBatchCommand>
         RuleFor(x => x.BatchNumber)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(Batch.BatchNumberMaxLength);
+            .MaximumLength(Batch.BatchNumberMaxLength)
+            .WithMessage($"Batch number cannot exceed {Batch.BatchNumberMaxLength} characters");
 
         RuleFor(x => x.Notes)
-            .MaximumLength(Batch.NotesMaxLength);
+            .MaximumLength(Batch.NotesMaxLength)
+            .WithMessage($"Batch notes cannot exceed {Batch.NotesMaxLength} characters");
     }
 }

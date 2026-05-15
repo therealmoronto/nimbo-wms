@@ -11,24 +11,31 @@ public class PatchSupplierRequestValidator : AbstractValidator<PatchSupplierComm
     public PatchSupplierRequestValidator()
     {
         RuleFor(x => x.Code)
-            .MaximumLength(Supplier.CodeMaxLength);
+            .MaximumLength(Supplier.CodeMaxLength)
+            .WithMessage($"Supplier code cannot exceed {Supplier.CodeMaxLength} characters");
 
         RuleFor(x => x.Name)
-            .MaximumLength(Supplier.NameMaxLength);
+            .MaximumLength(Supplier.NameMaxLength)
+            .WithMessage($"Supplier name cannot exceed {Supplier.NameMaxLength} characters");
 
         RuleFor(x => x.TaxId)
-            .MaximumLength(Supplier.TaxIdMaxLength);
+            .MaximumLength(Supplier.TaxIdMaxLength)
+            .WithMessage($"Supplier tax ID cannot exceed {Supplier.TaxIdMaxLength} characters");
 
         RuleFor(x => x.Address)
-            .MaximumLength(Supplier.AddressMaxLength);
+            .MaximumLength(Supplier.AddressMaxLength)
+            .WithMessage($"Supplier address cannot exceed {Supplier.AddressMaxLength} characters");
 
         RuleFor(x => x.ContactName)
-            .MaximumLength(Supplier.ContactNameMaxLength);
+            .MaximumLength(Supplier.ContactNameMaxLength)
+            .WithMessage($"Supplier contact name cannot exceed {Supplier.ContactNameMaxLength} characters");
 
         RuleFor(x => x.Phone)
-            .MaximumLength(Supplier.PhoneMaxLength);
+            .MaximumLength(Supplier.PhoneMaxLength)
+            .WithMessage($"Supplier phone cannot exceed {Supplier.PhoneMaxLength} characters");
 
         RuleFor(x => x.Email)
-            .MaximumLength(Supplier.EmailMaxLength);
+            .MaximumLength(Supplier.EmailMaxLength)
+            .WithMessage($"Supplier email cannot exceed {Supplier.EmailMaxLength} characters");
     }
 }

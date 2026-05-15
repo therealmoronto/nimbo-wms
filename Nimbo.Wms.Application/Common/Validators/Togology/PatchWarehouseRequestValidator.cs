@@ -11,15 +11,19 @@ public class PatchWarehouseRequestValidator : AbstractValidator<PatchWarehouseCo
     public PatchWarehouseRequestValidator()
     {
         RuleFor(x => x.Code)
-            .MaximumLength(Warehouse.CodeMaxLength);
+            .MaximumLength(Warehouse.CodeMaxLength)
+            .WithMessage($"Warehouse code cannot exceed {Warehouse.CodeMaxLength} characters");
 
         RuleFor(x => x.Name)
-            .MaximumLength(Warehouse.NameMaxLength);
+            .MaximumLength(Warehouse.NameMaxLength)
+            .WithMessage($"Warehouse name cannot exceed {Warehouse.NameMaxLength} characters");
 
         RuleFor(x => x.Address)
-            .MaximumLength(Warehouse.AddressMaxLength);
+            .MaximumLength(Warehouse.AddressMaxLength)
+            .WithMessage($"Warehouse address cannot exceed {Warehouse.AddressMaxLength} characters");
 
         RuleFor(x => x.Description)
-            .MaximumLength(Warehouse.DescriptionMaxLength);
+            .MaximumLength(Warehouse.DescriptionMaxLength)
+            .WithMessage($"Warehouse description cannot exceed {Warehouse.DescriptionMaxLength} characters");
     }
 }

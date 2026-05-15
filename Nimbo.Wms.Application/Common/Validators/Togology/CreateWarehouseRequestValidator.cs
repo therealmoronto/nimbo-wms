@@ -13,11 +13,13 @@ public class CreateWarehouseRequestValidator : AbstractValidator<CreateWarehouse
         RuleFor(x => x.Name)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(Warehouse.NameMaxLength);
+            .MaximumLength(Warehouse.NameMaxLength)
+            .WithMessage($"Warehouse name cannot exceed {Warehouse.NameMaxLength} characters");
 
         RuleFor(x => x.Code)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(Warehouse.CodeMaxLength);
+            .MaximumLength(Warehouse.CodeMaxLength)
+            .WithMessage($"Warehouse code cannot exceed {Warehouse.CodeMaxLength} characters");
     }
 }

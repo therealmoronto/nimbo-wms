@@ -11,18 +11,23 @@ public class PatchLocationRequestValidator : AbstractValidator<PatchLocationComm
     public PatchLocationRequestValidator()
     {
         RuleFor(x => x.Code)
-            .MaximumLength(Location.CodeMaxLength);
+            .MaximumLength(Location.CodeMaxLength)
+            .WithMessage($"Location code cannot exceed {Location.CodeMaxLength} characters");
 
         RuleFor(x => x.Aisle)
-            .MaximumLength(Location.AisleMaxLength);
+            .MaximumLength(Location.AisleMaxLength)
+            .WithMessage($"Aisle cannot exceed {Location.AisleMaxLength} characters");
 
         RuleFor(x => x.Rack)
-            .MaximumLength(Location.RackMaxLength);
+            .MaximumLength(Location.RackMaxLength)
+            .WithMessage($"Rack cannot exceed {Location.RackMaxLength} characters");
 
         RuleFor(x => x.Level)
-            .MaximumLength(Location.LevelMaxLength);
+            .MaximumLength(Location.LevelMaxLength)
+            .WithMessage($"Level cannot exceed {Location.LevelMaxLength} characters");
 
         RuleFor(x => x.Position)
-            .MaximumLength(Location.PositionMaxLength);
+            .MaximumLength(Location.PositionMaxLength)
+            .WithMessage($"Position cannot exceed {Location.PositionMaxLength} characters");
     }
 }

@@ -11,12 +11,15 @@ public class PatchSupplierItemRequestValidator : AbstractValidator<PatchSupplier
     public PatchSupplierItemRequestValidator()
     {
         RuleFor(x => x.SupplierSku)
-            .MaximumLength(SupplierItem.SupplierSkuMaxLength);
+            .MaximumLength(SupplierItem.SupplierSkuMaxLength)
+            .WithMessage($"Supplier SKU cannot exceed {SupplierItem.SupplierSkuMaxLength} characters");
 
         RuleFor(x => x.SupplierBarcode)
-            .MaximumLength(SupplierItem.SupplierBarcodeMaxLength);
+            .MaximumLength(SupplierItem.SupplierBarcodeMaxLength)
+            .WithMessage($"Supplier barcode cannot exceed {SupplierItem.SupplierBarcodeMaxLength} characters");
 
         RuleFor(x => x.PurchaseUomCode)
-            .MaximumLength(SupplierItem.PurchaseUomCodeMaxLength);
+            .MaximumLength(SupplierItem.PurchaseUomCodeMaxLength)
+            .WithMessage($"Purchase UOM code cannot exceed {SupplierItem.PurchaseUomCodeMaxLength} characters");
     }
 }
