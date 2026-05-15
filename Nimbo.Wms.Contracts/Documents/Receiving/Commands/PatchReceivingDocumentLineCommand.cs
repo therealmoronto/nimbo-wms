@@ -10,7 +10,7 @@ public sealed record PatchReceivingDocumentLineCommand(
     Guid DocumentId,
     Guid Id,
     Guid? ToLocationId,
-    QuantityDto? RecievedQuantity,
+    QuantityDto? ReceivedQuantity,
     QuantityDto? ExpectedQuantity,
     string? Notes,
     long DocumentVersion

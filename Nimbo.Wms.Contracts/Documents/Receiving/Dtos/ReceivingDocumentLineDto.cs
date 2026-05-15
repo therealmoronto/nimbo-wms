@@ -8,7 +8,7 @@ public sealed record ReceivingDocumentLineDto(
     Guid Id,
     Guid DocumentId,
     Guid ToLocationId,
-    QuantityDto RecievedQuantity,
+    QuantityDto ReceivedQuantity,
     QuantityDto? ExpectedQuantity,
     string? Notes
 );

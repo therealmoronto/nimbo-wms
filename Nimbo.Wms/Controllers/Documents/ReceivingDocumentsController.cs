@@ -99,18 +99,19 @@ public class ReceivingDocumentsController(ISender sender) : ControllerBase
     }
 
     /// <summary>
-    /// Deletes an existing receiving document by its unique identifier.
+    /// Deletes an existing receiving document by its unique identifier and version.
     /// </summary>
     /// <param name="documentGuid">The unique identifier of the receiving document to delete.</param>
+    /// <param name="version">The version of the document to ensure it is the latest version being deleted.</param>
     /// <param name="ct">The cancellation token to observe while waiting for the task to complete.</param>
     /// <returns>An <see cref="IActionResult"/> with a status code of NoContent if the document is deleted successfully,
     /// or NotFound if the document does not exist.</returns>
     [HttpDelete("{documentGuid:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteDocument(Guid documentGuid, CancellationToken ct)
+    public async Task<IActionResult> DeleteDocument(Guid documentGuid, [FromQuery] long version, CancellationToken ct)
     {
-        var command = new DeleteReceivingDocumentCommand(documentGuid);
+        var command = new DeleteReceivingDocumentCommand(documentGuid, version);
         await sender.Send(command, ct);
         return NoContent();
     }
