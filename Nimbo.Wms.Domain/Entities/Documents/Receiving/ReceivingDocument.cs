@@ -32,7 +32,7 @@ public sealed class ReceivingDocument : DocumentBase<ReceivingDocumentId, Receiv
 
     public SupplierId SupplierId { get; }
 
-    public Guid AddLine(ItemId itemId, Quantity receivedQuantity, LocationId toLocationId, Quantity? expectedQuantity, string? notes)
+    public Guid AddLine(ItemId itemId, Quantity receivedQuantity, LocationId toLocationId, Quantity expectedQuantity, string? notes)
     {
         EnsurePositive(receivedQuantity);
         EnsureNullableNonNegative(expectedQuantity);
@@ -49,7 +49,7 @@ public sealed class ReceivingDocument : DocumentBase<ReceivingDocumentId, Receiv
         Touch();
     }
 
-    public void ChangeLineExpectedQuantity(Guid lineId, Quantity? expectedQty)
+    public void ChangeLineExpectedQuantity(Guid lineId, Quantity expectedQty)
     {
         EnsureCanBeEdited();
         EnsureNullableNonNegative(expectedQty);
@@ -103,7 +103,7 @@ public sealed class ReceivingDocument : DocumentBase<ReceivingDocumentId, Receiv
             if (line.ReceivedQuantity.Value <= 0m)
                 throw new DomainException($"Line '{line.Id}' has non-positive received quantity.");
 
-            if (line.ExpectedQuantity is not null && line.ExpectedQuantity.Value < 0m)
+            if (line.ExpectedQuantity.Value < 0m)
                 throw new DomainException($"Line '{line.Id}' has negative expected quantity.");
 
             // optional strictness:

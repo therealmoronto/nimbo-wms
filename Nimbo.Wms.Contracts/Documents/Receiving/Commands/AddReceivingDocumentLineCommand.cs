@@ -9,8 +9,7 @@ namespace Nimbo.Wms.Contracts.Documents.Receiving.Commands;
 public sealed record AddReceivingDocumentLineCommand(
     Guid ReceivingDocumentId,
     Guid ToLocationId,
-    QuantityDto ReceivedQuantity,
-    QuantityDto? ExpectedQuantity,
+    QuantityDto ExpectedQuantity,
     string? Notes,
     long DocumentVersion
 ) : IRequest<Guid>, ITxRequest;

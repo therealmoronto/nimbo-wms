@@ -31,7 +31,6 @@ public class ReceivingDocumentLinesController(ISender sender) : ControllerBase
         var command = new AddReceivingDocumentLineCommand(
             documentGuid,
             request.ToLocationId,
-            request.ReceivedQuantity,
             request.ExpectedQuantity,
             request.Notes,
             request.DocumentVersion);
