@@ -7,7 +7,8 @@ namespace Nimbo.Wms.Contracts.Documents.Receiving.Commands;
 
 [PublicAPI]
 public sealed record AddReceivingDocumentLineCommand(
-    Guid ReceivingDocumentId,
+    Guid DocumentId,
+    Guid ItemId,
     Guid ToLocationId,
     QuantityDto ExpectedQuantity,
     string? Notes,

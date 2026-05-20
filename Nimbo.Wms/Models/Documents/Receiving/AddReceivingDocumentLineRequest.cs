@@ -6,6 +6,7 @@ namespace Nimbo.Wms.Models.Documents.Receiving;
 [PublicAPI]
 public sealed record AddReceivingDocumentLineRequest(
     Guid ReceivingDocumentId,
+    Guid ItemId,
     Guid ToLocationId,
     QuantityDto ExpectedQuantity,
     string? Notes,

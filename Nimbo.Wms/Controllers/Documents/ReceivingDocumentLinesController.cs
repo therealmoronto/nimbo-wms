@@ -30,6 +30,7 @@ public class ReceivingDocumentLinesController(ISender sender) : ControllerBase
     {
         var command = new AddReceivingDocumentLineCommand(
             documentGuid,
+            request.ItemId,
             request.ToLocationId,
             request.ExpectedQuantity,
             request.Notes,

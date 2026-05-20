@@ -10,5 +10,5 @@ public sealed record CreateReceivingDocumentCommand(
     Guid SupplierId,
     string Code,
     string Title,
-    string? Notes
+    string? ExternalReference
 ) : IRequest<Guid>, ITxRequest;

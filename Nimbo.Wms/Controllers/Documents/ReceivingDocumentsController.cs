@@ -89,7 +89,6 @@ public class ReceivingDocumentsController(ISender sender) : ControllerBase
     {
         var command = new PatchReceivingDocumentCommand(
             documentGuid,
-            request.SupplierId,
             request.Code,
             request.Title,
             request.Notes,

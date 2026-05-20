@@ -29,6 +29,8 @@ public abstract class EfDocumentRepository<TDocument, TId> : IDocumentRepository
         return Set.FirstOrDefaultAsync(x => x.Id.Equals(id), ct);
     }
 
+    public abstract Task<TDocument?> GetByIdWithLinesAsync(TId id, CancellationToken ct = default);
+
     public virtual Task DeleteAsync(TDocument entity, CancellationToken ct = default)
     {
         Set.Remove(entity);

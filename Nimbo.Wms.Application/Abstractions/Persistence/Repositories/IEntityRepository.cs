@@ -32,5 +32,7 @@ public interface IDocumentRepository<TDocument, TId> : IRepository
 
     Task<TDocument?> GetByIdAsync(TId id, CancellationToken ct = default);
 
+    Task<TDocument?> GetByIdWithLinesAsync(TId id, CancellationToken ct = default);
+
     Task DeleteAsync(TDocument entity,CancellationToken ct = default);
 }

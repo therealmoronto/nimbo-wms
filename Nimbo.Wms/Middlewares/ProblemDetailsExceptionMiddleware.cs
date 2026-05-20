@@ -74,6 +74,9 @@ public sealed class ProblemDetailsExceptionMiddleware
             // Application/Common/NotFoundException (or wherever it lives)
             NotFoundException => (StatusCodes.Status404NotFound, "Not Found", "https://httpstatuses.com/404"),
 
+            // Application/Common/ConflictException (or wherever it lives)
+            ConcurrencyException => (StatusCodes.Status409Conflict, "Conflict", "https://httpstatuses.com/409"),
+
             // Common "bad input" exceptions
             InvalidOperationException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
             ArgumentException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),

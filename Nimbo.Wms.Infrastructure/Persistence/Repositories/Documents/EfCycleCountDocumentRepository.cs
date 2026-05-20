@@ -12,7 +12,7 @@ internal sealed class EfCycleCountDocumentRepository : EfDocumentRepository<Cycl
     public EfCycleCountDocumentRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
 
-    public override Task<CycleCountDocument?> GetByIdAsync(CycleCountDocumentId id, CancellationToken ct = default)
+    public override Task<CycleCountDocument?> GetByIdWithLinesAsync(CycleCountDocumentId id, CancellationToken ct = default)
     {
         return Set.Include(d => d.Lines)
             .FirstOrDefaultAsync(d => d.Id == id, ct);

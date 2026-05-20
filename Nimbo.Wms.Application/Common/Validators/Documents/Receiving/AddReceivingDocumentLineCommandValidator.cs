@@ -7,7 +7,7 @@ public class AddReceivingDocumentLineCommandValidator : AbstractValidator<AddRec
 {
     public AddReceivingDocumentLineCommandValidator()
     {
-        RuleFor(x => x.ReceivingDocumentId)
+        RuleFor(x => x.DocumentId)
             .NotEmpty()
             .WithMessage("Receiving document is required");
 

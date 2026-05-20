@@ -7,7 +7,6 @@ namespace Nimbo.Wms.Contracts.Documents.Receiving.Commands;
 [PublicAPI]
 public sealed record PatchReceivingDocumentCommand(
     Guid Id,
-    Guid? SupplierId,
     string? Code,
     string? Title,
     string? Notes,
