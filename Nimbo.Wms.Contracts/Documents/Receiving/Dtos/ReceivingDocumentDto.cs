@@ -4,6 +4,7 @@ namespace Nimbo.Wms.Contracts.Documents.Receiving.Dtos;
 
 [PublicAPI]
 public sealed record ReceivingDocumentBodyDto(
+    Guid Id,
     Guid WarehouseId,
     Guid SupplierId,
     string Code,
@@ -18,7 +19,6 @@ public sealed record ReceivingDocumentBodyDto(
 
 [PublicAPI]
 public sealed record ReceivingDocumentDto(
-    Guid Id,
     ReceivingDocumentBodyDto Body,
     List<ReceivingDocumentLineDto> Lines
 );
