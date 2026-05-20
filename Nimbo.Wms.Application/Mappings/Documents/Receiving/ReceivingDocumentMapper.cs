@@ -16,28 +16,3 @@ public partial class ReceivingDocumentBodyMapper : IMapper<ReceivingDocument, Re
 
     public partial ReceivingDocumentBodyDto MapToDto(ReceivingDocument item);
 }
-
-[PublicAPI]
-[Mapper(EnumMappingStrategy = EnumMappingStrategy.ByName)]
-public partial class ReceivingDocumentMapper : IMapper<ReceivingDocument, ReceivingDocumentDto>
-{
-    private readonly IMapper<ReceivingDocument, ReceivingDocumentBodyDto> _bodyMapper;
-    private readonly IMapper<ReceivingDocumentLine, ReceivingDocumentLineDto> _lineMapper;
-
-    public ReceivingDocumentMapper(
-        IMapper<ReceivingDocument, ReceivingDocumentBodyDto> bodyMapper,
-        IMapper<ReceivingDocumentLine, ReceivingDocumentLineDto> lineMapper)
-    {
-        _bodyMapper = bodyMapper;
-        _lineMapper = lineMapper;
-    }
-
-    public IQueryable<ReceivingDocumentDto> ProjectToDto(IQueryable<ReceivingDocument> items) => items.Select(i => MapToDto(i));
-
-    public IEnumerable<ReceivingDocumentDto> MapToDto(IEnumerable<ReceivingDocument> items) => items.Select(MapToDto);
-
-    public ReceivingDocumentDto MapToDto(ReceivingDocument item)
-    {
-        return new ReceivingDocumentDto(_bodyMapper.MapToDto(item), _lineMapper.MapToDto(item.Lines).ToList());
-    }
-}

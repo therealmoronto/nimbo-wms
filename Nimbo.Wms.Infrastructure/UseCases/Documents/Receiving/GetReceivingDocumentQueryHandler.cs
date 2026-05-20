@@ -12,12 +12,17 @@ namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Receiving;
 public class GetReceivingDocumentQueryHandler : IRequestHandler<GetReceivingDocumentQuery, ReceivingDocumentDto>
 {
     private readonly NimboWmsDbContext _dbContext;
-    private readonly IMapper<ReceivingDocument, ReceivingDocumentDto> _mapper;
+    private readonly IMapper<ReceivingDocument, ReceivingDocumentBodyDto> _bodyMapper;
+    private readonly IMapper<ReceivingDocumentLine, ReceivingDocumentLineDto> _lineMapper;
 
-    public GetReceivingDocumentQueryHandler(NimboWmsDbContext dbContext, IMapper<ReceivingDocument, ReceivingDocumentDto> mapper)
+    public GetReceivingDocumentQueryHandler(
+        NimboWmsDbContext dbContext,
+        IMapper<ReceivingDocument, ReceivingDocumentBodyDto> bodyMapper,
+        IMapper<ReceivingDocumentLine, ReceivingDocumentLineDto> lineMapper)
     {
         _dbContext = dbContext;
-        _mapper = mapper;
+        _bodyMapper = bodyMapper;
+        _lineMapper = lineMapper;
     }
 
     public async Task<ReceivingDocumentDto> Handle(GetReceivingDocumentQuery request, CancellationToken ct)
@@ -27,7 +32,11 @@ public class GetReceivingDocumentQueryHandler : IRequestHandler<GetReceivingDocu
             .Where(d => d.Id == request.Id)
             .Include(d => d.Lines);
 
-        var document = await _mapper.ProjectToDto(dbQuery).SingleOrDefaultAsync(ct);
+        var document = await dbQuery.Select(d =>
+                new ReceivingDocumentDto(
+                    _bodyMapper.MapToDto(d),
+                    _lineMapper.MapToDto(d.Lines).ToList()))
+            .SingleOrDefaultAsync(ct);
         if (document is null)
             throw new NotFoundException($"Receiving document with ID {request.Id} not found");
 
