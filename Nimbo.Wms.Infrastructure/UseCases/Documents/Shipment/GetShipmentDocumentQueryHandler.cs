@@ -15,15 +15,15 @@ namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Shipment;
 public class GetShipmentDocumentQueryHandler : IRequestHandler<GetShipmentDocumentQuery, ShipmentDocumentDto>
 {
     private readonly NimboWmsDbContext _dbContext;
-    private readonly ShipmentDocumentBodyMapper _bodyMapper;
-    private readonly ShipmentDocumentLineMapper _lineMapper;
-    private readonly ShipmentPickLineMapper _pickLineMapper;
+    private readonly IMapper<ShipmentDocument, ShipmentDocumentBodyDto> _bodyMapper;
+    private readonly IMapper<ShipmentDocumentLine, ShipmentDocumentLineDto> _lineMapper;
+    private readonly IMapper<ShipmentPickLine, ShipmentPickLineDto> _pickLineMapper;
 
     public GetShipmentDocumentQueryHandler(
         NimboWmsDbContext dbContext,
-        ShipmentDocumentBodyMapper bodyMapper,
-        ShipmentDocumentLineMapper lineMapper,
-        ShipmentPickLineMapper pickLineMapper)
+        IMapper<ShipmentDocument, ShipmentDocumentBodyDto> bodyMapper,
+        IMapper<ShipmentDocumentLine, ShipmentDocumentLineDto> lineMapper,
+        IMapper<ShipmentPickLine, ShipmentPickLineDto> pickLineMapper)
     {
         _dbContext = dbContext;
         _bodyMapper = bodyMapper;

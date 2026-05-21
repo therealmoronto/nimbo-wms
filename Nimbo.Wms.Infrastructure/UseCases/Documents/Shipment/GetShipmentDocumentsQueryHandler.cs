@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Mappings.Documents.Shipment;
+using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.Documents.Shipment.Dtos;
 using Nimbo.Wms.Contracts.Documents.Shipment.Queries;
 using Nimbo.Wms.Domain.Entities.Documents.Shipment;
@@ -13,9 +14,9 @@ namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Shipment;
 public class GetShipmentDocumentsQueryHandler : IRequestHandler<GetShipmentDocumentsQuery, IReadOnlyList<ShipmentDocumentBodyDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
-    private readonly ShipmentDocumentBodyMapper _mapper;
+    private readonly IMapper<ShipmentDocument, ShipmentDocumentBodyDto> _mapper;
 
-    public GetShipmentDocumentsQueryHandler(NimboWmsDbContext dbContext, ShipmentDocumentBodyMapper mapper)
+    public GetShipmentDocumentsQueryHandler(NimboWmsDbContext dbContext, IMapper<ShipmentDocument, ShipmentDocumentBodyDto> mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
