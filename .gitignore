@@ -42,6 +42,7 @@ artifacts/
 # Visual Studio / Rider
 .vs/
 .idea/
+.junie/
 .obsidian/
 *.user
 *.suo
