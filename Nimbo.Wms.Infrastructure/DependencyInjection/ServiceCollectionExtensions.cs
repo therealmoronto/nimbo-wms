@@ -124,6 +124,7 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IMapper<ReceivingDocumentLine, ReceivingDocumentLineDto>, ReceivingDocumentLineMapper>();
             services.AddScoped<IMapper<ShipmentDocument, ShipmentDocumentBodyDto>, ShipmentDocumentBodyMapper>();
             services.AddScoped<IMapper<ShipmentDocumentLine, ShipmentDocumentLineDto>, ShipmentDocumentLineMapper>();
+            services.AddScoped<IMapper<ShipmentPickLine, ShipmentPickLineDto>, ShipmentPickLineMapper>();
             services.AddScoped<IMapper<CycleCountDocument, CycleCountDocumentBodyDto>, CycleCountDocumentBodyMapper>();
             services.AddScoped<IMapper<CycleCountDocumentLine, CycleCountDocumentLineDto>, CycleCountDocumentLineMapper>();
 

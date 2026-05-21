@@ -38,9 +38,7 @@ public class PatchShipmentDocumentLineCommandHandler : IRequestHandler<PatchShip
 
         if (request.Notes is not null)
         {
-            var line = document.Lines.FirstOrDefault(l => l.Id == request.Id);
-            if (line is not null)
-                line.ChangeNotes(request.Notes);
+            document.ChangeLineNotes(request.Id, request.Notes);
         }
     }
 }
