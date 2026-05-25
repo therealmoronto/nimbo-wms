@@ -13,6 +13,7 @@ public class AddLocationRequestValidator : AbstractValidator<AddLocationCommand>
         RuleFor(x => x.Code)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(Location.CodeMaxLength);
+            .MaximumLength(Location.CodeMaxLength)
+            .WithMessage($"Location code cannot exceed {Location.CodeMaxLength} characters");
     }
 }

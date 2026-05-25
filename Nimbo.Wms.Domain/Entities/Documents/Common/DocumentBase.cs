@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using Nimbo.Wms.Domain.Common;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.ValueObject;
+using Riok.Mapperly.Abstractions;
 
 namespace Nimbo.Wms.Domain.Entities.Documents.Common;
 
@@ -51,6 +52,7 @@ public abstract class DocumentBase<TId, TStatus, TLine> : AggregateRoot<TId>, ID
 
     public string? Notes { get; private set; }
 
+    [MapperIgnore]
     public IReadOnlyCollection<TLine> Lines => _lines.AsReadOnly();
 
     public virtual bool IsEditable() => Status.ToString() == "Draft";

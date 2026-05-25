@@ -13,11 +13,13 @@ public class CreateSupplierRequestValidator : AbstractValidator<CreateSupplierCo
         RuleFor(x => x.Code)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(Supplier.CodeMaxLength);
+            .MaximumLength(Supplier.CodeMaxLength)
+            .WithMessage($"Supplier code cannot exceed {Supplier.CodeMaxLength} characters");
 
         RuleFor(x => x.Name)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(Supplier.NameMaxLength);
+            .MaximumLength(Supplier.NameMaxLength)
+            .WithMessage($"Supplier name cannot exceed {Supplier.NameMaxLength} characters");
     }
 }

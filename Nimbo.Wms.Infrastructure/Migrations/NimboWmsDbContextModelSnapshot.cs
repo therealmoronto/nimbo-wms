@@ -305,6 +305,8 @@ namespace Nimbo.Wms.Migrations
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "ExpectedQuantity", "Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocumentLine.ExpectedQuantity#Quantity", b1 =>
                         {
+                            b1.IsRequired();
+
                             b1.Property<string>("Uom")
                                 .IsRequired()
                                 .HasMaxLength(16)

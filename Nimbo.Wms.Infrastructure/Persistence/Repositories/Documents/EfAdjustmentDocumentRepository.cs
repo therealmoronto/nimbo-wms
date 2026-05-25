@@ -12,7 +12,7 @@ internal sealed class EfAdjustmentDocumentRepository : EfDocumentRepository<Adju
     public EfAdjustmentDocumentRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
 
-    public override Task<AdjustmentDocument?> GetByIdAsync(AdjustmentDocumentId id, CancellationToken ct = default)
+    public override Task<AdjustmentDocument?> GetByIdWithLinesAsync(AdjustmentDocumentId id, CancellationToken ct = default)
     {
         return Set.Include(d => d.Lines)
             .FirstOrDefaultAsync(d => d.Id == id, ct);

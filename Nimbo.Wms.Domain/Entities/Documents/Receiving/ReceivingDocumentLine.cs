@@ -18,7 +18,7 @@ public sealed class ReceivingDocumentLine : DocumentLineBase<ReceivingDocumentId
         ItemId itemId,
         Quantity receivedQuantity,
         LocationId toLocationId,
-        Quantity? expectedQuantity = null,
+        Quantity expectedQuantity,
         string? notes = null)
         : base(documentId, itemId, receivedQuantity, notes)
     {
@@ -30,9 +30,9 @@ public sealed class ReceivingDocumentLine : DocumentLineBase<ReceivingDocumentId
 
     public Quantity ReceivedQuantity => Quantity;
 
-    public Quantity? ExpectedQuantity { get; private set; }
+    public Quantity ExpectedQuantity { get; private set; }
 
-    public void ChangeExpectedQuantity(Quantity? newExpectedQuantity) => ExpectedQuantity = newExpectedQuantity;
+    public void ChangeExpectedQuantity(Quantity newExpectedQuantity) => ExpectedQuantity = newExpectedQuantity;
 
     public void ChangeToLocationId(LocationId locationId) => ToLocationId = locationId;
 }

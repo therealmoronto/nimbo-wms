@@ -12,7 +12,7 @@ internal sealed class EfShipmentDocumentRepository : EfDocumentRepository<Shipme
     public EfShipmentDocumentRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
 
-    public override Task<ShipmentDocument?> GetByIdAsync(ShipmentDocumentId id, CancellationToken ct = default)
+    public override Task<ShipmentDocument?> GetByIdWithLinesAsync(ShipmentDocumentId id, CancellationToken ct = default)
     {
         return Set.Include(d => d.Lines)
             .Include(d => d.PickLines)

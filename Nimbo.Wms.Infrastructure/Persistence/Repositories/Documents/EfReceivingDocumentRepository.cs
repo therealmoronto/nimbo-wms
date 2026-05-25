@@ -12,7 +12,7 @@ internal sealed class EfReceivingDocumentRepository : EfDocumentRepository<Recei
     public EfReceivingDocumentRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
 
-    public override Task<ReceivingDocument?> GetByIdAsync(ReceivingDocumentId id, CancellationToken ct = default)
+    public override Task<ReceivingDocument?> GetByIdWithLinesAsync(ReceivingDocumentId id, CancellationToken ct = default)
     {
         return Set.Include(d => d.Lines)
             .FirstOrDefaultAsync(d => d.Id == id, ct);

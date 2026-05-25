@@ -12,7 +12,7 @@ internal sealed class EfRelocationDocumentRepository : EfDocumentRepository<Relo
     public EfRelocationDocumentRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
 
-    public override Task<RelocationDocument?> GetByIdAsync(RelocationDocumentId id, CancellationToken ct = default)
+    public override Task<RelocationDocument?> GetByIdWithLinesAsync(RelocationDocumentId id, CancellationToken ct = default)
     {
         return Set.Include(d => d.Lines)
             .FirstOrDefaultAsync(d => d.Id == id, ct);

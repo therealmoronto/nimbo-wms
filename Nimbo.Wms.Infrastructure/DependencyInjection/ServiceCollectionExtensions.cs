@@ -13,11 +13,13 @@ using Nimbo.Wms.Application.Common.Behaviors;
 using Nimbo.Wms.Application.Mappings.MasterData;
 using Nimbo.Wms.Application.Mappings.Stock;
 using Nimbo.Wms.Application.Mappings.Topology;
+using Nimbo.Wms.Application.Mappings.Documents.Receiving;
 using Nimbo.Wms.Application.Services.Documents;
 using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Topology.Dtos;
+using Nimbo.Wms.Contracts.Documents.Receiving.Dtos;
 using Nimbo.Wms.Domain.Entities.Documents.Adjustment;
 using Nimbo.Wms.Domain.Entities.Documents.CycleCount;
 using Nimbo.Wms.Domain.Entities.Documents.Receiving;
@@ -114,6 +116,9 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddDocuments()
         {
+            services.AddScoped<IMapper<ReceivingDocument, ReceivingDocumentBodyDto>, ReceivingDocumentBodyMapper>();
+            services.AddScoped<IMapper<ReceivingDocumentLine, ReceivingDocumentLineDto>, ReceivingDocumentLineMapper>();
+
             services.AddScoped<IDocumentPostingService<ReceivingDocument>, ReceivingDocumentPostingService>();
             services.AddScoped<IDocumentPostingService<RelocationDocument>, RelocationDocumentPostingService>();
             services.AddScoped<IDocumentPostingService<ShipmentDocument>, ShipmentDocumentPostingService>();

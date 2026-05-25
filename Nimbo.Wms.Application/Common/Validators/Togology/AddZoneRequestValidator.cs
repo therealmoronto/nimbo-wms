@@ -13,11 +13,13 @@ public class AddZoneRequestValidator : AbstractValidator<AddZoneCommand>
         RuleFor(z => z.Name)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(Zone.NameMaxLength);
+            .MaximumLength(Zone.NameMaxLength)
+            .WithMessage($"Zone name cannot exceed {Zone.NameMaxLength} characters");
 
         RuleFor(z => z.Code)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(Zone.CodeMaxLength);
+            .MaximumLength(Zone.CodeMaxLength)
+            .WithMessage($"Zone code cannot exceed {Zone.CodeMaxLength} characters");
     }
 }

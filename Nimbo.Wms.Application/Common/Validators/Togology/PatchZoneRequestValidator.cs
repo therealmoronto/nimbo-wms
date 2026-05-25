@@ -11,9 +11,11 @@ public class PatchZoneRequestValidator : AbstractValidator<PatchZoneCommand>
     public PatchZoneRequestValidator()
     {
         RuleFor(x => x.Name)
-            .MaximumLength(Zone.NameMaxLength);
+            .MaximumLength(Zone.NameMaxLength)
+            .WithMessage($"Zone name cannot exceed {Zone.NameMaxLength} characters");
 
         RuleFor(x => x.Code)
-            .MaximumLength(Zone.CodeMaxLength);
+            .MaximumLength(Zone.CodeMaxLength)
+            .WithMessage($"Zone code cannot exceed {Zone.CodeMaxLength} characters");
     }
 }
