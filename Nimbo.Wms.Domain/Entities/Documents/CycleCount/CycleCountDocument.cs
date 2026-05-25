@@ -42,6 +42,13 @@ public sealed class CycleCountDocument : DocumentBase<CycleCountDocumentId, Cycl
         return line.Id;
     }
 
+    public void ChangeLineExpectedQuantity(Guid lineId, Quantity expectedQty)
+    {
+        var line = GetLine(lineId);
+        line.ChangeQuantity(expectedQty);
+        Touch();
+    }
+
     public void ChangeLineActualQuantity(Guid lineId, Quantity actualQty)
     {
         var line = GetLine(lineId);

@@ -1,0 +1,34 @@
+using JetBrains.Annotations;
+using MediatR;
+using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
+using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts.Documents.CycleCount.Commands;
+using Nimbo.Wms.Domain.Identification;
+
+namespace Nimbo.Wms.Infrastructure.UseCases.Documents.CycleCount;
+
+[PublicAPI]
+public class DeleteCycleCountDocumentLineCommandHandler : IRequestHandler<DeleteCycleCountDocumentLineCommand>
+{
+    private readonly ICycleCountDocumentRepository _repository;
+
+    public DeleteCycleCountDocumentLineCommandHandler(ICycleCountDocumentRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task Handle(DeleteCycleCountDocumentLineCommand request, CancellationToken ct)
+    {
+        var documentId = CycleCountDocumentId.From(request.DocumentId);
+        var document = await _repository.GetByIdWithLinesAsync(documentId, ct);
+
+        if (document == null)
+            throw new NotFoundException($"Cycle count document with ID '{documentId}' not found");
+
+        if (document.Version > request.DocumentVersion)
+            throw new ConcurrencyException($"Document version mismatch. Expected: {document.Version}, Actual: {request.DocumentVersion}");
+
+        var lineId = request.Id;
+        document.RemoveLine(lineId);
+    }
+}
