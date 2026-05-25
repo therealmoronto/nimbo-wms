@@ -12,6 +12,7 @@ public sealed record AdjustmentDocumentBodyDto(
     string ReasonCode,
     string? ReasonText,
     string Status,
+    string? Notes,
     DateTime CreatedAt,
     DateTime UpdatedAt,
     DateTime? PostedAt,
