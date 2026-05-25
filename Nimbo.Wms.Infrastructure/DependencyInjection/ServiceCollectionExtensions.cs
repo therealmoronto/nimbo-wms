@@ -15,6 +15,7 @@ using Nimbo.Wms.Application.Mappings.MasterData;
 using Nimbo.Wms.Application.Mappings.Stock;
 using Nimbo.Wms.Application.Mappings.Topology;
 using Nimbo.Wms.Application.Mappings.Documents.Receiving;
+using Nimbo.Wms.Application.Mappings.Documents.Relocation;
 using Nimbo.Wms.Application.Mappings.Documents.Shipment;
 using Nimbo.Wms.Application.Services.Documents;
 using Nimbo.Wms.Contracts.Common;
@@ -23,6 +24,7 @@ using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Documents.Receiving.Dtos;
+using Nimbo.Wms.Contracts.Documents.Relocation.Dtos;
 using Nimbo.Wms.Contracts.Documents.Shipment.Dtos;
 using Nimbo.Wms.Domain.Entities.Documents.Adjustment;
 using Nimbo.Wms.Domain.Entities.Documents.CycleCount;
@@ -122,9 +124,14 @@ public static class ServiceCollectionExtensions
         {
             services.AddScoped<IMapper<ReceivingDocument, ReceivingDocumentBodyDto>, ReceivingDocumentBodyMapper>();
             services.AddScoped<IMapper<ReceivingDocumentLine, ReceivingDocumentLineDto>, ReceivingDocumentLineMapper>();
+
+            services.AddScoped<IMapper<RelocationDocument, RelocationDocumentBodyDto>, RelocationDocumentBodyMapper>();
+            services.AddScoped<IMapper<RelocationDocumentLine, RelocationDocumentLineDto>, RelocationDocumentLineMapper>();
+
             services.AddScoped<IMapper<ShipmentDocument, ShipmentDocumentBodyDto>, ShipmentDocumentBodyMapper>();
             services.AddScoped<IMapper<ShipmentDocumentLine, ShipmentDocumentLineDto>, ShipmentDocumentLineMapper>();
             services.AddScoped<IMapper<ShipmentPickLine, ShipmentPickLineDto>, ShipmentPickLineMapper>();
+
             services.AddScoped<IMapper<CycleCountDocument, CycleCountDocumentBodyDto>, CycleCountDocumentBodyMapper>();
             services.AddScoped<IMapper<CycleCountDocumentLine, CycleCountDocumentLineDto>, CycleCountDocumentLineMapper>();
 
