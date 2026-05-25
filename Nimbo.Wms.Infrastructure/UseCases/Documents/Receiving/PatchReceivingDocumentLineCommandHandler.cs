@@ -29,26 +29,16 @@ public class PatchReceivingDocumentLineCommandHandler : IRequestHandler<PatchRec
         if (document.Version > request.DocumentVersion)
             throw new ConcurrencyException($"Document version mismatch. Expected: {document.Version}, Actual: {request.DocumentVersion}");
 
-        var line = document.GetLine(request.Id);
-        if (request.ReceivedQuantity is not null)
-        {
-            var value = request.ReceivedQuantity.Value;
-            var uom = Enum.Parse<UnitOfMeasure>(request.ReceivedQuantity.Uom);
-
-            var quantity = new Quantity(value, uom);
-            line.ChangeQuantity(quantity);
-        }
-
         if (request.ExpectedQuantity is not null)
         {
             var value = request.ExpectedQuantity.Value;
             var uom = Enum.Parse<UnitOfMeasure>(request.ExpectedQuantity.Uom);
 
             var quantity = new Quantity(value, uom);
-            line.ChangeExpectedQuantity(quantity);
+            document.ChangeLineExpectedQuantity(request.Id, quantity);
         }
 
         if (request.Notes is not null)
-            line.ChangeNotes(request.Notes);
+            document.ChangeLineNotes(request.Id, request.Notes);
     }
 }
