@@ -83,7 +83,6 @@ public class ReceivingDocumentLinesController(ISender sender) : ControllerBase
             documentGuid,
             lineGuid,
             request.ToLocationId,
-            request.ReceivedQuantity,
             request.ExpectedQuantity,
             request.Notes,
             request.DocumentVersion);
