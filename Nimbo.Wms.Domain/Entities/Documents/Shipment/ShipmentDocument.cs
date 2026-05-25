@@ -38,7 +38,7 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
         Touch();
     }
     
-    public void AddRequestedLine(ItemId itemId, Quantity requestedQty, string? notes = null)
+    public Guid AddRequestedLine(ItemId itemId, Quantity requestedQty, string? notes = null)
     {
         EnsureCanBeEdited();
 
@@ -51,9 +51,11 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
         var line = new ShipmentDocumentLine(Id, itemId, requestedQty, notes);
         AddLine(line);
         Touch();
+
+        return line.Id;
     }
 
-    public void AddPickLine(ItemId itemId, LocationId fromLocationId, Quantity qty, string? notes = null)
+    public Guid AddPickLine(ItemId itemId, LocationId fromLocationId, Quantity qty, string? notes = null)
     {
         EnsureCanBeEdited();
 
@@ -66,10 +68,13 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
         if (Equals(fromLocationId, default(LocationId)))
             throw new DomainException("FromLocationId is required.");
 
-        _pickLines.Add(new ShipmentPickLine(Id, itemId, fromLocationId, qty, notes));
+        var line = new ShipmentPickLine(Id, itemId, fromLocationId, qty, notes);
+        _pickLines.Add(line);
 
         EnsurePickTotalsDoNotExceedRequested(itemId, planLine.RequestedQuantity);
         Touch();
+
+        return line.Id;
     }
 
     public void ChangeLineRequestedQuantity(Guid lineId, Quantity requestedQuantity)
