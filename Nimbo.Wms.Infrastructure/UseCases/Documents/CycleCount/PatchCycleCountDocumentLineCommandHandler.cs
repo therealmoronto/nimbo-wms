@@ -34,7 +34,7 @@ public class PatchCycleCountDocumentLineCommandHandler : IRequestHandler<PatchCy
         {
             var uom = Enum.Parse<UnitOfMeasure>(request.ExpectedQuantity.Uom);
             var actualQuantity = new Quantity(request.ExpectedQuantity.Value, uom);
-            document.ChangeLineActualQuantity(lineId, actualQuantity);
+            document.ChangeLineExpectedQuantity(lineId, actualQuantity);
         }
 
         if (request.Notes is not null)
