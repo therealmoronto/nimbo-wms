@@ -9,6 +9,7 @@ namespace Nimbo.Wms.Contracts.Documents.Shipment.Commands;
 public sealed record AddShipmentDocumentLineCommand(
     Guid DocumentId,
     Guid ItemId,
+    Guid? BatchId,
     QuantityDto RequestedQuantity,
     string? Notes,
     long DocumentVersion

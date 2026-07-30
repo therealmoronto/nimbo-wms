@@ -14,6 +14,7 @@ internal sealed class EfInventoryItemRepository : EfEntityRepository<InventoryIt
         WarehouseId warehouseId,
         LocationId locationId,
         ItemId itemId,
+        BatchId? batchId,
         CancellationToken ct = default)
     {
         return await DbContext.Set<InventoryItem>()

@@ -13,11 +13,13 @@ public sealed class ShipmentDocumentLine : DocumentLineBase<ShipmentDocumentId>
         // Required by EF Core
     }
 
-    public ShipmentDocumentLine(ShipmentDocumentId documentId, ItemId itemId, Quantity quantity, string? notes = null)
+    public ShipmentDocumentLine(ShipmentDocumentId documentId, ItemId itemId, BatchId? batchId, Quantity quantity, string? notes = null)
         : base(documentId, itemId, quantity, notes)
     {
-        
+        BatchId = batchId;
     }
+
+    public BatchId? BatchId { get; private set; }
 
     public Quantity RequestedQuantity => Quantity;
 }

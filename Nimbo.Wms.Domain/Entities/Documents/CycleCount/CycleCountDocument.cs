@@ -27,14 +27,14 @@ public sealed class CycleCountDocument : DocumentBase<CycleCountDocumentId, Cycl
 
     public WarehouseId WarehouseId { get; }
     
-    public Guid AddLine(ItemId itemId, LocationId locationId, Quantity expectedQty)
+    public Guid AddLine(ItemId itemId, BatchId? batchId, LocationId locationId, Quantity expectedQty)
     {
         EnsureCanBeEdited();
 
-        if (Lines.Any(x => x.ItemId == itemId && x.LocationId == locationId))
+        if (Lines.Any(x => x.ItemId == itemId && x.BatchId == batchId && x.LocationId == locationId))
             throw new DomainException("Duplicate cycle count line.");
 
-        var line = new CycleCountDocumentLine(Id, locationId, itemId, expectedQty);
+        var line = new CycleCountDocumentLine(Id, locationId, itemId, batchId, expectedQty);
         AddLine(line);
 
         Touch();

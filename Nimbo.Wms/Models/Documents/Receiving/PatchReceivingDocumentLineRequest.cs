@@ -6,6 +6,7 @@ namespace Nimbo.Wms.Models.Documents.Receiving;
 [PublicAPI]
 public sealed record PatchReceivingDocumentLineRequest(
     Guid? ToLocationId,
+    Guid? BatchId,
     QuantityDto? ExpectedQuantity,
     string? Notes,
     long DocumentVersion

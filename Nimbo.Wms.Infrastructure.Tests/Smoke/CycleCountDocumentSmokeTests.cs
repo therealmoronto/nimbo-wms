@@ -46,7 +46,7 @@ public class CycleCountDocumentSmokeTests : BaseIntegrationTests
             "Cycle Count 001",
             DateTime.UtcNow);
 
-        var guid = doc.AddLine(item.Id, location.Id, new Quantity(100m, UnitOfMeasure.Piece));
+        var guid = doc.AddLine(item.Id, batchId: null, location.Id, new Quantity(100m, UnitOfMeasure.Piece));
         doc.ChangeLineActualQuantity(guid, new Quantity(50m, UnitOfMeasure.Piece));
 
         ctx.Add(doc);

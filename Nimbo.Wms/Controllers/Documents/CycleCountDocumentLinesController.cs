@@ -32,6 +32,7 @@ public class CycleCountDocumentLinesController(ISender sender) : ControllerBase
         var command = new AddCycleCountDocumentLineCommand(
             documentGuid,
             request.ItemId,
+            request.BatchId,
             request.LocationId,
             request.ExpectedQuantity,
             request.Notes,

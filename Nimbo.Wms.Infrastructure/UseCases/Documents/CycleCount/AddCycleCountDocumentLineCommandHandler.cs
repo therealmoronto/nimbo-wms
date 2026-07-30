@@ -2,8 +2,10 @@ using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
+using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Commands;
+using Nimbo.Wms.Domain.Common;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Domain.ValueObject;
@@ -15,13 +17,16 @@ public class AddCycleCountDocumentLineCommandHandler : IRequestHandler<AddCycleC
 {
     private readonly ICycleCountDocumentRepository _repository;
     private readonly IItemRepository _itemRepository;
+    private readonly IBatchRepository _batchRepository;
 
     public AddCycleCountDocumentLineCommandHandler(
         ICycleCountDocumentRepository repository,
-        IItemRepository itemRepository)
+        IItemRepository itemRepository,
+        IBatchRepository batchRepository)
     {
         _repository = repository;
         _itemRepository = itemRepository;
+        _batchRepository = batchRepository;
     }
 
     public async Task<Guid> Handle(AddCycleCountDocumentLineCommand request, CancellationToken ct)
@@ -39,10 +44,18 @@ public class AddCycleCountDocumentLineCommandHandler : IRequestHandler<AddCycleC
         if (item is null)
             throw new InvalidOperationException($"Item with ID '{itemId}' not found");
 
+        if (request.BatchId is null && item.IsBatchManaged)
+            throw new DomainException($"Batch is required for item {itemId}");
+
+        var batchId = BatchId.From(request.BatchId!.Value);
+        var batch = await _batchRepository.GetByIdAsync(batchId, ct);
+        if (batch is null && item.IsBatchManaged)
+            throw new DomainException($"Batch with ID '{batchId}' not found");
+
         var locationId = LocationId.From(request.LocationId);
         var uom = Enum.Parse<UnitOfMeasure>(request.ExpectedQuantity.Uom);
         var expectedQuantity = new Quantity(request.ExpectedQuantity.Value, uom);
 
-        return document.AddLine(itemId, locationId, expectedQuantity);
+        return document.AddLine(itemId, batchId, locationId, expectedQuantity);
     }
 }

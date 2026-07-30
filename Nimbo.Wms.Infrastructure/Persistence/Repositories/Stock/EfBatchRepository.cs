@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Domain.Identification;
@@ -8,4 +9,15 @@ internal sealed class EfBatchRepository : EfEntityRepository<Batch, BatchId>, IB
 {
     public EfBatchRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
+
+    public async Task<Batch> FindOrCreateAsync(ItemId itemId, string? batchNumber, DateTime? expiryDate, CancellationToken ct = default)
+    {
+        var batch = await Set.FirstOrDefaultAsync(b => b.ItemId == itemId && b.BatchNumber == batchNumber && b.ExpiryDate == expiryDate, ct);
+        if (batch is not null)
+            return batch;
+
+        batch = new Batch(BatchId.New(), itemId, batchNumber, expiryDate: expiryDate);
+        await AddAsync(batch);
+        return batch;
+    }
 }

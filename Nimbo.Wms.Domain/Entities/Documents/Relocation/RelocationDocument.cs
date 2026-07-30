@@ -22,7 +22,7 @@ public sealed class RelocationDocument : DocumentBase<RelocationDocumentId, Relo
 
     public WarehouseId WarehouseId { get; private set; }
 
-    public Guid AddLine(ItemId itemId, Quantity quantity, LocationId from, LocationId to, string? notes = null)
+    public Guid AddLine(ItemId itemId, BatchId? batchId, Quantity quantity, LocationId from, LocationId to, string? notes = null)
     {
         EnsureCanBeEdited();
         EnsurePositive(quantity);
@@ -30,10 +30,10 @@ public sealed class RelocationDocument : DocumentBase<RelocationDocumentId, Relo
         if (from == to)
             throw new DomainException("FromLocationId and ToLocationId cannot be the same.");
 
-        if (Lines.Any(x => x.ItemId == itemId && x.From == from && x.To == to))
+        if (Lines.Any(x => x.ItemId == itemId && x.BatchId == batchId && x.From == from && x.To == to))
             throw new DomainException("Duplicate relocation line (same item and same from/to).");
 
-        var line = new RelocationDocumentLine(Id, itemId, from, to, quantity, notes);
+        var line = new RelocationDocumentLine(Id, itemId, batchId, from, to, quantity, notes);
         AddLine(line);
 
         return line.Id;

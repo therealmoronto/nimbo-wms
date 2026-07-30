@@ -29,6 +29,7 @@ public class AdjustmentDocumentLinesController(ISender sender) : ControllerBase
         var command = new AddAdjustmentDocumentLineCommand(
             documentGuid,
             request.ItemId,
+            request.BatchId,
             request.LocationId,
             request.Delta,
             request.Notes,

@@ -17,6 +17,7 @@ public sealed class ShipmentPickLine : DocumentLineBase<ShipmentDocumentId>
     public ShipmentPickLine(
         ShipmentDocumentId documentId,
         ItemId itemId,
+        BatchId? batchId,
         LocationId fromLocation,
         Quantity quantity,
         string? notes = null) : base(documentId, itemId, quantity, notes)
@@ -25,9 +26,12 @@ public sealed class ShipmentPickLine : DocumentLineBase<ShipmentDocumentId>
             throw new DomainException("Pick quantity must be greater than zero.");
 
         FromLocation = fromLocation;
+        BatchId = batchId;
     }
 
     public LocationId FromLocation { get; private set; }
+
+    public BatchId? BatchId { get; private set; }
 
     public void ChangeFromLocation(LocationId fromLocationId) => FromLocation = fromLocationId;
 }

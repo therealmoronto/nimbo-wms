@@ -9,6 +9,7 @@ namespace Nimbo.Wms.Contracts.Documents.Relocation.Commands;
 public sealed record AddRelocationDocumentLineCommand(
     Guid DocumentId,
     Guid ItemId,
+    Guid? BatchId,
     Guid FromLocationId,
     Guid ToLocationId,
     QuantityDto Quantity,

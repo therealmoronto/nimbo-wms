@@ -36,6 +36,7 @@ public sealed class AdjustmentDocumentPostingService : IDocumentPostingService<A
                 document.WarehouseId,
                 line.LocationId,
                 line.ItemId,
+                line.BatchId,
                 ct);
 
             if (inventoryItem is null)
@@ -61,6 +62,7 @@ public sealed class AdjustmentDocumentPostingService : IDocumentPostingService<A
             var ledgerEntry = new StockLedgerEntry(
                 inventoryItem.Id,
                 inventoryItem.ItemId,
+                inventoryItem.BatchId,
                 inventoryItem.LocationId,
                 inventoryItem.WarehouseId,
                 line.Quantity.ToDelta(),

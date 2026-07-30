@@ -39,6 +39,7 @@ public sealed class CycleCountDocumentPostingService : IDocumentPostingService<C
                 document.WarehouseId,
                 line.LocationId,
                 line.ItemId,
+                line.BatchId,
                 ct);
 
             var actualQuantity = line.ActualQuantity.Value;
@@ -69,6 +70,7 @@ public sealed class CycleCountDocumentPostingService : IDocumentPostingService<C
             var ledgerEntry = new StockLedgerEntry(
                 inventoryItem.Id,
                 inventoryItem.ItemId,
+                inventoryItem.BatchId,
                 inventoryItem.LocationId,
                 inventoryItem.WarehouseId,
                 delta,

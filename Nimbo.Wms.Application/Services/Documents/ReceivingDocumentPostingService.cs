@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using Nimbo.Wms.Application.Abstractions.Persistence;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Ledger;
+using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Domain.Common;
 using Nimbo.Wms.Domain.Entities.Documents.Receiving;
@@ -15,12 +16,20 @@ namespace Nimbo.Wms.Application.Services.Documents;
 public sealed class ReceivingDocumentPostingService : IDocumentPostingService<ReceivingDocument>
 {
     private readonly IStockLedgerEntryRepository _stockLedgerEntryRepo;
+    private readonly IItemRepository _itemRepo;
     private readonly IInventoryItemRepository _inventoryItemRepo;
+    private readonly IBatchRepository _batchRepo;
 
-    public ReceivingDocumentPostingService(IStockLedgerEntryRepository stockLedgerEntryRepo, IInventoryItemRepository inventoryItemRepo)
+    public ReceivingDocumentPostingService(
+        IStockLedgerEntryRepository stockLedgerEntryRepo,
+        IItemRepository itemRepo,
+        IInventoryItemRepository inventoryItemRepo,
+        IBatchRepository batchRepo)
     {
         _stockLedgerEntryRepo = stockLedgerEntryRepo;
+        _itemRepo = itemRepo;
         _inventoryItemRepo = inventoryItemRepo;
+        _batchRepo = batchRepo;
     }
 
     public async Task PostAsync(ReceivingDocument document, CancellationToken ct = default)
@@ -33,7 +42,15 @@ public sealed class ReceivingDocumentPostingService : IDocumentPostingService<Re
             if (line.ReceivedQuantity.IsZero)
                 continue;
 
-            var inventoryItem = await _inventoryItemRepo.GetByCriteriaAsync(document.WarehouseId, line.ToLocationId, line.ItemId, ct);
+            var batch = !string.IsNullOrWhiteSpace(line.BatchNumber) && line.ExpiryDate.HasValue
+                ? await _batchRepo.FindOrCreateAsync(line.ItemId, line.BatchNumber, line.ExpiryDate, ct)
+                : null;
+
+            var item = await _itemRepo.GetByIdAsync(line.ItemId, ct);
+            if (item != null && item.IsBatchManaged && batch is null)
+                throw new DomainException($"Batch number is required for item {line.ItemId}");
+
+            var inventoryItem = await _inventoryItemRepo.GetByCriteriaAsync(document.WarehouseId, line.ToLocationId, line.ItemId, batch?.Id, ct);
             if (inventoryItem is null)
             {
                 var inventoryItemId = InventoryItemId.New();
@@ -42,7 +59,8 @@ public sealed class ReceivingDocumentPostingService : IDocumentPostingService<Re
                     line.ItemId,
                     document.WarehouseId,
                     line.ToLocationId,
-                    Quantity.Zero(line.ReceivedQuantity.Uom));
+                    Quantity.Zero(line.ReceivedQuantity.Uom),
+                    batchId: batch?.Id);
 
                 await _inventoryItemRepo.AddAsync(inventoryItem, ct);
             }
@@ -52,6 +70,7 @@ public sealed class ReceivingDocumentPostingService : IDocumentPostingService<Re
             var ledgerEntity = new StockLedgerEntry(
                 inventoryItem.Id,
                 inventoryItem.ItemId,
+                inventoryItem.BatchId,
                 inventoryItem.LocationId,
                 inventoryItem.WarehouseId,
                 line.ReceivedQuantity.ToDelta(),

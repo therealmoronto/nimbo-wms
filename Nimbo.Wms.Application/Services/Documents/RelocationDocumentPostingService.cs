@@ -32,7 +32,7 @@ public sealed class RelocationDocumentPostingService : IDocumentPostingService<R
 
         foreach (var line in document.Lines)
         {
-            var sourceItem = await _inventoryItemRepo.GetByCriteriaAsync(document.WarehouseId, line.From, line.ItemId, ct);
+            var sourceItem = await _inventoryItemRepo.GetByCriteriaAsync(document.WarehouseId, line.From, line.ItemId, line.BatchId, ct);
             if (sourceItem is null || sourceItem.Quantity.Value < line.Quantity.Value)
                 throw new DomainException("Source item does not exist or insufficient quantity");
 
@@ -41,6 +41,7 @@ public sealed class RelocationDocumentPostingService : IDocumentPostingService<R
             var outLedger = new StockLedgerEntry(
                 sourceItem.Id,
                 sourceItem.ItemId,
+                sourceItem.BatchId,
                 sourceItem.LocationId,
                 sourceItem.WarehouseId,
                 line.Quantity.ToDelta().Negate(),
@@ -56,6 +57,7 @@ public sealed class RelocationDocumentPostingService : IDocumentPostingService<R
                 document.WarehouseId,
                 line.To,
                 line.ItemId,
+                line.BatchId,
                 ct);
 
             if (targetItem is null)
@@ -75,6 +77,7 @@ public sealed class RelocationDocumentPostingService : IDocumentPostingService<R
             var inLedger = new StockLedgerEntry(
                 targetItem.Id,
                 targetItem.ItemId,
+                targetItem.BatchId,
                 targetItem.LocationId,
                 targetItem.WarehouseId,
                 line.Quantity.ToDelta(),

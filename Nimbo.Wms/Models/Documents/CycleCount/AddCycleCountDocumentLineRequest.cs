@@ -7,6 +7,7 @@ namespace Nimbo.Wms.Models.Documents.CycleCount;
 public sealed record AddCycleCountDocumentLineRequest(
     Guid CycleCountDocumentId,
     Guid ItemId,
+    Guid? BatchId,
     Guid LocationId,
     QuantityDto ExpectedQuantity,
     string? Notes,

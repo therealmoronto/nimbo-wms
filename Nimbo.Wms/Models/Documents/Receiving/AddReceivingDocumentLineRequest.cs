@@ -7,6 +7,8 @@ namespace Nimbo.Wms.Models.Documents.Receiving;
 public sealed record AddReceivingDocumentLineRequest(
     Guid ReceivingDocumentId,
     Guid ItemId,
+    DateTimeOffset? ExpiryDate,
+    string? BatchNumber,
     Guid ToLocationId,
     QuantityDto ExpectedQuantity,
     string? Notes,

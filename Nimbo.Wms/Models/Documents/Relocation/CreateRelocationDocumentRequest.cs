@@ -9,3 +9,6 @@ public sealed record CreateRelocationDocumentRequest(
     string Title,
     string? Notes
 );
+
+[PublicAPI]
+public sealed record CreateRelocationDocumentResponse(Guid DocumentGuid);

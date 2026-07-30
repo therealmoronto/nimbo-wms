@@ -18,14 +18,18 @@ public sealed class CycleCountDocumentLine : DocumentLineBase<CycleCountDocument
         CycleCountDocumentId documentId,
         LocationId locationId,
         ItemId itemId,
+        BatchId? batchId,
         Quantity quantity,
         string? notes = null)
         : base(documentId, itemId, quantity, notes)
     {
         LocationId = locationId;
+        BatchId = batchId;
     }
 
     public LocationId LocationId { get; private set; }
+
+    public BatchId? BatchId { get; private set; }
 
     public Quantity ExpectedQuantity => Quantity;
 

@@ -9,6 +9,7 @@ namespace Nimbo.Wms.Contracts.Documents.CycleCount.Commands;
 public sealed record AddCycleCountDocumentLineCommand(
     Guid DocumentId,
     Guid ItemId,
+    Guid? BatchId,
     Guid LocationId,
     QuantityDto ExpectedQuantity,
     string? Notes,

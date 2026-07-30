@@ -31,6 +31,7 @@ public class ShipmentDocumentLinesController(ISender sender) : ControllerBase
         var command = new AddShipmentDocumentLineCommand(
             documentGuid,
             request.ItemId,
+            request.BatchId,
             request.RequestedQuantity,
             request.Notes,
             documentVersion);

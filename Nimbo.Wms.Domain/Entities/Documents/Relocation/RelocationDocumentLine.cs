@@ -16,15 +16,19 @@ public sealed class RelocationDocumentLine : DocumentLineBase<RelocationDocument
     public RelocationDocumentLine(
         RelocationDocumentId documentId,
         ItemId itemId,
+        BatchId? batchId,
         LocationId from,
         LocationId to,
         Quantity quantity,
         string? notes = null)
         : base(documentId, itemId, quantity, notes)
     {
+        BatchId = batchId;
         From = from;
         To = to;
     }
+
+    public BatchId? BatchId { get; private set; }
 
     public LocationId From { get; private set; }
 

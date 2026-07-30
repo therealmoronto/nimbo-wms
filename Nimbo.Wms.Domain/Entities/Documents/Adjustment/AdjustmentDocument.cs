@@ -41,18 +41,18 @@ public sealed class AdjustmentDocument : DocumentBase<AdjustmentDocumentId, Adju
         Touch();
     }
 
-    public Guid AddLine(ItemId itemId, LocationId locationId, QuantityDelta delta, string? notes = null)
+    public Guid AddLine(ItemId itemId, BatchId? batchId, LocationId locationId, QuantityDelta delta, string? notes = null)
     {
         EnsureCanBeEdited();
 
         if (delta.Value == 0m)
             throw new DomainException("Delta cannot be zero.");
 
-        // duplicates by (Item, Location) is a sane MVP rule
-        if (Lines.Any(x => x.ItemId == itemId && x.LocationId == locationId))
+        // duplicates by (Item, Batch, Location) is a sane MVP rule
+        if (Lines.Any(x => x.ItemId == itemId && x.BatchId == batchId && x.LocationId == locationId))
             throw new DomainException("Duplicate adjustment line (same item and location).");
 
-        var line = new AdjustmentDocumentLine(Id, itemId, locationId, delta, notes);
+        var line = new AdjustmentDocumentLine(Id, itemId, batchId, locationId, delta, notes);
         AddLine(line);
         return line.Id;
     }

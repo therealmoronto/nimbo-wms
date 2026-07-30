@@ -19,11 +19,15 @@ public sealed class ReceivingDocumentLine : DocumentLineBase<ReceivingDocumentId
         Quantity receivedQuantity,
         LocationId toLocationId,
         Quantity expectedQuantity,
+        DateTime? expiryDate = null,
+        string? batchNumber = null,
         string? notes = null)
         : base(documentId, itemId, receivedQuantity, notes)
     {
         ToLocationId = toLocationId;
         ExpectedQuantity = expectedQuantity;
+        ExpiryDate = expiryDate;
+        BatchNumber = batchNumber;
     }
 
     public LocationId ToLocationId { get; private set; }
@@ -31,6 +35,10 @@ public sealed class ReceivingDocumentLine : DocumentLineBase<ReceivingDocumentId
     public Quantity ReceivedQuantity => Quantity;
 
     public Quantity ExpectedQuantity { get; private set; }
+
+    public DateTime? ExpiryDate { get; private set; }
+
+    public string? BatchNumber { get; private set; }
 
     public void ChangeExpectedQuantity(Quantity newExpectedQuantity) => ExpectedQuantity = newExpectedQuantity;
 

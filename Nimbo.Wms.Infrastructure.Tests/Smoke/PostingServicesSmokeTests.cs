@@ -40,7 +40,7 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
         var receivedQuantity = new Quantity(10, UnitOfMeasure.Piece);
         var expectedQuantity = new Quantity(10, UnitOfMeasure.Piece);
         var doc = new ReceivingDocument(ReceivingDocumentId.New(), warehouseId, supplierId, "REC-001", "REC", DateTime.UtcNow);
-        doc.AddLine(itemId, receivedQuantity, locationId, expectedQuantity, null);
+        doc.AddLine(itemId, receivedQuantity, locationId, expectedQuantity, null, null, null);
         doc.Start(); // Ensure status is InProgress
 
         await receivingRepo.AddAsync(doc);
@@ -52,7 +52,7 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
 
         // 3. Assert Authoritative Stock
         var stockRepo = Scope.ServiceProvider.GetRequiredService<IInventoryItemRepository>();
-        var stock = await stockRepo.GetByCriteriaAsync(warehouseId, locationId, itemId);
+        var stock = await stockRepo.GetByCriteriaAsync(warehouseId, locationId, itemId, batchId: null);
         stock!.Quantity.Value.Should().Be(10);
 
         // 4. Assert Ledger Traceability
@@ -82,7 +82,7 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
 
         var moveQty = new Quantity(20, UnitOfMeasure.Piece);
         var doc = new RelocationDocument(RelocationDocumentId.New(), warehouseId, "MOV-001", "MOV", DateTime.UtcNow);
-        doc.AddLine(itemId, moveQty, sourceLocId, targetLocId);
+        doc.AddLine(itemId, batchId: null, moveQty, sourceLocId, targetLocId);
         doc.Start();
 
         await relocationRepo.AddAsync(doc);
@@ -94,8 +94,8 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
 
         // 3. Assert Balances
         var stockRepo = Scope.ServiceProvider.GetRequiredService<IInventoryItemRepository>();
-        var sourceStock = await stockRepo.GetByCriteriaAsync(warehouseId, sourceLocId, itemId);
-        var targetStock = await stockRepo.GetByCriteriaAsync(warehouseId, targetLocId, itemId);
+        var sourceStock = await stockRepo.GetByCriteriaAsync(warehouseId, sourceLocId, itemId, batchId: null);
+        var targetStock = await stockRepo.GetByCriteriaAsync(warehouseId, targetLocId, itemId, batchId: null);
 
         sourceStock!.Quantity.Value.Should().Be(30); // 50 - 20
         targetStock!.Quantity.Value.Should().Be(20); // 0 + 20
@@ -121,7 +121,7 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
         var uow = Scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
         var doc = new CycleCountDocument(CycleCountDocumentId.New(), warehouseId, "CNT-001", "CNT", DateTime.UtcNow);
-        var lineId = doc.AddLine(itemId, locationId, new Quantity(10, UnitOfMeasure.Piece)); // This should capture 'BookQuantity' as 10 internally
+        var lineId = doc.AddLine(itemId, batchId: null, locationId, new Quantity(10, UnitOfMeasure.Piece)); // This should capture 'BookQuantity' as 10 internally
         var line = doc.GetLine(lineId);
         line.ChangeActualQuantity(new Quantity(12, UnitOfMeasure.Piece));
         doc.Complete(); // Move to Completed status so it can be Posted
@@ -135,7 +135,7 @@ public class PostingServicesSmokeTests : BaseIntegrationTests
 
         // 4. Assert Authoritative Stock is updated to the counted value (12)
         var stockRepo = Scope.ServiceProvider.GetRequiredService<IInventoryItemRepository>();
-        var stock = await stockRepo.GetByCriteriaAsync(warehouseId, locationId, itemId);
+        var stock = await stockRepo.GetByCriteriaAsync(warehouseId, locationId, itemId, batchId: null);
         stock!.Quantity.Value.Should().Be(12);
 
         // 5. Assert Ledger records only the discrepancy (+2)

@@ -6,6 +6,7 @@ namespace Nimbo.Wms.Models.Documents.Adjustment;
 [PublicAPI]
 public sealed record AddAdjustmentDocumentLineRequest(
     Guid ItemId,
+    Guid? BatchId,
     Guid LocationId,
     QuantityDeltaDto Delta,
     string? Notes,

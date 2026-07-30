@@ -22,6 +22,7 @@ public class Item : BaseEntity<ItemId>
         string internalSku,
         string barcode,
         UnitOfMeasure baseUomCode,
+        bool isBatchManaged = false,
         string? manufacturer = null,
         decimal? weightKg = null,
         decimal? volumeM3 = null)
@@ -32,6 +33,8 @@ public class Item : BaseEntity<ItemId>
         InternalSku = RequireNonEmpty(internalSku, nameof(internalSku));
 
         BaseUomCode = baseUomCode;
+
+        IsBatchManaged = isBatchManaged;
 
         Barcode = RequireNonEmpty(barcode, nameof(barcode));
         Manufacturer = TrimOrNull(manufacturer);
@@ -47,7 +50,9 @@ public class Item : BaseEntity<ItemId>
     public string Barcode { get; private set; } = null!;
     
     public UnitOfMeasure BaseUomCode { get; private set; }
-    
+
+    public bool IsBatchManaged { get; private set; }
+
     public string? Manufacturer { get; private set; }
     
     public decimal? WeightKg { get; private set; }

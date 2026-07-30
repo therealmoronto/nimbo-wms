@@ -2,8 +2,10 @@ using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
+using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Commands;
+using Nimbo.Wms.Domain.Common;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Domain.ValueObject;
@@ -15,11 +17,16 @@ public class AddAdjustmentDocumentLineCommandHandler : IRequestHandler<AddAdjust
 {
     private readonly IAdjustmentDocumentRepository _repository;
     private readonly IItemRepository _itemRepository;
+    private readonly IBatchRepository _batchRepository;
 
-    public AddAdjustmentDocumentLineCommandHandler(IAdjustmentDocumentRepository repository, IItemRepository itemRepository)
+    public AddAdjustmentDocumentLineCommandHandler(
+        IAdjustmentDocumentRepository repository,
+        IItemRepository itemRepository,
+        IBatchRepository batchRepository)
     {
         _repository = repository;
         _itemRepository = itemRepository;
+        _batchRepository = batchRepository;
     }
 
     public async Task<Guid> Handle(AddAdjustmentDocumentLineCommand request, CancellationToken ct)
@@ -37,10 +44,18 @@ public class AddAdjustmentDocumentLineCommandHandler : IRequestHandler<AddAdjust
         if (item is null)
             throw new InvalidOperationException($"Item with ID '{itemId}' not found");
 
+        if (request.BatchId is null && item.IsBatchManaged)
+            throw new DomainException($"Batch is required for item {itemId}");
+
+        var batchId = BatchId.From(request.BatchId!.Value);
+        var batch = await _batchRepository.GetByIdAsync(batchId, ct);
+        if (batch is null && item.IsBatchManaged)
+            throw new DomainException($"Batch with ID '{batchId}' not found");
+
         var locationId = LocationId.From(request.LocationId);
         var uom = Enum.Parse<UnitOfMeasure>(request.Delta.Uom);
         var delta = new QuantityDelta(request.Delta.Value, uom);
 
-        return document.AddLine(itemId, locationId, delta, request.Notes);
+        return document.AddLine(itemId, batchId, locationId, delta, request.Notes);
     }
 }

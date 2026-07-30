@@ -9,6 +9,7 @@ namespace Nimbo.Wms.Contracts.Documents.Shipment.Commands;
 public sealed record AddPickLineCommand(
     Guid DocumentId,
     Guid ItemId,
+    Guid? BatchId,
     Guid FromLocationId,
     QuantityDto Quantity,
     string? Notes,

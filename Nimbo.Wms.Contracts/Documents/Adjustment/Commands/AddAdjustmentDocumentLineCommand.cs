@@ -9,6 +9,7 @@ namespace Nimbo.Wms.Contracts.Documents.Adjustment.Commands;
 public sealed record AddAdjustmentDocumentLineCommand(
     Guid DocumentId,
     Guid ItemId,
+    Guid? BatchId,
     Guid LocationId,
     QuantityDeltaDto Delta,
     string? Notes,

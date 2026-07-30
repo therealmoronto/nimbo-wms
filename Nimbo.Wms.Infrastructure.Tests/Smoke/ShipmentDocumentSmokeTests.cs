@@ -47,10 +47,10 @@ public class ShipmentDocumentSmokeTests : BaseIntegrationTests
             "Shipment 001",
             createdAt);
 
-        doc.AddRequestedLine(item.Id, new Quantity(100m, UnitOfMeasure.Piece));
+        doc.AddRequestedLine(item.Id, batchId: null, new Quantity(100m, UnitOfMeasure.Piece));
         
-        doc.AddPickLine(item.Id, location.Id, new Quantity(40m, UnitOfMeasure.Piece));
-        doc.AddPickLine(item.Id, location.Id, new Quantity(10m, UnitOfMeasure.Piece));
+        doc.AddPickLine(item.Id, batchId: null, location.Id, new Quantity(40m, UnitOfMeasure.Piece));
+        doc.AddPickLine(item.Id, batchId: null, location.Id, new Quantity(10m, UnitOfMeasure.Piece));
 
         ctx.Add(doc);
         await ctx.SaveChangesAsync();

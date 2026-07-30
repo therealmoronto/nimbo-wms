@@ -36,6 +36,7 @@ public sealed class ShipmentDocumentPostingService : IDocumentPostingService<Shi
                 document.WarehouseId,
                 pickLine.FromLocation,
                 pickLine.ItemId,
+                pickLine.BatchId,
                 ct);
 
             if (inventoryItem is null || inventoryItem.Quantity.Value < pickLine.Quantity.Value)
@@ -48,6 +49,7 @@ public sealed class ShipmentDocumentPostingService : IDocumentPostingService<Shi
             var ledgerEntry = new StockLedgerEntry(
                 inventoryItem.Id,
                 inventoryItem.ItemId,
+                inventoryItem.BatchId,
                 inventoryItem.LocationId,
                 inventoryItem.WarehouseId,
                 pickLine.Quantity.ToDelta().Negate(),

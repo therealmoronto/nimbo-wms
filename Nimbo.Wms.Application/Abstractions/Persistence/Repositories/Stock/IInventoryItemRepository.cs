@@ -5,5 +5,5 @@ namespace Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 
 public interface IInventoryItemRepository : IEntityRepository<InventoryItem, InventoryItemId>
 {
-    Task<InventoryItem?> GetByCriteriaAsync(WarehouseId warehouseId, LocationId locationId, ItemId itemId, CancellationToken ct = default);
+    Task<InventoryItem?> GetByCriteriaAsync(WarehouseId warehouseId, LocationId locationId, ItemId itemId, BatchId? batchId, CancellationToken ct = default);
 }

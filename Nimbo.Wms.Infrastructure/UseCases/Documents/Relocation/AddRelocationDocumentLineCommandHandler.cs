@@ -2,8 +2,10 @@ using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
+using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Documents.Relocation.Commands;
+using Nimbo.Wms.Domain.Common;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Domain.ValueObject;
@@ -15,11 +17,16 @@ public class AddRelocationDocumentLineCommandHandler : IRequestHandler<AddReloca
 {
     private readonly IRelocationDocumentRepository _repository;
     private readonly IItemRepository _itemRepository;
+    private readonly IBatchRepository _batchRepository;
 
-    public AddRelocationDocumentLineCommandHandler(IRelocationDocumentRepository repository, IItemRepository itemRepository)
+    public AddRelocationDocumentLineCommandHandler(
+        IRelocationDocumentRepository repository,
+        IItemRepository itemRepository,
+        IBatchRepository batchRepository)
     {
         _repository = repository;
         _itemRepository = itemRepository;
+        _batchRepository = batchRepository;
     }
 
     public async Task<Guid> Handle(AddRelocationDocumentLineCommand request, CancellationToken ct)
@@ -37,11 +44,19 @@ public class AddRelocationDocumentLineCommandHandler : IRequestHandler<AddReloca
         if (item is null)
             throw new InvalidOperationException($"Item with ID '{itemId}' not found");
 
+        if (request.BatchId is null && item.IsBatchManaged)
+            throw new DomainException($"Batch is required for item {itemId}");
+
+        var batchId = BatchId.From(request.BatchId!.Value);
+        var batch = await _batchRepository.GetByIdAsync(batchId, ct);
+        if (batch is null && item.IsBatchManaged)
+            throw new DomainException($"Batch with ID '{batchId}' not found");
+
         var fromLocationId = LocationId.From(request.FromLocationId);
         var toLocationId = LocationId.From(request.ToLocationId);
         var uom = Enum.Parse<UnitOfMeasure>(request.Quantity.Uom);
         var quantity = new Quantity(request.Quantity.Value, uom);
 
-        return document.AddLine(itemId, quantity, fromLocationId, toLocationId, request.Notes);
+        return document.AddLine(itemId, batchId, quantity, fromLocationId, toLocationId, request.Notes);
     }
 }

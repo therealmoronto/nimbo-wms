@@ -10,16 +10,16 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
     public void Configure(EntityTypeBuilder<Item> builder)
     {
         builder.ToTable("items");
-        
+
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
             .HasEntityIdConversion();
-        
+
         builder.Property(x => x.Name)
             .HasMaxLength(Item.NameMaxLength)
             .IsRequired();
-        
+
         builder.Property(x => x.InternalSku)
             .HasMaxLength(Item.InternalSkuMaxLength)
             .IsRequired();
@@ -27,8 +27,11 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
         builder.Property(x => x.Barcode)
             .HasMaxLength(Item.BarcodeMaxLength)
             .IsRequired();
-        
+
         builder.Property(x => x.BaseUomCode)
+            .IsRequired();
+
+        builder.Property(x => x.IsBatchManaged)
             .IsRequired();
 
         builder.Property(x => x.Manufacturer)
@@ -36,7 +39,7 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
 
         builder.Property(x => x.WeightKg);
         builder.Property(x => x.VolumeM3);
-        
+
         builder.HasIndex(x => x.InternalSku).IsUnique();
     }
 }

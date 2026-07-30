@@ -41,6 +41,6 @@ public class AddReceivingDocumentLineCommandHandler : IRequestHandler<AddReceivi
         var uom = Enum.Parse<UnitOfMeasure>(request.ExpectedQuantity.Uom);
         var expectedQuantity = new Quantity(request.ExpectedQuantity.Value, uom);
 
-        return document.AddLine(itemId, Quantity.Zero(uom), toLocationId, expectedQuantity, request.Notes);
+        return document.AddLine(itemId, Quantity.Zero(uom), toLocationId, expectedQuantity, request.ExpiryDate?.UtcDateTime, request.BatchNumber, request.Notes);
     }
 }

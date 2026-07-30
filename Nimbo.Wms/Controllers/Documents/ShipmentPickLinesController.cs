@@ -31,6 +31,7 @@ public class ShipmentPickLinesController(ISender sender) : ControllerBase
         var command = new AddPickLineCommand(
             documentGuid,
             request.ItemId,
+            request.BatchId,
             request.FromLocationId,
             request.Quantity,
             request.Notes,

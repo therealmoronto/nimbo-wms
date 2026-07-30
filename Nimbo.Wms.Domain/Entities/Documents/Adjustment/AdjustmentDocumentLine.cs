@@ -16,6 +16,7 @@ public sealed class AdjustmentDocumentLine : DocumentLineBase<AdjustmentDocument
     public AdjustmentDocumentLine(
         AdjustmentDocumentId documentId,
         ItemId itemId,
+        BatchId? batchId,
         LocationId locationId,
         QuantityDelta delta,
         string? notes = null)
@@ -24,6 +25,8 @@ public sealed class AdjustmentDocumentLine : DocumentLineBase<AdjustmentDocument
         LocationId = locationId;
         Delta = delta;
     }
+
+    public BatchId? BatchId { get; private set; }
 
     public LocationId LocationId { get; private set; }
 

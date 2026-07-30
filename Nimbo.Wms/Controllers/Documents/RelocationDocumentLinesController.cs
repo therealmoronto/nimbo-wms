@@ -29,6 +29,7 @@ public class RelocationDocumentLinesController(ISender sender) : ControllerBase
         var command = new AddRelocationDocumentLineCommand(
             documentGuid,
             request.ItemId,
+            request.BatchId,
             request.FromLocationId,
             request.ToLocationId,
             request.Quantity,
