@@ -26,6 +26,9 @@ public class ShipmentDocumentLineConfiguration : IEntityTypeConfiguration<Shipme
             .HasEntityIdConversion()
             .IsRequired();
 
+        builder.Property(x => x.BatchId)
+            .HasEntityIdConversion();
+
         builder.Property(x => x.Notes)
             .HasMaxLength(IDocumentLine.NotesMaxLength);
 

@@ -8,6 +8,7 @@ public sealed record ShipmentDocumentLineDto(
     Guid Id,
     Guid DocumentId,
     Guid ItemId,
+    Guid? BatchId,
     QuantityDto RequestedQuantity,
     string? Notes
 );

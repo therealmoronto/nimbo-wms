@@ -27,6 +27,9 @@ public class RelocationDocumentLineConfiguration : IEntityTypeConfiguration<Relo
             .HasEntityIdConversion()
             .IsRequired();
 
+        builder.Property(x => x.BatchId)
+            .HasEntityIdConversion();
+
         builder.Property(x => x.From)
             .HasEntityIdConversion()
             .IsRequired();

@@ -9,6 +9,7 @@ public sealed record ReceivingDocumentLineDto(
     Guid DocumentId,
     Guid ToLocationId,
     Guid ItemId,
+    Guid? BatchId,
     QuantityDto ReceivedQuantity,
     QuantityDto? ExpectedQuantity,
     string? Notes

@@ -8,6 +8,7 @@ public sealed record RelocationDocumentLineDto(
     Guid Id,
     Guid DocumentId,
     Guid ItemId,
+    Guid? BatchId,
     Guid FromLocationId,
     Guid ToLocationId,
     QuantityDto Quantity,

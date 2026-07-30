@@ -21,8 +21,7 @@ public class StockLedgerEntryConfiguration : IEntityTypeConfiguration<StockLedge
             .IsRequired();
 
         builder.Property(x => x.BatchId)
-            .HasEntityIdConversion()
-            .IsRequired();
+            .HasEntityIdConversion();
 
         builder.Property(x => x.LocationId)
             .HasEntityIdConversion()

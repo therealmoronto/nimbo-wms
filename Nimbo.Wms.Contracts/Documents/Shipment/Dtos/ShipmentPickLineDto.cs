@@ -8,6 +8,7 @@ public sealed record ShipmentPickLineDto(
     Guid Id,
     Guid DocumentId,
     Guid ItemId,
+    Guid? BatchId,
     Guid FromLocation,
     QuantityDto Quantity,
     string? Notes

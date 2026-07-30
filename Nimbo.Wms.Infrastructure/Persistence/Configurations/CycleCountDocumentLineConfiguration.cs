@@ -25,6 +25,9 @@ public class CycleCountDocumentLineConfiguration : IEntityTypeConfiguration<Cycl
             .HasEntityIdConversion()
             .IsRequired();
 
+        builder.Property(x => x.BatchId)
+            .HasEntityIdConversion();
+
         builder.Property(x => x.LocationId)
             .HasEntityIdConversion()
             .IsRequired();

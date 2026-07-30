@@ -9,6 +9,7 @@ public sealed record AdjustmentDocumentLineDto(
     Guid DocumentId,
     Guid LocationId,
     Guid ItemId,
+    Guid? BatchId,
     QuantityDeltaDto Delta,
     string? Notes
 );

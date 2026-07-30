@@ -26,6 +26,11 @@ public class ReceivingDocumentLineConfiguration : IEntityTypeConfiguration<Recei
             .HasEntityIdConversion()
             .IsRequired();
 
+        builder.Property(x => x.BatchNumber)
+            .HasMaxLength(255);
+
+        builder.Property(x => x.ExpiryDate);
+
         builder.Property(x => x.ToLocationId)
             .HasEntityIdConversion()
             .IsRequired();
