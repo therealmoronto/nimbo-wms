@@ -25,6 +25,11 @@ public class AdjustmentDocumentLineConfiguration : IEntityTypeConfiguration<Adju
             .HasEntityIdConversion()
             .IsRequired();
 
+
+        builder.Property(x => x.BatchId)
+            .HasEntityIdConversion()
+            .IsRequired();
+
         builder.Property(x => x.LocationId)
             .HasEntityIdConversion()
             .IsRequired();

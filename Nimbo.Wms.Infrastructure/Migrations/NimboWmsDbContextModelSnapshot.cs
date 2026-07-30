@@ -91,6 +91,9 @@ namespace Nimbo.Wms.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("BatchId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("DocumentId")
                         .HasColumnType("uuid");
 
@@ -184,6 +187,9 @@ namespace Nimbo.Wms.Migrations
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.CycleCount.CycleCountDocumentLine", b =>
                 {
                     b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("BatchId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("DocumentId")
@@ -290,8 +296,15 @@ namespace Nimbo.Wms.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("BatchNumber")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<Guid>("DocumentId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("ItemId")
                         .HasColumnType("uuid");
@@ -400,6 +413,9 @@ namespace Nimbo.Wms.Migrations
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Relocation.RelocationDocumentLine", b =>
                 {
                     b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("BatchId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("DocumentId")
@@ -511,6 +527,9 @@ namespace Nimbo.Wms.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("BatchId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("DocumentId")
                         .HasColumnType("uuid");
 
@@ -550,6 +569,9 @@ namespace Nimbo.Wms.Migrations
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Shipment.ShipmentPickLine", b =>
                 {
                     b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("BatchId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("DocumentId")
@@ -592,6 +614,9 @@ namespace Nimbo.Wms.Migrations
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Ledger.StockLedgerEntry", b =>
                 {
                     b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("BatchId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("InventoryItemId")
@@ -725,6 +750,9 @@ namespace Nimbo.Wms.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
+
+                    b.Property<bool>("IsBatchManaged")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Manufacturer")
                         .HasMaxLength(128)
