@@ -42,12 +42,12 @@ public sealed class ReceivingDocumentPostingService : IDocumentPostingService<Re
             if (line.ReceivedQuantity.IsZero)
                 continue;
 
-            var batch = !string.IsNullOrWhiteSpace(line.BatchNumber) && line.ExpiryDate.HasValue
+            var batch = !string.IsNullOrWhiteSpace(line.BatchNumber)
                 ? await _batchRepo.FindOrCreateAsync(line.ItemId, line.BatchNumber, line.ExpiryDate, ct)
                 : null;
 
             var item = await _itemRepo.GetByIdAsync(line.ItemId, ct);
-            if (item != null && item.IsBatchManaged && batch is null)
+            if (item is { IsBatchManaged: true } && batch is null)
                 throw new DomainException($"Batch number is required for item {line.ItemId}");
 
             var inventoryItem = await _inventoryItemRepo.GetByCriteriaAsync(document.WarehouseId, line.ToLocationId, line.ItemId, batch?.Id, ct);

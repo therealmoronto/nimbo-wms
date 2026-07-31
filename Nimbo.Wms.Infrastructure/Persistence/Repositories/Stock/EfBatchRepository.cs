@@ -10,14 +10,14 @@ internal sealed class EfBatchRepository : EfEntityRepository<Batch, BatchId>, IB
     public EfBatchRepository(NimboWmsDbContext dbContext)
         : base(dbContext) { }
 
-    public async Task<Batch> FindOrCreateAsync(ItemId itemId, string? batchNumber, DateTime? expiryDate, CancellationToken ct = default)
+    public async Task<Batch> FindOrCreateAsync(ItemId itemId, string batchNumber, DateTime? expiryDate, CancellationToken ct = default)
     {
-        var batch = await Set.FirstOrDefaultAsync(b => b.ItemId == itemId && b.BatchNumber == batchNumber && b.ExpiryDate == expiryDate, ct);
+        var batch = await Set.FirstOrDefaultAsync(b => b.ItemId == itemId && b.BatchNumber == batchNumber, ct);
         if (batch is not null)
             return batch;
 
         batch = new Batch(BatchId.New(), itemId, batchNumber, expiryDate: expiryDate);
-        await AddAsync(batch);
+        await AddAsync(batch, ct);
         return batch;
     }
 }
