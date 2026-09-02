@@ -1,7 +1,9 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Nimbo.Wms.Domain.Entities.Documents.Receiving;
 using Nimbo.Wms.Domain.Entities.Documents.Shipment;
 using Nimbo.Wms.Domain.Entities.MasterData;
+using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
@@ -29,11 +31,23 @@ public class ShipmentDocumentSmokeTests : BaseIntegrationTests
         var zone = new Zone(ZoneId.New(), warehouseId, "ZONE-001", "Zone #1", ZoneType.Storage);
         var location = new Location(LocationId.New(), warehouseId, zone.Id, "LOC-001", LocationType.Floor);
         var item = new Item(ItemId.New(), "ITEM-001", "Test Item", "SKU-001", UnitOfMeasure.Piece);
+        var supplier = new Supplier(SupplierId.New(), "SUP-001", "Test Supplier", "Test address");
 
         ctx.Add(warehouse);
         ctx.Add(zone);
         ctx.Add(location);
         ctx.Add(item);
+        ctx.Add(supplier);
+
+        await ctx.SaveChangesAsync();
+
+        // A StockLot needs a real ReceivingDocument to satisfy the FK, even in a persistence-only smoke
+        // test — pick lines now require a mandatory StockLotId.
+        var receivingDoc = new ReceivingDocument(ReceivingDocumentId.New(), warehouseId, supplier.Id, "REC-SEED", "Seed", DateTime.UtcNow);
+        var stockLot = new StockLot(StockLotId.New(), item.Id, receivingDoc.Id, DateTime.UtcNow);
+
+        ctx.Add(receivingDoc);
+        ctx.Add(stockLot);
 
         await ctx.SaveChangesAsync();
         ctx.ChangeTracker.Clear();
@@ -49,8 +63,8 @@ public class ShipmentDocumentSmokeTests : BaseIntegrationTests
 
         doc.AddRequestedLine(item.Id, new Quantity(100m, UnitOfMeasure.Piece));
         
-        doc.AddPickLine(item.Id, location.Id, new Quantity(40m, UnitOfMeasure.Piece));
-        doc.AddPickLine(item.Id, location.Id, new Quantity(10m, UnitOfMeasure.Piece));
+        doc.AddPickLine(item.Id, stockLot.Id, location.Id, new Quantity(40m, UnitOfMeasure.Piece));
+        doc.AddPickLine(item.Id, stockLot.Id, location.Id, new Quantity(10m, UnitOfMeasure.Piece));
 
         ctx.Add(doc);
         await ctx.SaveChangesAsync();

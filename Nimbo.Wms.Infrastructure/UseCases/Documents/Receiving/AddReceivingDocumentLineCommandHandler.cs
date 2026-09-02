@@ -41,6 +41,8 @@ public class AddReceivingDocumentLineCommandHandler : IRequestHandler<AddReceivi
         var uom = Enum.Parse<UnitOfMeasure>(request.ExpectedQuantity.Uom);
         var expectedQuantity = new Quantity(request.ExpectedQuantity.Value, uom);
 
-        return document.AddLine(itemId, Quantity.Zero(uom), toLocationId, expectedQuantity, request.Notes);
+        // BatchNumber/ExpiryDate are carried as-is here — they're resolved into a real VendorLot only
+        // at posting time (ReceivingDocumentPostingService), not validated at line-add time.
+        return document.AddLine(itemId, Quantity.Zero(uom), toLocationId, expectedQuantity, request.ExpiryDate, request.BatchNumber, request.Notes);
     }
 }

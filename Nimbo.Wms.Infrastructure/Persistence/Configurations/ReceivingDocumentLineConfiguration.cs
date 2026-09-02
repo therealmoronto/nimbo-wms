@@ -62,6 +62,11 @@ public class ReceivingDocumentLineConfiguration : IEntityTypeConfiguration<Recei
                     .IsRequired();
             });
 
+        builder.Property(x => x.ExpiryDate);
+
+        builder.Property(x => x.BatchNumber)
+            .HasMaxLength(255);
+
         builder.Property(x => x.Notes)
             .HasMaxLength(IDocumentLine.NotesMaxLength);
 

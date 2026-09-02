@@ -21,9 +21,9 @@ public class InventoryItem : BaseEntity<InventoryItemId>
         ItemId itemId,
         WarehouseId warehouseId,
         LocationId locationId,
+        StockLotId stockLotId,
         Quantity quantity,
         InventoryStatus status = InventoryStatus.Available,
-        BatchId? batchId = null,
         string? serialNumber = null,
         decimal? unitCost = null)
     {
@@ -33,7 +33,7 @@ public class InventoryItem : BaseEntity<InventoryItemId>
         WarehouseId = warehouseId;
         LocationId = locationId;
 
-        BatchId = batchId;
+        StockLotId = stockLotId;
         SerialNumber = TrimOrNull(serialNumber);
 
         Quantity = quantity;
@@ -57,10 +57,11 @@ public class InventoryItem : BaseEntity<InventoryItemId>
     public Quantity Quantity { get; private set; }
 
     /// <summary>
-    /// Optional batch/lot identifier stored directly on InventoryItem (MVP).
-    /// If you later rely on Batch entity, you can use BatchId instead or keep both.
+    /// Mandatory stock lot (receiving lineage). Together with ItemId and LocationId, this forms
+    /// InventoryItem's natural key — every receipt is a distinct, independently-trackable stock position,
+    /// which is what makes FIFO/FEFO rotation possible.
     /// </summary>
-    public BatchId? BatchId { get; private set; }
+    public StockLotId StockLotId { get; }
 
     /// <summary>
     /// Optional serial number (when used, quantity is typically 1).
@@ -128,8 +129,6 @@ public class InventoryItem : BaseEntity<InventoryItemId>
     public void MarkExpired() => ChangeStatus(InventoryStatus.Expired);
 
     public void StartAudit() => ChangeStatus(InventoryStatus.Audit);
-
-    public void SetBatchNumber(BatchId? batchId) => BatchId = batchId;
 
     public void SetSerialNumber(string? serialNumber)
     {

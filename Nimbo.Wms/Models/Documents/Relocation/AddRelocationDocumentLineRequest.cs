@@ -9,6 +9,7 @@ public sealed record AddRelocationDocumentLineRequest(
     Guid FromLocationId,
     Guid ToLocationId,
     QuantityDto Quantity,
+    Guid? StockLotId,
     string? Notes,
     long DocumentVersion
 );

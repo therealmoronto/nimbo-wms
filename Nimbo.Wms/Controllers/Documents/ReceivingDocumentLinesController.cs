@@ -33,6 +33,8 @@ public class ReceivingDocumentLinesController(ISender sender) : ControllerBase
             request.ItemId,
             request.ToLocationId,
             request.ExpectedQuantity,
+            request.ExpiryDate,
+            request.BatchNumber,
             request.Notes,
             request.DocumentVersion);
 

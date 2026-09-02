@@ -10,6 +10,7 @@ public sealed record AddPickLineCommand(
     Guid DocumentId,
     Guid ItemId,
     Guid FromLocationId,
+    Guid StockLotId,
     QuantityDto Quantity,
     string? Notes,
     long DocumentVersion

@@ -439,29 +439,22 @@ The `IUnitOfWork` must be managed by the Command Handler, not delegated to the P
 
 ---
 
-## Why MediatR Is Not Used (Yet)
+## Why MediatR Is Used
 
-MediatR is a common CQRS library that provides a service bus for dispatching commands and queries. We do not use it because:
+> **Correction (2026-09):** This section previously argued against adopting MediatR. That decision was reversed;
+> the codebase has used MediatR since commit `b279bbd` ("Introduce `TransactionBehavior` pipeline for unified
+> transaction handling"), well before this document's "Phase 1" language below was written. Commands/queries are
+> `IRequest<TResult>` records, handlers are `IRequestHandler<TRequest,TResult>`, and controllers dispatch via
+> `ISender.Send(...)` — not the `ICommand`/`ICommandHandler`/`await handler.HandleAsync(...)` shape described
+> elsewhere in this document. The rest of this file's prose (explicit-handler examples, the "Evolution Path"
+> phases) is stale relative to that and due for a fuller rewrite; treat it as historical context, not the current
+> contract.
 
-**Explicit handlers are sufficient:**
-- Dependency injection resolves handlers directly
-- No magic dispatch behavior to debug
-- Compiler errors if handler is missing
-- Simple and clear control flow
-
-**MediatR adds overhead for our use cases:**
-- Reflection-based handler discovery adds latency
-- Pipelines/behaviors add middleware complexity we don't need yet
-- Service bus semantics suggest async messaging (we're in-process)
-- Adds a NuGet dependency for a thin wrapper over DI
-
-**When MediatR may be introduced:**
-- If we need cross-cutting concerns (logging, validation, authorization pipelines)
-- If we adopt async event sourcing and event publishing
-- If we move to microservices and true async messaging
-- If we need to standardize command/query dispatch across multiple services
-
-**Until then:** Direct dependency injection is clearer and requires no additional library.
+MediatR's pipeline behaviors (`Application/Common/Behaviors/LoggingBehavior.cs`, `ValidationBehavior.cs`,
+`TransactionBehavior.cs`, registered via `cfg.AddOpenBehavior(...)` in `ServiceCollectionExtensions.cs`) are what
+give every command automatic logging, FluentValidation, and unit-of-work commit — a handler only needs to implement
+`IRequestHandler<TCommand, TResult>`; validation and transaction commit are cross-cutting, not hand-wired per
+handler. This is exactly the "Phase 2, Option B" this document originally described as a future possibility.
 
 ---
 

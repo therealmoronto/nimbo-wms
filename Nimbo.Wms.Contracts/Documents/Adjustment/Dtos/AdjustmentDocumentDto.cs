@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using Nimbo.Wms.Contracts.Common.Dtos;
 
 namespace Nimbo.Wms.Contracts.Documents.Adjustment.Dtos;
 

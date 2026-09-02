@@ -9,6 +9,7 @@ public sealed record ItemDto(
     string InternalSku,
     string Barcode,
     string BaseUomCode,
+    bool IsBatchManaged,
     string? Manufacturer,
     decimal? WeightKg,
     decimal? VolumeM3

@@ -11,6 +11,7 @@ public sealed record PatchItemCommand(
     string? InternalSku = null,
     string? Barcode = null,
     string? BaseUom = null,
+    bool? IsBatchManaged = null,
     string? Manufacturer = null,
     decimal? WeightKg = null,
     decimal? VolumeM3 = null

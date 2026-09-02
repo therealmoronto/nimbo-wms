@@ -11,7 +11,7 @@ public sealed record InventoryItemDto(
     Guid LocationId,
     QuantityDto Quantity,
     string Status,
-    Guid? BatchId,
+    Guid StockLotId,
     string? SerialNumber,
     decimal? UnitCost
 );

@@ -31,6 +31,7 @@ public class AdjustmentDocumentLinesController(ISender sender) : ControllerBase
             request.ItemId,
             request.LocationId,
             request.Delta,
+            request.StockLotId,
             request.Notes,
             request.DocumentVersion);
         var lineId = await sender.Send(command, ct);

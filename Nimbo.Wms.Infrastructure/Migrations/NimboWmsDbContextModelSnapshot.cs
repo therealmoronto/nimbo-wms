@@ -104,6 +104,9 @@ namespace Nimbo.Wms.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
+                    b.Property<Guid?>("StockLotId")
+                        .HasColumnType("uuid");
+
                     b.ComplexProperty(typeof(Dictionary<string, object>), "Delta", "Nimbo.Wms.Domain.Entities.Documents.Adjustment.AdjustmentDocumentLine.Delta#QuantityDelta", b1 =>
                         {
                             b1.IsRequired();
@@ -122,6 +125,8 @@ namespace Nimbo.Wms.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DocumentId");
+
+                    b.HasIndex("StockLotId");
 
                     b.HasIndex("DocumentId", "ItemId", "LocationId");
 
@@ -199,6 +204,9 @@ namespace Nimbo.Wms.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
+                    b.Property<Guid?>("StockLotId")
+                        .HasColumnType("uuid");
+
                     b.ComplexProperty(typeof(Dictionary<string, object>), "ActualQuantity", "Nimbo.Wms.Domain.Entities.Documents.CycleCount.CycleCountDocumentLine.ActualQuantity#Quantity", b1 =>
                         {
                             b1.Property<string>("Uom")
@@ -230,6 +238,8 @@ namespace Nimbo.Wms.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DocumentId");
+
+                    b.HasIndex("StockLotId");
 
                     b.HasIndex("DocumentId", "ItemId", "LocationId")
                         .IsUnique();
@@ -290,8 +300,15 @@ namespace Nimbo.Wms.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("BatchNumber")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<Guid>("DocumentId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("ItemId")
                         .HasColumnType("uuid");
@@ -415,6 +432,9 @@ namespace Nimbo.Wms.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
+                    b.Property<Guid?>("StockLotId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("To")
                         .HasColumnType("uuid");
 
@@ -440,6 +460,8 @@ namespace Nimbo.Wms.Migrations
                     b.HasIndex("From");
 
                     b.HasIndex("ItemId");
+
+                    b.HasIndex("StockLotId");
 
                     b.HasIndex("To");
 
@@ -521,6 +543,9 @@ namespace Nimbo.Wms.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
+                    b.Property<Guid?>("StockLotId")
+                        .HasColumnType("uuid");
+
                     b.ComplexProperty(typeof(Dictionary<string, object>), "Quantity", "Nimbo.Wms.Domain.Entities.Documents.Shipment.ShipmentDocumentLine.Quantity#Quantity", b1 =>
                         {
                             b1.IsRequired();
@@ -541,6 +566,8 @@ namespace Nimbo.Wms.Migrations
                     b.HasIndex("DocumentId");
 
                     b.HasIndex("ItemId");
+
+                    b.HasIndex("StockLotId");
 
                     b.HasIndex("DocumentId", "ItemId");
 
@@ -564,6 +591,9 @@ namespace Nimbo.Wms.Migrations
                     b.Property<string>("Notes")
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
+
+                    b.Property<Guid>("StockLotId")
+                        .HasColumnType("uuid");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "Quantity", "Nimbo.Wms.Domain.Entities.Documents.Shipment.ShipmentPickLine.Quantity#Quantity", b1 =>
                         {
@@ -610,6 +640,9 @@ namespace Nimbo.Wms.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("SourceDocumentLineId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("StockLotId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("TransactionType")
@@ -725,6 +758,9 @@ namespace Nimbo.Wms.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
+
+                    b.Property<bool>("IsBatchManaged")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Manufacturer")
                         .HasMaxLength(128)
@@ -844,53 +880,9 @@ namespace Nimbo.Wms.Migrations
                     b.ToTable("supplier_items", "nimbo");
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Stock.Batch", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("BatchNumber")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<DateTime?>("ExpiryDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("ItemId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("ManufacturedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
-
-                    b.Property<DateTime?>("ReceivedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("SupplierId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExpiryDate");
-
-                    b.HasIndex("SupplierId");
-
-                    b.HasIndex("ItemId", "BatchNumber")
-                        .IsUnique();
-
-                    b.ToTable("batches", "nimbo");
-                });
-
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Stock.InventoryItem", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("BatchId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ItemId")
@@ -907,6 +899,9 @@ namespace Nimbo.Wms.Migrations
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
+
+                    b.Property<Guid>("StockLotId")
+                        .HasColumnType("uuid");
 
                     b.Property<decimal?>("UnitCost")
                         .HasColumnType("numeric(18, 4)");
@@ -931,17 +926,99 @@ namespace Nimbo.Wms.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BatchId");
-
                     b.HasIndex("LocationId");
 
                     b.HasIndex("Status");
 
+                    b.HasIndex("StockLotId");
+
                     b.HasIndex("WarehouseId");
+
+                    b.HasIndex("ItemId", "StockLotId", "LocationId")
+                        .IsUnique();
 
                     b.HasIndex("ItemId", "WarehouseId", "LocationId");
 
                     b.ToTable("inventory_items", "nimbo");
+                });
+
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Stock.StockLot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ReceivedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ReceivingDocumentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal?>("UnitCost")
+                        .HasColumnType("numeric(18, 4)");
+
+                    b.Property<Guid?>("VendorLotId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceivingDocumentId");
+
+                    b.HasIndex("VendorLotId");
+
+                    b.HasIndex("ItemId", "ReceivedAt");
+
+                    b.ToTable("stock_lots", "nimbo");
+                });
+
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Stock.VendorLot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BatchNumber")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("SupplierId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpiryDate");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("ItemId", "BatchNumber")
+                        .IsUnique()
+                        .HasDatabaseName("ix_vendor_lots_item_batch_only")
+                        .HasFilter("\"SupplierId\" IS NULL AND \"ExpiryDate\" IS NULL");
+
+                    b.HasIndex("ItemId", "BatchNumber", "ExpiryDate")
+                        .IsUnique()
+                        .HasDatabaseName("ix_vendor_lots_item_batch_expiry_only")
+                        .HasFilter("\"SupplierId\" IS NULL AND \"ExpiryDate\" IS NOT NULL");
+
+                    b.HasIndex("ItemId", "BatchNumber", "SupplierId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_vendor_lots_item_batch_supplier_only")
+                        .HasFilter("\"SupplierId\" IS NOT NULL AND \"ExpiryDate\" IS NULL");
+
+                    b.HasIndex("ItemId", "BatchNumber", "SupplierId", "ExpiryDate")
+                        .IsUnique()
+                        .HasDatabaseName("ix_vendor_lots_item_batch_supplier_expiry")
+                        .HasFilter("\"SupplierId\" IS NOT NULL AND \"ExpiryDate\" IS NOT NULL");
+
+                    b.ToTable("vendor_lots", "nimbo");
                 });
 
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Location", b =>
@@ -1143,6 +1220,11 @@ namespace Nimbo.Wms.Migrations
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Stock.StockLot", null)
+                        .WithMany()
+                        .HasForeignKey("StockLotId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.CycleCount.CycleCountDocumentLine", b =>
@@ -1152,6 +1234,11 @@ namespace Nimbo.Wms.Migrations
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Stock.StockLot", null)
+                        .WithMany()
+                        .HasForeignKey("StockLotId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocumentLine", b =>
@@ -1189,6 +1276,11 @@ namespace Nimbo.Wms.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Stock.StockLot", null)
+                        .WithMany()
+                        .HasForeignKey("StockLotId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Location", null)
                         .WithMany()
                         .HasForeignKey("To")
@@ -1209,6 +1301,11 @@ namespace Nimbo.Wms.Migrations
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Stock.StockLot", null)
+                        .WithMany()
+                        .HasForeignKey("StockLotId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Documents.Shipment.ShipmentPickLine", b =>
@@ -1235,27 +1332,8 @@ namespace Nimbo.Wms.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Stock.Batch", b =>
-                {
-                    b.HasOne("Nimbo.Wms.Domain.Entities.MasterData.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Nimbo.Wms.Domain.Entities.MasterData.Supplier", null)
-                        .WithMany()
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Stock.InventoryItem", b =>
                 {
-                    b.HasOne("Nimbo.Wms.Domain.Entities.Stock.Batch", null)
-                        .WithMany()
-                        .HasForeignKey("BatchId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Nimbo.Wms.Domain.Entities.MasterData.Item", null)
                         .WithMany()
                         .HasForeignKey("ItemId")
@@ -1268,11 +1346,51 @@ namespace Nimbo.Wms.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Stock.StockLot", null)
+                        .WithMany()
+                        .HasForeignKey("StockLotId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Nimbo.Wms.Domain.Entities.Topology.Warehouse", null)
                         .WithMany()
                         .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Stock.StockLot", b =>
+                {
+                    b.HasOne("Nimbo.Wms.Domain.Entities.MasterData.Item", null)
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Documents.Receiving.ReceivingDocument", null)
+                        .WithMany()
+                        .HasForeignKey("ReceivingDocumentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Nimbo.Wms.Domain.Entities.Stock.VendorLot", null)
+                        .WithMany()
+                        .HasForeignKey("VendorLotId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Stock.VendorLot", b =>
+                {
+                    b.HasOne("Nimbo.Wms.Domain.Entities.MasterData.Item", null)
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Nimbo.Wms.Domain.Entities.MasterData.Supplier", null)
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Nimbo.Wms.Domain.Entities.Topology.Location", b =>

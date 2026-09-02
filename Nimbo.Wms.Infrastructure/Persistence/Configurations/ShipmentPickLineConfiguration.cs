@@ -28,7 +28,12 @@ public class ShipmentPickLineConfiguration : IEntityTypeConfiguration<ShipmentPi
         builder.Property(x => x.FromLocation)
             .HasEntityIdConversion()
             .IsRequired();
-        
+
+        builder.Property(x => x.StockLotId)
+            .HasEntityIdConversion()
+            .IsRequired();
+
+
         builder.ComplexProperty(
             x => x.Quantity,
             q =>

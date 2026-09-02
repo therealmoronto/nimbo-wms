@@ -32,11 +32,18 @@ public sealed class ReceivingDocument : DocumentBase<ReceivingDocumentId, Receiv
 
     public SupplierId SupplierId { get; }
 
-    public Guid AddLine(ItemId itemId, Quantity receivedQuantity, LocationId toLocationId, Quantity expectedQuantity, string? notes)
+    public Guid AddLine(
+        ItemId itemId,
+        Quantity receivedQuantity,
+        LocationId toLocationId,
+        Quantity expectedQuantity,
+        DateTime? expiryDate = null,
+        string? batchNumber = null,
+        string? notes = null)
     {
         EnsurePositive(receivedQuantity);
         EnsureNullableNonNegative(expectedQuantity);
-        var line = new ReceivingDocumentLine(Id, itemId, receivedQuantity, toLocationId, expectedQuantity, notes);
+        var line = new ReceivingDocumentLine(Id, itemId, receivedQuantity, toLocationId, expectedQuantity, expiryDate, batchNumber, notes);
         AddLine(line);
         return line.Id;
     }

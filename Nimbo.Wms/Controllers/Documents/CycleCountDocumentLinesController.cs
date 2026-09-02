@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Contracts.Common.Dtos;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Commands;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Dtos;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Queries;
@@ -34,6 +33,7 @@ public class CycleCountDocumentLinesController(ISender sender) : ControllerBase
             request.ItemId,
             request.LocationId,
             request.ExpectedQuantity,
+            request.StockLotId,
             request.Notes,
             request.DocumentVersion);
 

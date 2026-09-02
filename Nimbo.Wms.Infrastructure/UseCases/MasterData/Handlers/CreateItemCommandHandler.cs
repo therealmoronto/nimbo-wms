@@ -25,7 +25,8 @@ internal sealed class CreateItemCommandHandler : IRequestHandler<CreateItemComma
             request.Name,
             request.InternalSku,
             request.Barcode,
-            Enum.Parse<UnitOfMeasure>(request.BaseUom));
+            Enum.Parse<UnitOfMeasure>(request.BaseUom),
+            request.IsBatchManaged);
 
         await _repository.AddAsync(item, ct);
 

@@ -8,6 +8,7 @@ public sealed record AddAdjustmentDocumentLineRequest(
     Guid ItemId,
     Guid LocationId,
     QuantityDeltaDto Delta,
+    Guid? StockLotId,
     string? Notes,
     long DocumentVersion
 );

@@ -22,7 +22,7 @@ public class ItemsController(ISender sender) : ControllerBase
     [Produces("application/json")]
     public async Task<IActionResult> CreateItem([FromBody] CreateItemRequest request, CancellationToken ct)
     {
-        var command = new CreateItemCommand(request.Name, request.InternalSku, request.Barcode, request.BaseUom);
+        var command = new CreateItemCommand(request.Name, request.InternalSku, request.Barcode, request.BaseUom, request.IsBatchManaged);
         var itemGuid = await sender.Send(command, ct);
         return CreatedAtAction(
             actionName: nameof(GetItem),
@@ -79,6 +79,7 @@ public class ItemsController(ISender sender) : ControllerBase
             request.InternalSku,
             request.Barcode,
             request.BaseUom,
+            request.IsBatchManaged,
             request.Manufacturer,
             request.WeightKg,
             request.VolumeM3);

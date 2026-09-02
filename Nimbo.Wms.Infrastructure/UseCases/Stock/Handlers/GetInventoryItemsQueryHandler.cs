@@ -30,8 +30,8 @@ internal sealed class GetInventoryItemsQueryHandler : IRequestHandler<GetInvento
         if (query.ItemId is not null)
             dbQuery = dbQuery.Where(i => i.ItemId == query.ItemId);
 
-        if (query.BatchId is not null)
-            dbQuery = dbQuery.Where(i => i.BatchId == query.BatchId);
+        if (query.StockLotId is not null)
+            dbQuery = dbQuery.Where(i => i.StockLotId == query.StockLotId);
 
         var inventoryItems = await _mapper.ProjectToDto(dbQuery).ToListAsync(ct);
 

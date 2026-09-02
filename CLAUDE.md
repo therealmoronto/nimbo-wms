@@ -86,8 +86,9 @@ This is the one thing that looks backwards if you assume queries and commands li
 - **Queries** (reads) live in **Infrastructure**, under `Infrastructure/UseCases/{Feature}`, query `DbContext`
   directly with `.AsNoTracking()`, and project straight into Contracts DTOs via `.Select(...)`. Query handlers are
   `internal`. No repository indirection on the read side.
-- No MediatR — handlers are resolved via plain DI and invoked directly (`await handler.HandleAsync(...)`) from
-  controllers. This is a deliberate choice, not an oversight; see the ADR before introducing a dispatch layer.
+- Handlers are dispatched via MediatR (`ISender`/`IRequestHandler<TCommand,TResult>`), with `LoggingBehavior`,
+  `ValidationBehavior`, and `TransactionBehavior` as pipeline behaviors (`Application/Common/Behaviors`). Controllers
+  call `sender.Send(command, ct)` rather than resolving handlers directly.
 
 ### Document posting workflow
 

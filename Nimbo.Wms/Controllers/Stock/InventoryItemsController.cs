@@ -31,7 +31,7 @@ public class InventoryItemsController : ControllerBase
         [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var command = new CreateInventoryItemCommand(request.ItemId, request.WarehouseId, request.LocationId, request.Quantity, request.QuantityUom, request.Status, request.BatchId, request.SerialNumber, request.UnitCost);
+        var command = new CreateInventoryItemCommand(request.ItemId, request.WarehouseId, request.LocationId, request.Quantity, request.QuantityUom, request.Status, request.StockLotId, request.SerialNumber, request.UnitCost);
         var inventoryItemGuid = await mediator.Send(command, ct);
         return CreatedAtAction(
             nameof(GetInventoryItem),
@@ -83,11 +83,11 @@ public class InventoryItemsController : ControllerBase
     public async Task<IReadOnlyList<InventoryItemDto>> GetInventoryItems(
         [FromQuery] Guid? warehouseGuid,
         [FromQuery] Guid? itemGuid,
-        [FromQuery] Guid? batchGuid,
+        [FromQuery] Guid? stockLotGuid,
         [FromServices] IMediator mediator,
         CancellationToken ct)
     {
-        var query = new GetInventoryItemsQuery(warehouseGuid, itemGuid, batchGuid);
+        var query = new GetInventoryItemsQuery(warehouseGuid, itemGuid, stockLotGuid);
         return await mediator.Send(query, ct);
     }
 }

@@ -114,10 +114,11 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddStock()
         {
-            services.AddScoped<IMapper<Batch, BatchDto>, BatchMapper>();
+            services.AddScoped<IMapper<VendorLot, VendorLotDto>, VendorLotMapper>();
             services.AddScoped<IMapper<InventoryItem, InventoryItemDto>, InventoryItemMapper>();
 
-            services.AddScoped<IBatchRepository, EfBatchRepository>();
+            services.AddScoped<IVendorLotRepository, EfVendorLotRepository>();
+            services.AddScoped<IStockLotRepository, EfStockLotRepository>();
             services.AddScoped<IInventoryItemRepository, EfInventoryItemRepository>();
             return services;
         }

@@ -25,7 +25,8 @@ This document is the source of truth for core domain concepts and models used in
 
 ## 4. Bounded contexts
 
-- Inventory/Stock: inventory items, quantities, stock movements, reservations.
+- Inventory/Stock: inventory items, quantities, stock movements, reservations, and lot genealogy (`VendorLot`,
+  `StockLot`) that makes FIFO/FEFO rotation possible.
 - Documents (operational): `ReceivingDocument`, `ShipmentDocument`, `CycleCountDocument`, `RelocationDocument`, `AdjustmentDocument` — they encapsulate transactional workflows.
 - Master Data: `Item`, `Location`, `Customer` — reference data used by documents and inventory.
 - Integration/Adapters: external system adapters and anti-corruption layers live in Infrastructure and map to domain models.
@@ -45,7 +46,11 @@ This document is the source of truth for core domain concepts and models used in
 - `AdjustmentDocument` (aggregate root): models inventory adjustments and discrepancies with reason tracking.
 - `Item` (master aggregate): product definition, unit-of-measure, identification rules, and any item-level constraints.
 - `Location` (master aggregate): storage location definition, type, capacity constraints, and permitted item attributes.
-- `InventoryItem` / Stock entity: physical stock per item+location, quantity bookkeeping, and reservation/commit operations.
+- `InventoryItem` / Stock entity: physical stock per item+StockLot+location, quantity bookkeeping, and reservation/commit operations.
+- `VendorLot` (aggregate root): the supplier's declared batch identity (item + batch number + supplier + expiry).
+  Optional — only exists for batch-managed items.
+- `StockLot` (aggregate root): the system's own receiving lineage (which `ReceivingDocument`, when). Always
+  created per receiving line, independent of whether the item is batch-managed; optionally links a `VendorLot`.
 
 ## 7. Core invariants
 
@@ -62,6 +67,8 @@ This document is the source of truth for core domain concepts and models used in
 - `ReceivingDocument`:
   - Received quantity per line must be positive; expected quantity (if provided) must be non-negative.
   - Receiving completes only when all lines are valid (document-level validations pass).
+  - At posting time, a `BatchNumber` is mandatory on the line when `Item.IsBatchManaged`; it resolves to a
+    `VendorLot` (find-or-create). A `StockLot` is always minted, one per line, regardless of `IsBatchManaged`.
 
 - `RelocationDocument`:
   - Source and destination locations must be different.

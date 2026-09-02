@@ -39,6 +39,7 @@ public sealed class CycleCountDocumentPostingService : IDocumentPostingService<C
                 document.WarehouseId,
                 line.LocationId,
                 line.ItemId,
+                line.StockLotId,
                 ct);
 
             var actualQuantity = line.ActualQuantity.Value;
@@ -47,11 +48,18 @@ public sealed class CycleCountDocumentPostingService : IDocumentPostingService<C
                 if (actualQuantity.IsZero)
                     continue;
 
+                // A StockLot can only be minted from a ReceivingDocument, and this service has none to
+                // attribute newly-discovered surplus to — the caller must point at an existing lot.
+                if (line.StockLotId is null)
+                    throw new DomainException(
+                        $"Cannot record new stock for Item {line.ItemId} at Location {line.LocationId} without a StockLotId — surplus must be attributed to an existing stock lot.");
+
                 inventoryItem = new InventoryItem(
                     InventoryItemId.New(),
                     line.ItemId,
                     document.WarehouseId,
                     line.LocationId,
+                    line.StockLotId.Value,
                     Quantity.Zero(actualQuantity.Uom));
 
                 await _inventoryItemRepo.AddAsync(inventoryItem, ct);
@@ -69,6 +77,7 @@ public sealed class CycleCountDocumentPostingService : IDocumentPostingService<C
             var ledgerEntry = new StockLedgerEntry(
                 inventoryItem.Id,
                 inventoryItem.ItemId,
+                inventoryItem.StockLotId,
                 inventoryItem.LocationId,
                 inventoryItem.WarehouseId,
                 delta,

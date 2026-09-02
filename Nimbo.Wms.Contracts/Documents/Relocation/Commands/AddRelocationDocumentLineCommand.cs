@@ -12,6 +12,7 @@ public sealed record AddRelocationDocumentLineCommand(
     Guid FromLocationId,
     Guid ToLocationId,
     QuantityDto Quantity,
+    Guid? StockLotId,
     string? Notes,
     long DocumentVersion
 ) : IRequest<Guid>, ITxRequest;

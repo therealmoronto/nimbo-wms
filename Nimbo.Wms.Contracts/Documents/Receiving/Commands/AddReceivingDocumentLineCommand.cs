@@ -11,6 +11,8 @@ public sealed record AddReceivingDocumentLineCommand(
     Guid ItemId,
     Guid ToLocationId,
     QuantityDto ExpectedQuantity,
+    DateTime? ExpiryDate,
+    string? BatchNumber,
     string? Notes,
     long DocumentVersion
 ) : IRequest<Guid>, ITxRequest;

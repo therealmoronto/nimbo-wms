@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
+using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Commands;
 using Nimbo.Wms.Domain.Identification;
@@ -15,13 +16,16 @@ public class AddCycleCountDocumentLineCommandHandler : IRequestHandler<AddCycleC
 {
     private readonly ICycleCountDocumentRepository _repository;
     private readonly IItemRepository _itemRepository;
+    private readonly IStockLotRepository _stockLotRepository;
 
     public AddCycleCountDocumentLineCommandHandler(
         ICycleCountDocumentRepository repository,
-        IItemRepository itemRepository)
+        IItemRepository itemRepository,
+        IStockLotRepository stockLotRepository)
     {
         _repository = repository;
         _itemRepository = itemRepository;
+        _stockLotRepository = stockLotRepository;
     }
 
     public async Task<Guid> Handle(AddCycleCountDocumentLineCommand request, CancellationToken ct)
@@ -39,10 +43,20 @@ public class AddCycleCountDocumentLineCommandHandler : IRequestHandler<AddCycleC
         if (item is null)
             throw new InvalidOperationException($"Item with ID '{itemId}' not found");
 
+        StockLotId? stockLotId = null;
+        if (request.StockLotId is not null)
+        {
+            var stockLot = await _stockLotRepository.GetByIdAsync(StockLotId.From(request.StockLotId.Value), ct);
+            if (stockLot is null)
+                throw new NotFoundException($"Stock lot with ID '{request.StockLotId}' not found");
+
+            stockLotId = stockLot.Id;
+        }
+
         var locationId = LocationId.From(request.LocationId);
         var uom = Enum.Parse<UnitOfMeasure>(request.ExpectedQuantity.Uom);
         var expectedQuantity = new Quantity(request.ExpectedQuantity.Value, uom);
 
-        return document.AddLine(itemId, locationId, expectedQuantity);
+        return document.AddLine(itemId, locationId, expectedQuantity, stockLotId);
     }
 }

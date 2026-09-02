@@ -10,6 +10,7 @@ public sealed record AddShipmentDocumentLineCommand(
     Guid DocumentId,
     Guid ItemId,
     QuantityDto RequestedQuantity,
+    Guid? StockLotId,
     string? Notes,
     long DocumentVersion
 ) : IRequest<Guid>, ITxRequest;

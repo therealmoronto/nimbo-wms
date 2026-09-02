@@ -11,6 +11,7 @@ public sealed record AddCycleCountDocumentLineCommand(
     Guid ItemId,
     Guid LocationId,
     QuantityDto ExpectedQuantity,
+    Guid? StockLotId,
     string? Notes,
     long DocumentVersion
 ) : IRequest<Guid>, ITxRequest;

@@ -10,7 +10,7 @@ public sealed record CreateInventoryItemRequest(
     decimal Quantity,
     string QuantityUom,
     string Status,
-    Guid? BatchId,
+    Guid StockLotId,
     string? SerialNumber,
     decimal? UnitCost
 );

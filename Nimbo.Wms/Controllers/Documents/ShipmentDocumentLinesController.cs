@@ -32,6 +32,7 @@ public class ShipmentDocumentLinesController(ISender sender) : ControllerBase
             documentGuid,
             request.ItemId,
             request.RequestedQuantity,
+            request.StockLotId,
             request.Notes,
             documentVersion);
         var lineGuid = await sender.Send(command, ct);

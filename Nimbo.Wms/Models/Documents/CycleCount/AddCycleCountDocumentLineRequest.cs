@@ -9,6 +9,7 @@ public sealed record AddCycleCountDocumentLineRequest(
     Guid ItemId,
     Guid LocationId,
     QuantityDto ExpectedQuantity,
+    Guid? StockLotId,
     string? Notes,
     long DocumentVersion
 );
