@@ -7,7 +7,8 @@ public sealed record CreateItemRequest(
     string Name,
     string InternalSku,
     string Barcode,
-    string BaseUom
+    string BaseUom,
+    bool IsBatchManaged = false
 );
 
 [PublicAPI]

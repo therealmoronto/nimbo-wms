@@ -32,6 +32,7 @@ public class ShipmentPickLinesController(ISender sender) : ControllerBase
             documentGuid,
             request.ItemId,
             request.FromLocationId,
+            request.StockLotId,
             request.Quantity,
             request.Notes,
             documentVersion);

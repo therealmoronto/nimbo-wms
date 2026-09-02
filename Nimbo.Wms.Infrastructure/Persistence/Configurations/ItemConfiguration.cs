@@ -31,6 +31,9 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
         builder.Property(x => x.BaseUomCode)
             .IsRequired();
 
+        builder.Property(x => x.IsBatchManaged)
+            .IsRequired();
+
         builder.Property(x => x.Manufacturer)
             .HasMaxLength(Item.ManufacturerMaxLength);
 

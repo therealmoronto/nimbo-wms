@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Documents.Receiving.Commands;
 using Nimbo.Wms.Contracts.Documents.Receiving.Dtos;
 using Nimbo.Wms.Contracts.Documents.Receiving.Queries;
-using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Models.Documents.Receiving;
 
 namespace Nimbo.Wms.Controllers.Documents;

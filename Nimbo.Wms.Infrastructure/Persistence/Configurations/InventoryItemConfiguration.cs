@@ -30,8 +30,9 @@ public class InventoryItemConfiguration : IEntityTypeConfiguration<InventoryItem
             .HasEntityIdConversion()
             .IsRequired();
 
-        builder.Property(x => x.BatchId)
-            .HasEntityIdConversion();
+        builder.Property(x => x.StockLotId)
+            .HasEntityIdConversion()
+            .IsRequired();
 
         builder.Property(x => x.SerialNumber)
             .HasMaxLength(InventoryItem.SerialNumberMaxLength);
@@ -75,12 +76,13 @@ public class InventoryItemConfiguration : IEntityTypeConfiguration<InventoryItem
             .HasForeignKey(x => x.LocationId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne<Batch>()
+        builder.HasOne<StockLot>()
             .WithMany()
-            .HasForeignKey(x => x.BatchId)
+            .HasForeignKey(x => x.StockLotId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(x => new {  x.ItemId, x.WarehouseId, x.LocationId });
+        builder.HasIndex(x => new { x.ItemId, x.WarehouseId, x.LocationId });
+        builder.HasIndex(x => new { x.ItemId, x.StockLotId, x.LocationId }).IsUnique();
         builder.HasIndex(x => x.Status);
     }
 }

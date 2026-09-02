@@ -38,24 +38,24 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
         Touch();
     }
     
-    public Guid AddRequestedLine(ItemId itemId, Quantity requestedQty, string? notes = null)
+    public Guid AddRequestedLine(ItemId itemId, Quantity requestedQty, StockLotId? stockLotId = null, string? notes = null)
     {
         EnsureCanBeEdited();
 
         if (requestedQty.Value <= 0m)
             throw new DomainException("Requested quantity must be greater than zero.");
 
-        if (Lines.Any(x => x.ItemId == itemId))
+        if (Lines.Any(x => x.ItemId == itemId && x.StockLotId == stockLotId))
             throw new DomainException("Duplicate shipment line for same item.");
 
-        var line = new ShipmentDocumentLine(Id, itemId, requestedQty, notes);
+        var line = new ShipmentDocumentLine(Id, itemId, stockLotId, requestedQty, notes);
         AddLine(line);
         Touch();
 
         return line.Id;
     }
 
-    public Guid AddPickLine(ItemId itemId, LocationId fromLocationId, Quantity qty, string? notes = null)
+    public Guid AddPickLine(ItemId itemId, StockLotId stockLotId, LocationId fromLocationId, Quantity qty, string? notes = null)
     {
         EnsureCanBeEdited();
 
@@ -68,7 +68,7 @@ public sealed class ShipmentDocument : DocumentBase<ShipmentDocumentId, Shipment
         if (Equals(fromLocationId, default(LocationId)))
             throw new DomainException("FromLocationId is required.");
 
-        var line = new ShipmentPickLine(Id, itemId, fromLocationId, qty, notes);
+        var line = new ShipmentPickLine(Id, itemId, stockLotId, fromLocationId, qty, notes);
         _pickLines.Add(line);
 
         EnsurePickTotalsDoNotExceedRequested(itemId, planLine.RequestedQuantity);

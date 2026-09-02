@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using Nimbo.Wms.Domain.References;
-using Riok.Mapperly.Abstractions;
 
 namespace Nimbo.Wms.Domain.ValueObject;
 

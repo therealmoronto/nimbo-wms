@@ -41,7 +41,7 @@ public sealed class AdjustmentDocument : DocumentBase<AdjustmentDocumentId, Adju
         Touch();
     }
 
-    public Guid AddLine(ItemId itemId, LocationId locationId, QuantityDelta delta, string? notes = null)
+    public Guid AddLine(ItemId itemId, LocationId locationId, QuantityDelta delta, StockLotId? stockLotId = null, string? notes = null)
     {
         EnsureCanBeEdited();
 
@@ -52,7 +52,7 @@ public sealed class AdjustmentDocument : DocumentBase<AdjustmentDocumentId, Adju
         if (Lines.Any(x => x.ItemId == itemId && x.LocationId == locationId))
             throw new DomainException("Duplicate adjustment line (same item and location).");
 
-        var line = new AdjustmentDocumentLine(Id, itemId, locationId, delta, notes);
+        var line = new AdjustmentDocumentLine(Id, itemId, locationId, delta, stockLotId, notes);
         AddLine(line);
         return line.Id;
     }

@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Mappings.Documents.Shipment;
 using Nimbo.Wms.Contracts.Common;
 using Nimbo.Wms.Contracts.Documents.Shipment.Dtos;
 using Nimbo.Wms.Contracts.Documents.Shipment.Queries;

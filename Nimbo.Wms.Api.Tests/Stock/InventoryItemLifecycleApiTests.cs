@@ -1,11 +1,17 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Contracts.Stock.Commands;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Topology.Commands;
+using Nimbo.Wms.Domain.Entities.Documents.Receiving;
+using Nimbo.Wms.Domain.Entities.MasterData;
+using Nimbo.Wms.Domain.Entities.Stock;
+using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
+using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Models.MasterData;
 using Nimbo.Wms.Models.Stock;
 using Nimbo.Wms.Models.Topology;
@@ -62,6 +68,27 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
         var itemId = createdItem.ItemGuid;
 
+        // StockLotId is now mandatory on CreateInventoryItemCommand — there's no HTTP-reachable way to
+        // mint one yet (Receiving posting isn't exposed over the API), so seed one directly via the
+        // DbContext, same as the Infrastructure smoke tests do.
+        Guid stockLotGuid;
+        await using (var scope = Factory.Services.CreateAsyncScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<NimboWmsDbContext>();
+
+            var supplier = new Supplier(SupplierId.New(), $"SUP-{Guid.NewGuid():N}"[..10], "Seed Supplier", "Seed Address");
+            var receivingDoc = new ReceivingDocument(
+                ReceivingDocumentId.New(), WarehouseId.From(warehouseGuid), supplier.Id, "REC-SEED", "Seed", DateTime.UtcNow);
+            var stockLot = new StockLot(StockLotId.New(), ItemId.From(itemId), receivingDoc.Id, DateTime.UtcNow);
+
+            dbContext.Add(supplier);
+            dbContext.Add(receivingDoc);
+            dbContext.Add(stockLot);
+            await dbContext.SaveChangesAsync();
+
+            stockLotGuid = stockLot.Id.Value;
+        }
+
         // 1) Create inventory item
         var createInventoryItemRequest = new CreateInventoryItemCommand(
             ItemId: itemId,
@@ -70,7 +97,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
             Quantity: 100m,
             QuantityUom: nameof(UnitOfMeasure.Kilogram),
             Status: nameof(InventoryStatus.Available),
-            BatchId: null,
+            StockLotId: stockLotGuid,
             SerialNumber: null,
             UnitCost: 25.50m);
 

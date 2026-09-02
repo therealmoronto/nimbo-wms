@@ -17,18 +17,18 @@ internal sealed class CreateInventoryItemCommandHandler : IRequestHandler<Create
 {
     private readonly IWarehouseRepository _warehouseRepository;
     private readonly IItemRepository _itemRepository;
-    private readonly IBatchRepository _batchRepository;
+    private readonly IStockLotRepository _stockLotRepository;
     private readonly IInventoryItemRepository _inventoryItemRepository;
 
     public CreateInventoryItemCommandHandler(
         IWarehouseRepository warehouseRepository,
         IItemRepository itemRepository,
-        IBatchRepository batchRepository,
+        IStockLotRepository stockLotRepository,
         IInventoryItemRepository inventoryItemRepository)
     {
         _warehouseRepository = warehouseRepository;
         _itemRepository = itemRepository;
-        _batchRepository = batchRepository;
+        _stockLotRepository = stockLotRepository;
         _inventoryItemRepository = inventoryItemRepository;
     }
 
@@ -48,15 +48,10 @@ internal sealed class CreateInventoryItemCommandHandler : IRequestHandler<Create
         if (item == null)
             throw new NotFoundException("Item not found");
 
-        BatchId? batchId = null;
-        if (command.BatchId.HasValue)
-        {
-            var batch = await _batchRepository.GetByIdAsync(BatchId.From(command.BatchId.Value), ct);
-            if (batch == null)
-                throw new NotFoundException("Batch not found");
-
-            batchId = batch.Id;
-        }
+        var stockLotId = StockLotId.From(command.StockLotId);
+        var stockLot = await _stockLotRepository.GetByIdAsync(stockLotId, ct);
+        if (stockLot == null)
+            throw new NotFoundException("StockLot not found");
 
         var inventoryItemId = InventoryItemId.New();
 
@@ -68,9 +63,9 @@ internal sealed class CreateInventoryItemCommandHandler : IRequestHandler<Create
             itemId,
             warehouseId,
             locationId,
+            stockLotId,
             quantity,
             status,
-            batchId,
             command.SerialNumber,
             command.UnitCost);
 

@@ -32,7 +32,7 @@ public sealed class RelocationDocumentPostingService : IDocumentPostingService<R
 
         foreach (var line in document.Lines)
         {
-            var sourceItem = await _inventoryItemRepo.GetByCriteriaAsync(document.WarehouseId, line.From, line.ItemId, ct);
+            var sourceItem = await _inventoryItemRepo.GetByCriteriaAsync(document.WarehouseId, line.From, line.ItemId, line.StockLotId, ct);
             if (sourceItem is null || sourceItem.Quantity.Value < line.Quantity.Value)
                 throw new DomainException("Source item does not exist or insufficient quantity");
 
@@ -41,6 +41,7 @@ public sealed class RelocationDocumentPostingService : IDocumentPostingService<R
             var outLedger = new StockLedgerEntry(
                 sourceItem.Id,
                 sourceItem.ItemId,
+                sourceItem.StockLotId,
                 sourceItem.LocationId,
                 sourceItem.WarehouseId,
                 line.Quantity.ToDelta().Negate(),
@@ -52,10 +53,13 @@ public sealed class RelocationDocumentPostingService : IDocumentPostingService<R
 
             await _stockLedgerEntryRepo.AddAsync(outLedger, ct);
 
+            // The target row inherits the source's resolved StockLotId — physical stock keeps its lot
+            // identity when moved, regardless of what (if anything) the caller passed as a hint.
             var targetItem = await _inventoryItemRepo.GetByCriteriaAsync(
                 document.WarehouseId,
                 line.To,
                 line.ItemId,
+                sourceItem.StockLotId,
                 ct);
 
             if (targetItem is null)
@@ -65,6 +69,7 @@ public sealed class RelocationDocumentPostingService : IDocumentPostingService<R
                     line.ItemId,
                     document.WarehouseId,
                     line.To,
+                    sourceItem.StockLotId,
                     Quantity.Zero(line.Quantity.Uom));
 
                 await _inventoryItemRepo.AddAsync(targetItem, ct);
@@ -75,6 +80,7 @@ public sealed class RelocationDocumentPostingService : IDocumentPostingService<R
             var inLedger = new StockLedgerEntry(
                 targetItem.Id,
                 targetItem.ItemId,
+                targetItem.StockLotId,
                 targetItem.LocationId,
                 targetItem.WarehouseId,
                 line.Quantity.ToDelta(),

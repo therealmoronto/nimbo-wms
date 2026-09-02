@@ -37,6 +37,9 @@ internal sealed class PatchItemCommandHandler : IRequestHandler<PatchItemCommand
         if (!string.IsNullOrEmpty(command.BaseUom) && Enum.TryParse(command.BaseUom, out UnitOfMeasure baseUom))
             item.ChangeBaseUom(baseUom);
 
+        if (command.IsBatchManaged is not null)
+            item.ChangeIsBatchManaged(command.IsBatchManaged.Value);
+
         if (!string.IsNullOrWhiteSpace(command.Manufacturer))
             item.ChangeManufacturer(command.Manufacturer);
 

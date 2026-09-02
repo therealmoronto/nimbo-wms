@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
+using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Commands;
 using Nimbo.Wms.Domain.Identification;
@@ -15,11 +16,16 @@ public class AddAdjustmentDocumentLineCommandHandler : IRequestHandler<AddAdjust
 {
     private readonly IAdjustmentDocumentRepository _repository;
     private readonly IItemRepository _itemRepository;
+    private readonly IStockLotRepository _stockLotRepository;
 
-    public AddAdjustmentDocumentLineCommandHandler(IAdjustmentDocumentRepository repository, IItemRepository itemRepository)
+    public AddAdjustmentDocumentLineCommandHandler(
+        IAdjustmentDocumentRepository repository,
+        IItemRepository itemRepository,
+        IStockLotRepository stockLotRepository)
     {
         _repository = repository;
         _itemRepository = itemRepository;
+        _stockLotRepository = stockLotRepository;
     }
 
     public async Task<Guid> Handle(AddAdjustmentDocumentLineCommand request, CancellationToken ct)
@@ -37,10 +43,20 @@ public class AddAdjustmentDocumentLineCommandHandler : IRequestHandler<AddAdjust
         if (item is null)
             throw new InvalidOperationException($"Item with ID '{itemId}' not found");
 
+        StockLotId? stockLotId = null;
+        if (request.StockLotId is not null)
+        {
+            var stockLot = await _stockLotRepository.GetByIdAsync(StockLotId.From(request.StockLotId.Value), ct);
+            if (stockLot is null)
+                throw new NotFoundException($"Stock lot with ID '{request.StockLotId}' not found");
+
+            stockLotId = stockLot.Id;
+        }
+
         var locationId = LocationId.From(request.LocationId);
         var uom = Enum.Parse<UnitOfMeasure>(request.Delta.Uom);
         var delta = new QuantityDelta(request.Delta.Value, uom);
 
-        return document.AddLine(itemId, locationId, delta, request.Notes);
+        return document.AddLine(itemId, locationId, delta, stockLotId, request.Notes);
     }
 }

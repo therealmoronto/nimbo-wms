@@ -19,13 +19,23 @@ public sealed class CycleCountDocumentLine : DocumentLineBase<CycleCountDocument
         LocationId locationId,
         ItemId itemId,
         Quantity quantity,
+        StockLotId? stockLotId = null,
         string? notes = null)
         : base(documentId, itemId, quantity, notes)
     {
         LocationId = locationId;
+        StockLotId = stockLotId;
     }
 
     public LocationId LocationId { get; private set; }
+
+    /// <summary>
+    /// Which stock lot is being counted. Optional when only one lot exists at the item/location;
+    /// required to attribute newly-discovered surplus with no prior InventoryItem row.
+    /// </summary>
+    public StockLotId? StockLotId { get; private set; }
+
+    public void ChangeStockLotId(StockLotId? stockLotId) => StockLotId = stockLotId;
 
     public Quantity ExpectedQuantity => Quantity;
 

@@ -13,12 +13,12 @@ public class PostgresFixture : IAsyncLifetime
 
     public bool IsStarted => _container is not null;
 
-    public string ConnectionString => _container?.GetConnectionString() ?? throw new InvalidOperationException("Container not initialized.");
+    public string ConnectionString => _container?.GetConnectionString() ?? throw new InvalidOperationException("Postgres container not initialized. Make sure Docker is running and available.");
     
     public async Task InitializeAsync()
     {
         if (!await DockerHelper.IsDockerAvailableAsync())
-            return;
+            throw new InvalidOperationException("Docker is not available. Integration tests require Docker to be running.");
 
         _container = new PostgreSqlBuilder("postgres:16-alpine")
             .WithDatabase("nimbo_wms")

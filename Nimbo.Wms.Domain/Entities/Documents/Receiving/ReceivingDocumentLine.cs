@@ -19,11 +19,15 @@ public sealed class ReceivingDocumentLine : DocumentLineBase<ReceivingDocumentId
         Quantity receivedQuantity,
         LocationId toLocationId,
         Quantity expectedQuantity,
+        DateTime? expiryDate = null,
+        string? batchNumber = null,
         string? notes = null)
         : base(documentId, itemId, receivedQuantity, notes)
     {
         ToLocationId = toLocationId;
         ExpectedQuantity = expectedQuantity;
+        ExpiryDate = expiryDate;
+        BatchNumber = batchNumber;
     }
 
     public LocationId ToLocationId { get; private set; }
@@ -32,7 +36,23 @@ public sealed class ReceivingDocumentLine : DocumentLineBase<ReceivingDocumentId
 
     public Quantity ExpectedQuantity { get; private set; }
 
+    /// <summary>
+    /// Supplier-declared expiry, entered by the receiving clerk. Input to VendorLot resolution during
+    /// posting when Item.IsBatchManaged; not persisted anywhere else.
+    /// </summary>
+    public DateTime? ExpiryDate { get; private set; }
+
+    /// <summary>
+    /// Supplier-declared batch number, entered by the receiving clerk. Input to VendorLot resolution
+    /// during posting when Item.IsBatchManaged; not persisted anywhere else.
+    /// </summary>
+    public string? BatchNumber { get; private set; }
+
     public void ChangeExpectedQuantity(Quantity newExpectedQuantity) => ExpectedQuantity = newExpectedQuantity;
 
     public void ChangeToLocationId(LocationId locationId) => ToLocationId = locationId;
+
+    public void ChangeExpiryDate(DateTime? expiryDate) => ExpiryDate = expiryDate;
+
+    public void ChangeBatchNumber(string? batchNumber) => BatchNumber = batchNumber;
 }

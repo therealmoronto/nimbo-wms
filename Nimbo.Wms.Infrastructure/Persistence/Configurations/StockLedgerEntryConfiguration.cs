@@ -20,6 +20,10 @@ public class StockLedgerEntryConfiguration : IEntityTypeConfiguration<StockLedge
             .HasEntityIdConversion()
             .IsRequired();
 
+        builder.Property(x => x.StockLotId)
+            .HasEntityIdConversion()
+            .IsRequired();
+
         builder.Property(x => x.LocationId)
             .HasEntityIdConversion()
             .IsRequired();

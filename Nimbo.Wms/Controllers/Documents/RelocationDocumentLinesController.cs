@@ -32,6 +32,7 @@ public class RelocationDocumentLinesController(ISender sender) : ControllerBase
             request.FromLocationId,
             request.ToLocationId,
             request.Quantity,
+            request.StockLotId,
             request.Notes,
             request.DocumentVersion);
 

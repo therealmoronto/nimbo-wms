@@ -15,6 +15,7 @@ public sealed class StockLedgerEntry : BaseEntity<StockLedgerEntryId>
     public StockLedgerEntry(
         InventoryItemId inventoryItemId,
         ItemId itemId,
+        StockLotId stockLotId,
         LocationId locationId,
         WarehouseId warehouseId,
         QuantityDelta quantityDelta,
@@ -27,6 +28,7 @@ public sealed class StockLedgerEntry : BaseEntity<StockLedgerEntryId>
         Id = StockLedgerEntryId.New();
         InventoryItemId = inventoryItemId;
         ItemId = itemId;
+        StockLotId = stockLotId;
         LocationId = locationId;
         WarehouseId = warehouseId;
         QuantityDelta = quantityDelta;
@@ -40,6 +42,8 @@ public sealed class StockLedgerEntry : BaseEntity<StockLedgerEntryId>
     public InventoryItemId InventoryItemId { get; }
 
     public ItemId ItemId { get; }
+
+    public StockLotId StockLotId { get; }
 
     public LocationId LocationId { get; }
 

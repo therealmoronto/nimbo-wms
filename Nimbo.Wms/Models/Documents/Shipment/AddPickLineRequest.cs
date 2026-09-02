@@ -7,6 +7,7 @@ namespace Nimbo.Wms.Models.Documents.Shipment;
 public sealed record AddPickLineRequest(
     Guid ItemId,
     Guid FromLocationId,
+    Guid StockLotId,
     QuantityDto Quantity,
     string? Notes
 );

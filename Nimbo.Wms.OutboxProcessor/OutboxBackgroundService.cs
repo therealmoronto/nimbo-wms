@@ -6,8 +6,6 @@ using Nimbo.Wms.Domain;
 using Nimbo.Wms.Domain.Entities.Documents;
 using Nimbo.Wms.Infrastructure.Persistence;
 using Nimbo.Wms.Infrastructure.Persistence.Outbox;
-using Polly;
-using Polly.Registry;
 
 namespace Nimbo.Wms.OutboxProcessor;
 

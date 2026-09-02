@@ -12,7 +12,7 @@ public sealed record CreateInventoryItemCommand(
     decimal Quantity,
     string QuantityUom,
     string Status,
-    Guid? BatchId,
+    Guid StockLotId,
     string? SerialNumber,
     decimal? UnitCost
 ) : IRequest<Guid>, ITxRequest;

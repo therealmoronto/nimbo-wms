@@ -32,10 +32,13 @@ public sealed class ShipmentDocumentPostingService : IDocumentPostingService<Shi
             if (pickLine.Quantity.IsZero)
                 continue;
 
+            // StockLotId is mandatory on a pick line, so this lookup is always an exact match — no
+            // ambiguity branch needed here, by construction.
             var inventoryItem = await _inventoryItemRepo.GetByCriteriaAsync(
                 document.WarehouseId,
                 pickLine.FromLocation,
                 pickLine.ItemId,
+                pickLine.StockLotId,
                 ct);
 
             if (inventoryItem is null || inventoryItem.Quantity.Value < pickLine.Quantity.Value)
@@ -48,6 +51,7 @@ public sealed class ShipmentDocumentPostingService : IDocumentPostingService<Shi
             var ledgerEntry = new StockLedgerEntry(
                 inventoryItem.Id,
                 inventoryItem.ItemId,
+                inventoryItem.StockLotId,
                 inventoryItem.LocationId,
                 inventoryItem.WarehouseId,
                 pickLine.Quantity.ToDelta().Negate(),

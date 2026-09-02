@@ -1,5 +1,4 @@
 using FluentValidation;
-using Nimbo.Wms.Contracts.Common.Dtos;
 using Nimbo.Wms.Contracts.Documents.Receiving.Commands;
 
 namespace Nimbo.Wms.Application.Common.Validators.Documents.Receiving;

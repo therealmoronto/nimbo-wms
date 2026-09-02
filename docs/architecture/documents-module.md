@@ -28,6 +28,25 @@ Trade-offs:
 - Pro: Strong consistency for operational workflows and simpler invariants enforcement.
 - Con: Large documents (many lines) may result in large aggregates, potentially impacting performance during concurrent updates.
 
+## Stock Lot References on Document Lines
+
+`ReceivingDocumentLine` carries scalar `BatchNumber`/`ExpiryDate` (entered by the receiving clerk) — these are
+*input* to lot resolution at posting time, not a reference to an existing lot. `ReceivingDocumentPostingService`
+resolves them into a `VendorLot` (find-or-create, only when `Item.IsBatchManaged`) and always mints a fresh
+`StockLot` per line (see `docs/architecture/stock-module.md`, "Lot Genealogy"). No other document type creates
+lots — they only reference `StockLotId`s that already exist.
+
+The other four document types carry a `StockLotId` reference with an intentional nullability split:
+- **Nullable** on `RelocationDocumentLine`, `CycleCountDocumentLine`, `AdjustmentDocumentLine`, and the "requested"
+  `ShipmentDocumentLine` — a caller may omit it when only one stock lot exists at the relevant item/location;
+  `IInventoryItemRepository.GetByCriteriaAsync` resolves that single-lot case unambiguously and throws a
+  `DomainException` if more than one lot exists and none was specified. CycleCount/Adjustment posting additionally
+  requires a `StockLotId` to materialize brand-new surplus stock (no prior `InventoryItem` row) — a `StockLot` can
+  only originate from a `ReceivingDocument`, so posting has no lot to attribute otherwise.
+- **Mandatory** on `ShipmentPickLine` — once more than one lot can coexist at an item/location (the entire point of
+  FIFO/FEFO), an unspecified pick lot would be ambiguous, so the type system forces the caller to have already
+  picked one (typically via `GetAvailableStockLotsQuery`, see `docs/architecture/stock-module.md`).
+
 ## API Lifecycle
 
 Routing is flat for usability; aggregate boundaries are enforced in handlers and domain logic, not by URL nesting.

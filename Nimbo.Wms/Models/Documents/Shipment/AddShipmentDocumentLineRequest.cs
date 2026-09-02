@@ -7,6 +7,7 @@ namespace Nimbo.Wms.Models.Documents.Shipment;
 public sealed record AddShipmentDocumentLineRequest(
     Guid ItemId,
     QuantityDto RequestedQuantity,
+    Guid? StockLotId,
     string? Notes
 );
 

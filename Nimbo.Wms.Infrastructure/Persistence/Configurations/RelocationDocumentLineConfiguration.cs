@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Entities.Documents.Relocation;
 using Nimbo.Wms.Domain.Entities.MasterData;
+using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 
@@ -51,8 +52,16 @@ public class RelocationDocumentLineConfiguration : IEntityTypeConfiguration<Relo
                     .IsRequired();
             });
 
+        builder.Property(x => x.StockLotId)
+            .HasEntityIdConversion();
+
         builder.Property(x => x.Notes)
             .HasMaxLength(IDocumentLine.NotesMaxLength);
+
+        builder.HasOne<StockLot>()
+            .WithMany()
+            .HasForeignKey(x => x.StockLotId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne<Item>()
             .WithMany()

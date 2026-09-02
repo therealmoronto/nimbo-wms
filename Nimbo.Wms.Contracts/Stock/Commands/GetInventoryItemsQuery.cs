@@ -8,5 +8,5 @@ namespace Nimbo.Wms.Contracts.Stock.Commands;
 public sealed record GetInventoryItemsQuery(
     Guid? WarehouseId,
     Guid? ItemId,
-    Guid? BatchId
+    Guid? StockLotId
 ) : IRequest<IReadOnlyList<InventoryItemDto>>;

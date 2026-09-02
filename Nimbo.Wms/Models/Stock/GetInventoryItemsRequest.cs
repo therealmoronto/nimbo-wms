@@ -6,5 +6,5 @@ namespace Nimbo.Wms.Models.Stock;
 public sealed record GetInventoryItemsRequest(
     Guid? WarehouseId,
     Guid? ItemId,
-    Guid? BatchId
+    Guid? StockLotId
 );
