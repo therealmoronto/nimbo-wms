@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Nimbo.Wms.Domain.Entities.Documents.Common;
+using Nimbo.Wms.Domain.Entities.Documents;
 using Nimbo.Wms.Domain.Entities.Documents.Relocation;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Domain.Entities.Stock;

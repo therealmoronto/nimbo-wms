@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Contracts.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Stock.Commands;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Domain.Entities.Stock;

@@ -71,7 +71,7 @@ public class InventoryItem : BaseEntity<InventoryItemId>
     public InventoryStatus Status { get; private set; }
 
     public decimal? UnitCost { get; private set; }
-    
+
     public void Increase(Quantity amount)
     {
         EnsureSameUom(amount);

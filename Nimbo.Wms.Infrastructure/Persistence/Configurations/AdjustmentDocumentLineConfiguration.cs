@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nimbo.Wms.Domain.Entities.Documents;
 using Nimbo.Wms.Domain.Entities.Documents.Adjustment;
-using Nimbo.Wms.Domain.Entities.Documents.Common;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Infrastructure.Persistence.Converters;
 

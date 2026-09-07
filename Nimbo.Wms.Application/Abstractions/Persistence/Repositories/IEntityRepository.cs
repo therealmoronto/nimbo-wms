@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 using Nimbo.Wms.Domain.Entities;
-using Nimbo.Wms.Domain.Entities.Documents.Common;
+using Nimbo.Wms.Domain.Entities.Documents;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Application.Abstractions.Persistence.Repositories;

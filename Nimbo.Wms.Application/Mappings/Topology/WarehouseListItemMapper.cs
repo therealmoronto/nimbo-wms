@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using Nimbo.Wms.Contracts.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Riok.Mapperly.Abstractions;

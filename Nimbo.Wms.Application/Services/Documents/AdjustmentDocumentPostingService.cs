@@ -64,7 +64,7 @@ public sealed class AdjustmentDocumentPostingService : IDocumentPostingService<A
             if (inventoryItem.Quantity.Value < Math.Abs(line.Delta.Value))
                 throw new DomainException($"Insufficient stock for Item {line.ItemId} at Location {line.LocationId}");
 
-            inventoryItem.Quantity.ApplyDelta(line.Delta);
+            inventoryItem.ApplyDelta(line.Delta);
 
             var ledgerEntry = new StockLedgerEntry(
                 inventoryItem.Id,

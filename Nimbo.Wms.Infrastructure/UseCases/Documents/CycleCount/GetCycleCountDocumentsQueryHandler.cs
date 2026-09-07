@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Contracts.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Dtos;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Queries;
 using Nimbo.Wms.Domain.Entities.Documents.CycleCount;
