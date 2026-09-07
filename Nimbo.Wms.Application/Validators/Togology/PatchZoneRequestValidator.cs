@@ -1,0 +1,21 @@
+using FluentValidation;
+using JetBrains.Annotations;
+using Nimbo.Wms.Contracts.Topology.Commands;
+using Nimbo.Wms.Domain.Entities.Topology;
+
+namespace Nimbo.Wms.Application.Validators.Togology;
+
+[PublicAPI]
+public class PatchZoneRequestValidator : AbstractValidator<PatchZoneCommand>
+{
+    public PatchZoneRequestValidator()
+    {
+        RuleFor(x => x.Name)
+            .MaximumLength(Zone.NameMaxLength)
+            .WithMessage($"Zone name cannot exceed {Zone.NameMaxLength} characters");
+
+        RuleFor(x => x.Code)
+            .MaximumLength(Zone.CodeMaxLength)
+            .WithMessage($"Zone code cannot exceed {Zone.CodeMaxLength} characters");
+    }
+}

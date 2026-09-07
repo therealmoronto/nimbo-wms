@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
-using Nimbo.Wms.Contracts.Common;
-using Nimbo.Wms.Contracts.Common.Dtos;
+using Nimbo.Wms.Contracts;
+using Nimbo.Wms.Contracts.ValueObject;
 using Nimbo.Wms.Domain.ValueObject;
 using Riok.Mapperly.Abstractions;
 

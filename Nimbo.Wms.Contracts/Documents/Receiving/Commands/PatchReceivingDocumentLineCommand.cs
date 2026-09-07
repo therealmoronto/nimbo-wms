@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
-using Nimbo.Wms.Contracts.Common;
-using Nimbo.Wms.Contracts.Common.Dtos;
+using Nimbo.Wms.Contracts.ValueObject;
 
 namespace Nimbo.Wms.Contracts.Documents.Receiving.Commands;
 

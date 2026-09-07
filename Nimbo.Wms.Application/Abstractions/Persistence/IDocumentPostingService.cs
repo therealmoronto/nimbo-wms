@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using Nimbo.Wms.Domain.Entities.Documents.Common;
+using Nimbo.Wms.Domain.Entities.Documents;
 
 namespace Nimbo.Wms.Application.Abstractions.Persistence;
 

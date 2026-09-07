@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Contracts.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Dtos;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Queries;
 using Nimbo.Wms.Domain.Entities.Documents.Adjustment;

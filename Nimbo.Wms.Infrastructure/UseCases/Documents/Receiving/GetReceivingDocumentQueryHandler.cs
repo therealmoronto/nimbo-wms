@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Nimbo.Wms.Application.Common;
-using Nimbo.Wms.Contracts.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.Receiving.Dtos;
 using Nimbo.Wms.Contracts.Documents.Receiving.Queries;
 using Nimbo.Wms.Domain.Entities.Documents.Receiving;

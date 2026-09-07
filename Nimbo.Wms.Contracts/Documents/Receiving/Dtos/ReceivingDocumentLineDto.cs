@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using Nimbo.Wms.Contracts.Common.Dtos;
+using Nimbo.Wms.Contracts.ValueObject;
 
 namespace Nimbo.Wms.Contracts.Documents.Receiving.Dtos;
 

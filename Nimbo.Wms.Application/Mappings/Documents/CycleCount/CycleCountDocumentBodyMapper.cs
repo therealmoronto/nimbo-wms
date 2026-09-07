@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using Nimbo.Wms.Contracts.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Dtos;
 using Nimbo.Wms.Domain.Entities.Documents.CycleCount;
 using Riok.Mapperly.Abstractions;

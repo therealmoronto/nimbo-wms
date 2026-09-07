@@ -1,9 +1,9 @@
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Contracts.Common.Dtos;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Queries;
+using Nimbo.Wms.Contracts.ValueObject;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Infrastructure.Persistence;
