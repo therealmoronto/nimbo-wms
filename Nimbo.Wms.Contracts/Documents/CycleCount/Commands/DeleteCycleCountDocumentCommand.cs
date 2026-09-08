@@ -7,4 +7,4 @@ namespace Nimbo.Wms.Contracts.Documents.CycleCount.Commands;
 public sealed record DeleteCycleCountDocumentCommand(
     Guid Id,
     long Version
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

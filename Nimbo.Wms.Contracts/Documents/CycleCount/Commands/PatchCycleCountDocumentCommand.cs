@@ -9,4 +9,4 @@ public sealed record PatchCycleCountDocumentCommand(
     string? Code,
     string? Title,
     long Version
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

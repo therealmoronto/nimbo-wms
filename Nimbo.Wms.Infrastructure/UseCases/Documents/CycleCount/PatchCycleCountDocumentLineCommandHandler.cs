@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Commands;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
@@ -10,7 +10,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.CycleCount;
 
 [PublicAPI]
-public class PatchCycleCountDocumentLineCommandHandler : IRequestHandler<PatchCycleCountDocumentLineCommand>
+public class PatchCycleCountDocumentLineCommandHandler : IRequestHandler<PatchCycleCountDocumentLineCommand, Result>
 {
     private readonly ICycleCountDocumentRepository _repository;
 
@@ -19,15 +19,15 @@ public class PatchCycleCountDocumentLineCommandHandler : IRequestHandler<PatchCy
         _repository = repository;
     }
 
-    public async Task Handle(PatchCycleCountDocumentLineCommand request, CancellationToken ct)
+    public async Task<Result> Handle(PatchCycleCountDocumentLineCommand request, CancellationToken ct)
     {
         var documentId = CycleCountDocumentId.From(request.DocumentId);
         var document = await _repository.GetByIdWithLinesAsync(documentId, ct);
         if (document is null)
-            throw new NotFoundException($"Cycle count document with ID '{documentId}' not found");
+            return Error.NotFound("document.notfound", $"Cycle count document with ID '{documentId}' not found");
 
         if (document.Version > request.DocumentVersion)
-            throw new ConcurrencyException($"Document version mismatch. Expected: {document.Version}, Actual: {request.DocumentVersion}");
+            return Error.Conflict("document.conflict", $"Document version mismatch. Expected: {document.Version}, Actual: {request.DocumentVersion}");
 
         var lineId = request.LineId;
         if (request.ExpectedQuantity is not null)
@@ -39,5 +39,7 @@ public class PatchCycleCountDocumentLineCommandHandler : IRequestHandler<PatchCy
 
         if (request.Notes is not null)
             document.ChangeLineNotes(lineId, request.Notes);
+
+        return Result.Success();
     }
 }

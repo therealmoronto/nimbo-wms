@@ -8,4 +8,4 @@ public sealed record CreateCycleCountDocumentCommand(
     Guid WarehouseId,
     string Code,
     string Title
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;

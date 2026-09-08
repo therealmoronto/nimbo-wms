@@ -11,7 +11,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.CycleCount;
 
 [PublicAPI]
-public class GetCycleCountDocumentLinesQueryHandler : IRequestHandler<GetCycleCountDocumentLinesQuery, IReadOnlyList<CycleCountDocumentLineDto>>
+public class GetCycleCountDocumentLinesQueryHandler : IRequestHandler<GetCycleCountDocumentLinesQuery, Result<IReadOnlyList<CycleCountDocumentLineDto>>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<CycleCountDocumentLine, CycleCountDocumentLineDto> _mapper;
@@ -24,7 +24,7 @@ public class GetCycleCountDocumentLinesQueryHandler : IRequestHandler<GetCycleCo
         _mapper = mapper;
     }
 
-    public async Task<IReadOnlyList<CycleCountDocumentLineDto>> Handle(
+    public async Task<Result<IReadOnlyList<CycleCountDocumentLineDto>>> Handle(
         GetCycleCountDocumentLinesQuery request,
         CancellationToken cancellationToken)
     {
