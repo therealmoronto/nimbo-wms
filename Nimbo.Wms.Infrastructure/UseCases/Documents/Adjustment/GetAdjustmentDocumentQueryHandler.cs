@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Dtos;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Queries;
@@ -9,7 +8,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Adjustment;
 
-public class GetAdjustmentDocumentQueryHandler : IRequestHandler<GetAdjustmentDocumentQuery, AdjustmentDocumentDto>
+public class GetAdjustmentDocumentQueryHandler : IRequestHandler<GetAdjustmentDocumentQuery, Result<AdjustmentDocumentDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<AdjustmentDocument, AdjustmentDocumentBodyDto> _bodyMapper;
@@ -25,7 +24,7 @@ public class GetAdjustmentDocumentQueryHandler : IRequestHandler<GetAdjustmentDo
         _lineMapper = lineMapper;
     }
 
-    public async Task<AdjustmentDocumentDto> Handle(GetAdjustmentDocumentQuery request, CancellationToken ct)
+    public async Task<Result<AdjustmentDocumentDto>> Handle(GetAdjustmentDocumentQuery request, CancellationToken ct)
     {
         var dbQuery = _dbContext.Set<AdjustmentDocument>()
             .AsNoTracking()
@@ -39,7 +38,7 @@ public class GetAdjustmentDocumentQueryHandler : IRequestHandler<GetAdjustmentDo
             .SingleOrDefaultAsync(ct);
             
         if (document is null)
-            throw new NotFoundException($"Adjustment document with ID {request.Id} not found");
+            return Error.NotFound("document.notfound", $"Adjustment document with ID {request.Id} not found");
 
         return document;
     }

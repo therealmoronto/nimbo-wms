@@ -11,4 +11,4 @@ public sealed record PatchAdjustmentDocumentCommand(
     string? ReasonCode,
     string? ReasonText,
     long Version
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

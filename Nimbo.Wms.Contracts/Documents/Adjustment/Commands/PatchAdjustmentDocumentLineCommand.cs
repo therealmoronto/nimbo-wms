@@ -12,4 +12,4 @@ public sealed record PatchAdjustmentDocumentLineCommand(
     QuantityDeltaDto? Delta,
     string? Notes,
     long DocumentVersion
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;
