@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Domain.Entities.MasterData;
 using Nimbo.Wms.Domain.Identification;
@@ -8,7 +9,7 @@ using Nimbo.Wms.Domain.Identification;
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
 [PublicAPI]
-internal sealed class CreateSupplierCommandHandler : IRequestHandler<CreateSupplierCommand, Guid>
+internal sealed class CreateSupplierCommandHandler : IRequestHandler<CreateSupplierCommand, Result<Guid>>
 {
     private readonly ISupplierRepository _repository;
 
@@ -17,13 +18,13 @@ internal sealed class CreateSupplierCommandHandler : IRequestHandler<CreateSuppl
         _repository = repository;
     }
 
-    public async Task<Guid> Handle(CreateSupplierCommand request, CancellationToken ct = default)
+    public async Task<Result<Guid>> Handle(CreateSupplierCommand request, CancellationToken ct = default)
     {
         var supplerId = SupplierId.From(Guid.NewGuid());
         var supplier = new Supplier(supplerId, request.Code, request.Name);
-        
+
         await _repository.AddAsync(supplier, ct);
 
-        return supplerId;
+        return supplerId.Value;
     }
 }

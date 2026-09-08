@@ -11,7 +11,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
 [PublicAPI]
-internal sealed class GetSupplierQueryHandler : IRequestHandler<GetSupplierQuery, SupplierDto>
+internal sealed class GetSupplierQueryHandler : IRequestHandler<GetSupplierQuery, Result<SupplierDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<Supplier, SupplierDto> _mapper;
@@ -22,7 +22,7 @@ internal sealed class GetSupplierQueryHandler : IRequestHandler<GetSupplierQuery
         _mapper = mapper;
     }
 
-    public async Task<SupplierDto> Handle(GetSupplierQuery query, CancellationToken ct = default)
+    public async Task<Result<SupplierDto>> Handle(GetSupplierQuery query, CancellationToken ct = default)
     {
         var dbQuery = _dbContext.Set<Supplier>()
             .AsNoTracking()
@@ -30,7 +30,7 @@ internal sealed class GetSupplierQueryHandler : IRequestHandler<GetSupplierQuery
 
         var supplier = await _mapper.ProjectToDto(dbQuery).SingleOrDefaultAsync(ct);
         if (supplier == null)
-            throw new NotFoundException($"Supplier not found.");
+            return Error.NotFound("supplier.notfound", "Supplier not found");
 
         return supplier;
     }
