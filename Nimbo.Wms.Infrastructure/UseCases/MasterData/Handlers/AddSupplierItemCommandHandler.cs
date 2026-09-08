@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
-using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Domain.Identification;
@@ -23,7 +22,7 @@ internal sealed class AddSupplierItemCommandHandler : IRequestHandler<AddSupplie
         var supplierId = SupplierId.From(command.SupplierGuid);
         var supplier = await _repository.GetByIdWithItemsAsync(supplierId, ct);
         if (supplier is null)
-            throw new NotFoundException("Supplier not found");
+            return Error.NotFound("supplier.notfound", "Supplier not found");
 
         var supplierItemId = SupplierItemId.New();
         var itemId = new ItemId(command.ItemGuid);

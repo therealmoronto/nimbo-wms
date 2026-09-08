@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Topology.Queries;
@@ -11,7 +10,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 
 [PublicAPI]
-internal sealed class GetWarehouseTopologyQueryHandler : IRequestHandler<GetWarehouseTopologyQuery, WarehouseTopologyDto>
+internal sealed class GetWarehouseTopologyQueryHandler : IRequestHandler<GetWarehouseTopologyQuery, Result<WarehouseTopologyDto>>
 {
     private readonly NimboWmsDbContext _db;
     private readonly IMapper<Warehouse, WarehouseTopologyDto> _mapper;
@@ -22,7 +21,7 @@ internal sealed class GetWarehouseTopologyQueryHandler : IRequestHandler<GetWare
         _mapper = mapper;
     }
 
-    public async Task<WarehouseTopologyDto> Handle(GetWarehouseTopologyQuery query, CancellationToken ct = default)
+    public async Task<Result<WarehouseTopologyDto>> Handle(GetWarehouseTopologyQuery query, CancellationToken ct = default)
     {
         var dbQuery = _db.Set<Warehouse>()
             .AsNoTracking()
@@ -30,7 +29,7 @@ internal sealed class GetWarehouseTopologyQueryHandler : IRequestHandler<GetWare
 
         var warehouse = await _mapper.ProjectToDto(dbQuery).SingleOrDefaultAsync(ct);
         if (warehouse is null)
-            throw new NotFoundException("Warehouse not found");
+            return Error.NotFound("warehouse.notfound","Warehouse not found");
 
         return warehouse;
     }

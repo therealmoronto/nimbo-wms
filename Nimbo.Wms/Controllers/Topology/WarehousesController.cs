@@ -35,12 +35,13 @@ public sealed class WarehousesController(ISender sender) : ControllerBase
     /// a Not Found (404) response is returned.
     /// </returns>
     [HttpGet("{warehouseGuid:guid}")]
-    [ProducesResponseType(typeof(WarehouseTopologyDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<WarehouseTopologyDto> GetWarehouseTopology([FromRoute] Guid warehouseGuid, CancellationToken ct)
+    public async Task<IActionResult> GetWarehouseTopology([FromRoute] Guid warehouseGuid, CancellationToken ct)
     {
-        return await sender.Send(new GetWarehouseTopologyQuery(warehouseGuid), ct);
+        var result = await sender.Send(new GetWarehouseTopologyQuery(warehouseGuid), ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
