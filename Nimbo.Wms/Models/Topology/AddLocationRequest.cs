@@ -11,4 +11,4 @@ public sealed record AddLocationRequest(
 );
 
 [PublicAPI]
-public sealed record AddLocationResponse(Guid LocationId);
+public sealed record AddLocationResponse(Guid Id);

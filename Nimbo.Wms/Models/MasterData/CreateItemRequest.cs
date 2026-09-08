@@ -12,4 +12,4 @@ public sealed record CreateItemRequest(
 );
 
 [PublicAPI]
-public sealed record CreateItemResponse(Guid Value);
+public sealed record CreateItemResponse(Guid Id);

@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Nimbo.Wms.Contracts.MasterData.Commands;
+using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Models.MasterData;
 using Nimbo.Wms.Tests.Common.Attributes;
@@ -27,7 +28,7 @@ public class SupplierLifecycleApiTests : ApiTestBase
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
         var createSupplierResponse = (await createResponse.Content.ReadFromJsonAsync<CreateSupplierResponse>())!;
-        var supplierGuid = createSupplierResponse.Value;
+        var supplierGuid = createSupplierResponse.Id;
         var patchSupplierRequest = new PatchSupplierRequest(
             supplierGuid,
             "SUP-002",
@@ -47,14 +48,14 @@ public class SupplierLifecycleApiTests : ApiTestBase
         
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemGuid = createdItem.Value;
+        var itemGuid = createdItem.Id;
 
         var addSupplierItemRequest = new AddSupplierItemCommand(supplierGuid, itemGuid);
         var addedSupplierItemResponse = await Client.PostAsJsonAsync($"/api/suppliers/{supplierGuid}/items", addSupplierItemRequest);
         addedSupplierItemResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         
         var addedSupplierItem = (await addedSupplierItemResponse.Content.ReadFromJsonAsync<AddSupplierItemResponse>())!;
-        var supplierItemGuid = addedSupplierItem.Value;
+        var supplierItemGuid = addedSupplierItem.Id;
 
         var patchSupplierItemRequest = new PatchSupplierItemRequest(
             supplierGuid,
@@ -75,12 +76,7 @@ public class SupplierLifecycleApiTests : ApiTestBase
 
         patchResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var supplierResponse = await Client.GetFromJsonAsync<GetSupplierResponse>($"/api/suppliers/{supplierGuid}");
-        supplierResponse.Should().NotBeNull();
-
-        var supplierDto = supplierResponse.Value;
-
-
+        var supplierDto = await Client.GetFromJsonAsync<SupplierDto>($"/api/suppliers/{supplierGuid}");
         supplierDto.Should().NotBeNull();
         supplierDto.Id.Should().Be(supplierGuid);
         supplierDto.Code.Should().Be("SUP-002");
@@ -102,9 +98,7 @@ public class SupplierLifecycleApiTests : ApiTestBase
         supplierItemDto.DefaultPurchasePrice.Should().Be(100m);
         supplierItemDto.IsPreferred.Should().BeTrue();
 
-        var suppliersResponse = await Client.GetFromJsonAsync<GetSuppliersResponse>("/api/suppliers");
-        suppliersResponse.Should().NotBeNull();
-        var suppliers = suppliersResponse.Value;
+        var suppliers = await Client.GetFromJsonAsync<IReadOnlyList<SupplierDto>>("/api/suppliers");
         suppliers.Should().NotBeNullOrEmpty();
         suppliers.Should().Contain(s => s.Id == supplierGuid);
 

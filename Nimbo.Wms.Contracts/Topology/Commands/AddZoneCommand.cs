@@ -9,4 +9,5 @@ public sealed record AddZoneCommand(
     string Code,
     string Name,
     string Type
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;
+

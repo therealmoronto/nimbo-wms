@@ -83,7 +83,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
 
         zoneRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var zone = (await zoneRes.Content.ReadFromJsonAsync<AddZoneResponse>())!;
-        var zoneId = zone.ZoneId;
+        var zoneId = zone.Id;
 
         // Delete zone
         var deleteRes = await Client.DeleteAsync($"/api/topology/zones/{zoneId}");
@@ -113,7 +113,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
 
         zoneRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var zone = (await zoneRes.Content.ReadFromJsonAsync<AddZoneResponse>())!;
-        var zoneGuid = zone.ZoneId;
+        var zoneGuid = zone.Id;
 
         // Add location in that zone
         var addLocationRequest = new AddLocationCommand(warehouseGuid, zoneGuid, "A-01-01-01", nameof(LocationType.Shelf));
@@ -153,7 +153,7 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
 
         zoneRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var zone = (await zoneRes.Content.ReadFromJsonAsync<AddZoneResponse>())!;
-        var zoneGuid = zone.ZoneId;
+        var zoneGuid = zone.Id;
 
         // Add location
         var addLocationRequest = new AddLocationCommand(warehouseGuid, zoneGuid, "A-01-01-01", nameof(LocationType.Shelf));
@@ -161,17 +161,17 @@ public class WarehouseTopologyDeleteApiTest : ApiTestBase
 
         locRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var loc = (await locRes.Content.ReadFromJsonAsync<AddLocationResponse>())!;
-        var locationId = loc.LocationId;
+        var locationGuid = loc.Id;
 
         // Delete location
-        var deleteRes = await Client.DeleteAsync($"/api/topology/locations/{locationId}");
+        var deleteRes = await Client.DeleteAsync($"/api/topology/locations/{locationGuid}");
         deleteRes.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // Verify topology
         var topology = await Client.GetFromJsonAsync<WarehouseTopologyDto>($"/api/topology/warehouses/{warehouseGuid}");
 
         topology.Should().NotBeNull();
-        topology.Locations.Should().NotContain(l => l.Id == locationId);
+        topology.Locations.Should().NotContain(l => l.Id == locationGuid);
     }
 
     [Fact]

@@ -24,7 +24,11 @@ public class SuppliersController(ISender sender) : ControllerBase
     {
         var command = new CreateSupplierCommand(request.Code, request.Name);
         var result = await sender.Send(command, ct);
-        return result.ToActionResult(this, nameof(CreateSupplier));
+        return result.ToActionResult(
+            this,
+            v => new CreateSupplierResponse(v),
+            nameof(GetSuppliers),
+            "Suppliers");
     }
 
     /// <summary>

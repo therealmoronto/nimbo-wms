@@ -60,7 +60,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
 
         zRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var zone = (await zRes.Content.ReadFromJsonAsync<AddZoneResponse>())!;
-        var zoneGuid = zone.ZoneId;
+        var zoneGuid = zone.Id;
 
         // patch zone
         var patch = new PatchZoneCommand(
@@ -100,7 +100,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
 
         zRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var zone = (await zRes.Content.ReadFromJsonAsync<AddZoneResponse>())!;
-        var zoneGuid = zone.ZoneId;
+        var zoneGuid = zone.Id;
 
         // add location
         var addLocationRequest = new AddLocationCommand(warehouseGuid, zoneGuid, "A-01-01-01", nameof(LocationType.Shelf));
@@ -108,7 +108,7 @@ public class WarehouseTopologyPatchApiTests : ApiTestBase
 
         lRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var loc = (await lRes.Content.ReadFromJsonAsync<AddLocationResponse>())!;
-        var locationGuid = loc.LocationId;
+        var locationGuid = loc.Id;
 
         // patch location
         var patch = new PatchLocationCommand(

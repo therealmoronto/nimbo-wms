@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Nimbo.Wms.Contracts.MasterData.Commands;
+using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Models.MasterData;
 using Nimbo.Wms.Tests.Common.Attributes;
@@ -29,16 +30,10 @@ public class ItemsLifecycleApiTests : ApiTestBase
 
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         var createItemResponse = (await createResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemGuid = createItemResponse.Value;
+        var itemGuid = createItemResponse.Id;
 
         // 2) Get item by id
-        var itemResponse = await Client.GetFromJsonAsync<GetItemResponse>($"/api/items/{itemGuid}");
-
-        itemResponse.Should().NotBeNull();
-        itemResponse.Value.Should().NotBeNull();
-
-        var item = itemResponse.Value;
-
+        var item = await Client.GetFromJsonAsync<ItemDto>($"/api/items/{itemGuid}");
         item.Should().NotBeNull();
         item.Id.Should().Be(itemGuid);
         item.Name.Should().Be("ITEM-001");
@@ -62,12 +57,8 @@ public class ItemsLifecycleApiTests : ApiTestBase
         patchResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // 4) Get list of items
-        var itemsResponse = await Client.GetFromJsonAsync<GetItemsResponse>("/api/items");
-
-        itemsResponse.Should().NotBeNull();
-        itemsResponse.Value.Should().NotBeNullOrEmpty();
-
-        var items = itemsResponse.Value;
+        var items = await Client.GetFromJsonAsync<IReadOnlyList<ItemDto>>("/api/items");
+        items.Should().NotBeNullOrEmpty();
 
         var updated = items.Single(i => i.Id == itemGuid);
         updated.Id.Should().Be(itemGuid);
@@ -84,12 +75,8 @@ public class ItemsLifecycleApiTests : ApiTestBase
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // 6) Get list of items
-        itemsResponse = await Client.GetFromJsonAsync<GetItemsResponse>("/api/items");
-        itemsResponse.Should().NotBeNull();
-
-        items = itemsResponse.Value;
-
-        items.Should().NotBeNull();
+        items = await Client.GetFromJsonAsync<IReadOnlyList<ItemDto>>("/api/items");
+        items.Should().NotBeNullOrEmpty();
         items.Should().NotContain(i => i.Id == itemGuid);
     }
 

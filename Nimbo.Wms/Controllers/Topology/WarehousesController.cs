@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Topology.Commands;
 using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Topology.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Topology;
 
 namespace Nimbo.Wms.Controllers.Topology;
@@ -50,18 +51,17 @@ public sealed class WarehousesController(ISender sender) : ControllerBase
     /// and a Created (201) response status.
     /// </returns>
     [HttpPost]
-    [ProducesResponseType(typeof(CreateWarehouseResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [Produces("application/json")]
-    public async Task<ActionResult<CreateWarehouseResponse>> CreateWarehouse([FromBody] CreateWarehouseRequest request, CancellationToken ct)
+    public async Task<IActionResult> CreateWarehouse([FromBody] CreateWarehouseRequest request, CancellationToken ct)
     {
         var command = new CreateWarehouseCommand(request.Code, request.Name);
-        var warehouseGuid = await sender.Send(command, ct);
-
-        return CreatedAtAction(
-            actionName: nameof(WarehousesController.GetWarehouseTopology),
-            controllerName: "Warehouses",
-            routeValues: new { warehouseGuid = warehouseGuid },
-            value: new CreateWarehouseResponse(warehouseGuid));
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(
+            this,
+            v => new CreateWarehouseResponse(v),
+            nameof(GetWarehouses),
+            "Warehouses");
     }
 
     /// <summary>
@@ -77,8 +77,8 @@ public sealed class WarehousesController(ISender sender) : ControllerBase
     public async Task<IActionResult> UpdateWarehouse([FromRoute] Guid warehouseGuid, [FromBody] PatchWarehouseRequest request, CancellationToken ct)
     {
         var command = new PatchWarehouseCommand(warehouseGuid, request.Code, request.Name, request.Address, request.Description);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ public sealed class WarehousesController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteWarehouse([FromRoute] Guid warehouseGuid, CancellationToken ct)
     {
-        await sender.Send(new DeleteWarehouseCommand(warehouseGuid), ct);
-        return NoContent();
+        var result = await sender.Send(new DeleteWarehouseCommand(warehouseGuid), ct);
+        return result.ToActionResult(this);
     }
 }

@@ -24,7 +24,11 @@ public class ItemsController(ISender sender) : ControllerBase
     {
         var command = new CreateItemCommand(request.Name, request.InternalSku, request.Barcode, request.BaseUom, request.IsBatchManaged);
         var result = await sender.Send(command, ct);
-        return result.ToActionResult(this, nameof(CreateItem));
+        return result.ToActionResult(
+            this,
+            v => new CreateItemResponse(v),
+            nameof(GetItems),
+            "Items");
     }
 
     /// <summary>

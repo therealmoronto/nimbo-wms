@@ -9,4 +9,4 @@ public sealed record CreateSupplierRequest(
 );
 
 [PublicAPI]
-public sealed record CreateSupplierResponse(Guid Value);
+public sealed record CreateSupplierResponse(Guid Id);

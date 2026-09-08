@@ -30,7 +30,12 @@ public class SupplierItemsController(ISender sender) : ControllerBase
     {
         var command = new AddSupplierItemCommand(supplierGuid, request.ItemGuid);
         var result = await sender.Send(command, ct);
-        return result.ToActionResult(this, nameof(AddSupplierItem));
+        return result.ToActionResult(
+            this,
+            v => new AddSupplierItemResponse(v),
+            nameof(SuppliersController.GetSuppliers),
+            "Suppliers",
+            new { supplierGuid });
     }
 
     /// <summary>

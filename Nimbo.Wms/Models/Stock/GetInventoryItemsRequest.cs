@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using Nimbo.Wms.Contracts.Stock.Dtos;
 
 namespace Nimbo.Wms.Models.Stock;
 
@@ -9,5 +8,3 @@ public sealed record GetInventoryItemsRequest(
     Guid? ItemId,
     Guid? StockLotId
 );
-
-public sealed record GetInventoryItemsResponse(IReadOnlyList<InventoryItemDto> Value);

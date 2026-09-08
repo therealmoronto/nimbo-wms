@@ -11,4 +11,4 @@ public sealed record AddZoneRequest(
 );
 
 [PublicAPI]
-public sealed record AddZoneResponse(Guid ZoneId);
+public sealed record AddZoneResponse(Guid Id);

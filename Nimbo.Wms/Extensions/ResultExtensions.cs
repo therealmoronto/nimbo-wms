@@ -14,17 +14,23 @@ public static class ResultExtensions
             : controller.Problem(result.Error);
     }
 
-    public static IActionResult ToActionResult<T>(this Result<T> result, ControllerBase controller, string actionName)
+    public static IActionResult ToActionResult<T>(
+        this Result<T> result,
+        ControllerBase controller,
+        Func<T, object> valueSelector,
+        [AspMvcAction] string actionName,
+        [AspMvcController] string? controllerName = null,
+        object? routeValues = null)
     {
         return result.IsSuccess
-            ? controller.CreatedAtAction(actionName, new { result.Value })
+            ? controller.CreatedAtAction(actionName, controllerName, routeValues, valueSelector(result.Value))
             : controller.Problem(result.Error);
     }
 
     public static IActionResult ToActionResult<T>(this Result<T> result, ControllerBase controller)
     {
         return result.IsSuccess
-            ? controller.Ok(new { result.Value })
+            ? controller.Ok(result.Value)
             : controller.Problem(result.Error);
     }
 

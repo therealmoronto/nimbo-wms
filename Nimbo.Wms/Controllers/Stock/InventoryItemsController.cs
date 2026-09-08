@@ -34,7 +34,11 @@ public class InventoryItemsController : ControllerBase
     {
         var command = new CreateInventoryItemCommand(request.ItemId, request.WarehouseId, request.LocationId, request.Quantity, request.QuantityUom, request.Status, request.StockLotId, request.SerialNumber, request.UnitCost);
         var result = await mediator.Send(command, ct);
-        return result.ToActionResult(this, nameof(CreateInventoryItem));
+        return result.ToActionResult(
+            this,
+            v => new CreateInventoryItemResponse(v),
+            nameof(GetInventoryItems),
+            "InventoryItems");
     }
 
     /// <summary>
