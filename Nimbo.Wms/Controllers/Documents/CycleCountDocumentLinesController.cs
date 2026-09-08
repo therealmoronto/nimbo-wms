@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Commands;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Dtos;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Documents.CycleCount;
 
 namespace Nimbo.Wms.Controllers.Documents;
@@ -37,11 +38,14 @@ public class CycleCountDocumentLinesController(ISender sender) : ControllerBase
             request.Notes,
             request.DocumentVersion);
 
-        var lineGuid = await sender.Send(command, ct);
-        return CreatedAtAction(
-            nameof(GetLines),
-            new { documentGuid, lineGuid },
-            new AddCycleCountDocumentLineResponse(lineGuid));
+        var result = await sender.Send(command, ct);
+
+        return result.ToActionResult(
+            this,
+            v => new AddCycleCountDocumentLineResponse(v),
+            nameof(CycleCountDocumentsController.GetDocument),
+            "CycleCountDocuments",
+            new { documentGuid });
     }
 
     /// <summary>
@@ -54,12 +58,13 @@ public class CycleCountDocumentLinesController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<CycleCountDocumentLineDto>> GetLines(
+    public async Task<IActionResult> GetLines(
         Guid documentGuid,
         CancellationToken ct)
     {
         var query = new GetCycleCountDocumentLinesQuery(documentGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -86,8 +91,8 @@ public class CycleCountDocumentLinesController(ISender sender) : ControllerBase
             request.ExpectedQuantity,
             request.Notes,
             request.DocumentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -111,7 +116,7 @@ public class CycleCountDocumentLinesController(ISender sender) : ControllerBase
             documentGuid,
             lineGuid,
             documentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }

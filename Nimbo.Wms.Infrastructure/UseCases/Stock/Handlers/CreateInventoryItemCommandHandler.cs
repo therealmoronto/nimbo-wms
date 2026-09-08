@@ -3,7 +3,7 @@ using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Stock;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Stock.Commands;
 using Nimbo.Wms.Domain.Entities.Stock;
 using Nimbo.Wms.Domain.Identification;
@@ -13,7 +13,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
 [PublicAPI]
-internal sealed class CreateInventoryItemCommandHandler : IRequestHandler<CreateInventoryItemCommand, Guid>
+internal sealed class CreateInventoryItemCommandHandler : IRequestHandler<CreateInventoryItemCommand, Result<Guid>>
 {
     private readonly IWarehouseRepository _warehouseRepository;
     private readonly IItemRepository _itemRepository;
@@ -32,26 +32,26 @@ internal sealed class CreateInventoryItemCommandHandler : IRequestHandler<Create
         _inventoryItemRepository = inventoryItemRepository;
     }
 
-    public async Task<Guid> Handle(CreateInventoryItemCommand command, CancellationToken ct = default)
+    public async Task<Result<Guid>> Handle(CreateInventoryItemCommand command, CancellationToken ct = default)
     {
         var warehouseId = WarehouseId.From(command.WarehouseId);
         var warehouse = await _warehouseRepository.GetByIdAsync(warehouseId, ct);
         if (warehouse == null)
-            throw new NotFoundException("Warehouse not found");
+            return Error.NotFound("warehouse.notfound", "Warehouse not found");
 
         var locationId = LocationId.From(command.LocationId);
         if (warehouse.Locations.All(l => l.Id != locationId))
-            throw new NotFoundException("Location not found");
+            return Error.NotFound("location.notfound", "Location not found");
 
         var itemId = ItemId.From(command.ItemId);
         var item = await _itemRepository.GetByIdAsync(itemId, ct);
         if (item == null)
-            throw new NotFoundException("Item not found");
+            return Error.NotFound("item.notfound", "Item not found");
 
         var stockLotId = StockLotId.From(command.StockLotId);
         var stockLot = await _stockLotRepository.GetByIdAsync(stockLotId, ct);
         if (stockLot == null)
-            throw new NotFoundException("StockLot not found");
+            return Error.NotFound("stocklot.notfound", "StockLot not found");
 
         var inventoryItemId = InventoryItemId.New();
 
@@ -71,6 +71,6 @@ internal sealed class CreateInventoryItemCommandHandler : IRequestHandler<Create
 
         await _inventoryItemRepository.AddAsync(inventoryItem, ct);
 
-        return inventoryItemId;
+        return inventoryItemId.Value;
     }
 }

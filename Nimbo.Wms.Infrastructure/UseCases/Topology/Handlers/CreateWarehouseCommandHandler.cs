@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Topology.Commands;
 using Nimbo.Wms.Domain.Entities.Topology;
 using Nimbo.Wms.Domain.Identification;
@@ -8,7 +9,7 @@ using Nimbo.Wms.Domain.Identification;
 namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 
 [PublicAPI]
-internal sealed class CreateWarehouseCommandHandler : IRequestHandler<CreateWarehouseCommand, Guid>
+internal sealed class CreateWarehouseCommandHandler : IRequestHandler<CreateWarehouseCommand, Result<Guid>>
 {
     private readonly IWarehouseRepository _repository;
 
@@ -17,12 +18,12 @@ internal sealed class CreateWarehouseCommandHandler : IRequestHandler<CreateWare
         _repository = repository;
     }
 
-    public async Task<Guid> Handle(CreateWarehouseCommand command, CancellationToken ct = default)
+    public async Task<Result<Guid>> Handle(CreateWarehouseCommand command, CancellationToken ct = default)
     {
         var id = WarehouseId.New();
         var warehouse = new Warehouse(id, command.Code, command.Name);
         await _repository.AddAsync(warehouse, ct);
 
-        return id;
+        return id.Value;
     }
 }

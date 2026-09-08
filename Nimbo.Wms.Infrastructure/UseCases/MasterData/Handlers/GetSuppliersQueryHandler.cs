@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Queries;
 using Nimbo.Wms.Domain.Entities.MasterData;
@@ -9,7 +10,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
 [PublicAPI]
-internal class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, IReadOnlyList<SupplierDto>>
+internal class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, Result<IReadOnlyList<SupplierDto>>>
 {
     private readonly NimboWmsDbContext _dbContext;
 
@@ -18,7 +19,7 @@ internal class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, IRe
         _dbContext = dbContext;
     }
 
-    public async Task<IReadOnlyList<SupplierDto>> Handle(GetSuppliersQuery query, CancellationToken ct = default)
+    public async Task<Result<IReadOnlyList<SupplierDto>>> Handle(GetSuppliersQuery query, CancellationToken ct = default)
     {
         var suppliers = await _dbContext.Set<Supplier>()
             .AsNoTracking()

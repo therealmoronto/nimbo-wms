@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Documents.Receiving.Commands;
 using Nimbo.Wms.Contracts.Documents.Receiving.Dtos;
 using Nimbo.Wms.Contracts.Documents.Receiving.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Documents.Receiving;
 
 namespace Nimbo.Wms.Controllers.Documents;
@@ -38,11 +39,14 @@ public class ReceivingDocumentLinesController(ISender sender) : ControllerBase
             request.Notes,
             request.DocumentVersion);
 
-        var lineGuid = await sender.Send(command, ct);
-        return CreatedAtAction(
+        var result = await sender.Send(command, ct);
+
+        return result.ToActionResult(
+            this,
+            v => new AddReceivingDocumentLineResponse(v),
             nameof(GetLines),
-            new { documentGuid, lineGuid },
-            new AddReceivingDocumentLineResponse(lineGuid));
+            "ReceivingDocumentLines",
+            result.IsSuccess ? new { documentGuid, lineGuid = result.Value } : null);
     }
 
     /// <summary>
@@ -55,12 +59,13 @@ public class ReceivingDocumentLinesController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<ReceivingDocumentLineDto>> GetLines(
+    public async Task<IActionResult> GetLines(
         Guid documentGuid,
         CancellationToken ct)
     {
         var query = new GetReceivingDocumentLinesQuery(documentGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -88,8 +93,8 @@ public class ReceivingDocumentLinesController(ISender sender) : ControllerBase
             request.ExpectedQuantity,
             request.Notes,
             request.DocumentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -113,7 +118,7 @@ public class ReceivingDocumentLinesController(ISender sender) : ControllerBase
             documentGuid,
             lineGuid,
             documentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }

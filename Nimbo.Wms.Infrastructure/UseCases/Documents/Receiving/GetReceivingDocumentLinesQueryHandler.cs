@@ -11,7 +11,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Receiving;
 
 [PublicAPI]
-public class GetReceivingDocumentLinesQueryHandler : IRequestHandler<GetReceivingDocumentLinesQuery, List<ReceivingDocumentLineDto>>
+public class GetReceivingDocumentLinesQueryHandler : IRequestHandler<GetReceivingDocumentLinesQuery, Result<List<ReceivingDocumentLineDto>>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<ReceivingDocumentLine, ReceivingDocumentLineDto> _mapper;
@@ -22,7 +22,7 @@ public class GetReceivingDocumentLinesQueryHandler : IRequestHandler<GetReceivin
         _mapper = mapper;
     }
 
-    public async Task<List<ReceivingDocumentLineDto>> Handle(GetReceivingDocumentLinesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<ReceivingDocumentLineDto>>> Handle(GetReceivingDocumentLinesQuery request, CancellationToken cancellationToken)
     {
         var documentId = ReceivingDocumentId.From(request.Id);
         var dbQuery = _dbContext.Set<ReceivingDocumentLine>()

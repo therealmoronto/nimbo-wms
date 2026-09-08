@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Queries;
+using Nimbo.Wms.Extensions;
 
 namespace Nimbo.Wms.Controllers.Stock;
 
@@ -23,7 +24,7 @@ public class StockLotsController : ControllerBase
     [HttpGet("available-stock-lots")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<AvailableStockLotDto>> GetAvailableStockLots(
+    public async Task<IActionResult> GetAvailableStockLots(
         [FromQuery] Guid itemGuid,
         [FromQuery] Guid? warehouseGuid,
         [FromQuery] Guid? locationGuid,
@@ -31,6 +32,7 @@ public class StockLotsController : ControllerBase
         CancellationToken ct)
     {
         var query = new GetAvailableStockLotsQuery(itemGuid, warehouseGuid, locationGuid);
-        return await mediator.Send(query, ct);
+        var result = await mediator.Send(query, ct);
+        return result.ToActionResult(this);
     }
 }

@@ -8,4 +8,4 @@ public sealed record DeleteCycleCountDocumentLineCommand(
     Guid DocumentId,
     Guid Id,
     long DocumentVersion
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

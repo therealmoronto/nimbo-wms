@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.MasterData.Commands;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.MasterData;
 
 namespace Nimbo.Wms.Controllers.MasterData;
@@ -28,13 +29,13 @@ public class SupplierItemsController(ISender sender) : ControllerBase
         CancellationToken ct)
     {
         var command = new AddSupplierItemCommand(supplierGuid, request.ItemGuid);
-        var supplierItemGuid = await sender.Send(command, ct);
-
-        return CreatedAtAction(
-            actionName: nameof(SuppliersController.GetSupplier),
-            controllerName: "Suppliers",
-            routeValues: new { supplierGuid = supplierItemGuid },
-            value: new AddSupplierItemResponse(supplierItemGuid));
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(
+            this,
+            v => new AddSupplierItemResponse(v),
+            nameof(SuppliersController.GetSuppliers),
+            "Suppliers",
+            new { supplierGuid });
     }
 
     /// <summary>
@@ -67,8 +68,8 @@ public class SupplierItemsController(ISender sender) : ControllerBase
             request.MinOrderQty,
             request.IsPreferred);
 
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -88,7 +89,7 @@ public class SupplierItemsController(ISender sender) : ControllerBase
         CancellationToken ct)
     {
         var command = new DeleteSupplierItemCommand(supplierGuid, supplierItemGuid);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }

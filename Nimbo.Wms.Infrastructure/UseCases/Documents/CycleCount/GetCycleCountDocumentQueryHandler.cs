@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Dtos;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Queries;
@@ -9,7 +8,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.CycleCount;
 
-public class GetCycleCountDocumentQueryHandler : IRequestHandler<GetCycleCountDocumentQuery, CycleCountDocumentDto>
+public class GetCycleCountDocumentQueryHandler : IRequestHandler<GetCycleCountDocumentQuery, Result<CycleCountDocumentDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<CycleCountDocument, CycleCountDocumentBodyDto> _bodyMapper;
@@ -25,7 +24,7 @@ public class GetCycleCountDocumentQueryHandler : IRequestHandler<GetCycleCountDo
         _lineMapper = lineMapper;
     }
 
-    public async Task<CycleCountDocumentDto> Handle(GetCycleCountDocumentQuery request, CancellationToken ct)
+    public async Task<Result<CycleCountDocumentDto>> Handle(GetCycleCountDocumentQuery request, CancellationToken ct)
     {
         var dbQuery = _dbContext.Set<CycleCountDocument>()
             .AsNoTracking()
@@ -39,7 +38,7 @@ public class GetCycleCountDocumentQueryHandler : IRequestHandler<GetCycleCountDo
             .SingleOrDefaultAsync(ct);
 
         if (document is null)
-            throw new NotFoundException($"Cycle count document with ID {request.DocumentId} not found");
+            return Error.NotFound("document.notfound", $"Cycle count document with ID {request.DocumentId} not found");
 
         return document;
     }

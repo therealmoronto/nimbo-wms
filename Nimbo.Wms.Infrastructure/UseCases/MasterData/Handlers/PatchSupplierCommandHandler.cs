@@ -1,14 +1,14 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
 [PublicAPI]
-internal sealed class PatchSupplierCommandHandler : IRequestHandler<PatchSupplierCommand>
+internal sealed class PatchSupplierCommandHandler : IRequestHandler<PatchSupplierCommand, Result>
 {
     private readonly ISupplierRepository _repository;
 
@@ -17,12 +17,12 @@ internal sealed class PatchSupplierCommandHandler : IRequestHandler<PatchSupplie
         _repository = repository;
     }
 
-    public async Task Handle(PatchSupplierCommand command, CancellationToken ct = default)
+    public async Task<Result> Handle(PatchSupplierCommand command, CancellationToken ct = default)
     {
         var supplierId = SupplierId.From(command.SupplierId);
         var supplier = await _repository.GetByIdAsync(supplierId, ct);
         if (supplier is null)
-            throw new NotFoundException("Supplier not found");
+            return Error.NotFound("supplier.notfound", "Supplier not found");
         
         if (!string.IsNullOrWhiteSpace(command.Code))
             supplier.ChangeCode(command.Code);
@@ -51,5 +51,7 @@ internal sealed class PatchSupplierCommandHandler : IRequestHandler<PatchSupplie
             else
                 supplier.Deactivate();
         }
+
+        return Result.Success();
     }
 }

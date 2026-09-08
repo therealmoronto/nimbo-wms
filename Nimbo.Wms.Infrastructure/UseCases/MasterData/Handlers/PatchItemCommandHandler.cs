@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
@@ -9,7 +9,7 @@ using Nimbo.Wms.Domain.References;
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
 [PublicAPI]
-internal sealed class PatchItemCommandHandler : IRequestHandler<PatchItemCommand>
+internal sealed class PatchItemCommandHandler : IRequestHandler<PatchItemCommand, Result>
 {
     private readonly IItemRepository _repository;
 
@@ -18,12 +18,12 @@ internal sealed class PatchItemCommandHandler : IRequestHandler<PatchItemCommand
         _repository = repository;
     }
     
-    public async Task Handle(PatchItemCommand command, CancellationToken ct = default)
+    public async Task<Result> Handle(PatchItemCommand command, CancellationToken ct = default)
     {
         var itemId = ItemId.From(command.ItemGuid);
         var item = await _repository.GetByIdAsync(itemId, ct);
         if (item is null)
-            throw new NotFoundException($"Item with id {itemId} not found");
+            return Error.NotFound("item.notfound", $"Item with id {itemId} not found");
         
         if (!string.IsNullOrWhiteSpace(command.Name))
             item.Rename(command.Name);
@@ -49,5 +49,7 @@ internal sealed class PatchItemCommandHandler : IRequestHandler<PatchItemCommand
             var volume = command.VolumeM3 ?? item.VolumeM3;
             item.SetPhysical(weight, volume);
         }
+
+        return Result.Success();
     }
 }

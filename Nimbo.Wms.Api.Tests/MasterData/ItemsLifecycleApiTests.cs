@@ -30,17 +30,16 @@ public class ItemsLifecycleApiTests : ApiTestBase
 
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         var createItemResponse = (await createResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemGuid = createItemResponse.ItemGuid;
+        var itemGuid = createItemResponse.Id;
 
         // 2) Get item by id
-        var created = await Client.GetFromJsonAsync<ItemDto>($"/api/items/{itemGuid}");
-
-        created.Should().NotBeNull();
-        created.Id.Should().Be(itemGuid);
-        created.Name.Should().Be("ITEM-001");
-        created.InternalSku.Should().Be("I-001");
-        created.Barcode.Should().Be("00100245");
-        created.BaseUomCode.Should().Be(nameof(UnitOfMeasure.Kilogram));
+        var item = await Client.GetFromJsonAsync<ItemDto>($"/api/items/{itemGuid}");
+        item.Should().NotBeNull();
+        item.Id.Should().Be(itemGuid);
+        item.Name.Should().Be("ITEM-001");
+        item.InternalSku.Should().Be("I-001");
+        item.Barcode.Should().Be("00100245");
+        item.BaseUomCode.Should().Be(nameof(UnitOfMeasure.Kilogram));
         
         // 3) Patch item
         var patchItemRequest = new PatchItemRequest(itemGuid)
@@ -58,7 +57,7 @@ public class ItemsLifecycleApiTests : ApiTestBase
         patchResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // 4) Get list of items
-        var items = await Client.GetFromJsonAsync<List<ItemDto>>("/api/items");
+        var items = await Client.GetFromJsonAsync<IReadOnlyList<ItemDto>>("/api/items");
         items.Should().NotBeNullOrEmpty();
 
         var updated = items.Single(i => i.Id == itemGuid);
@@ -74,10 +73,10 @@ public class ItemsLifecycleApiTests : ApiTestBase
         // 5) Delete item
         var deleteResponse = await Client.DeleteAsync($"/api/items/{itemGuid}");
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
-        
+
         // 6) Get list of items
-        items = await Client.GetFromJsonAsync<List<ItemDto>>("/api/items");
-        items.Should().NotBeNull();
+        items = await Client.GetFromJsonAsync<IReadOnlyList<ItemDto>>("/api/items");
+        items.Should().NotBeNullOrEmpty();
         items.Should().NotContain(i => i.Id == itemGuid);
     }
 

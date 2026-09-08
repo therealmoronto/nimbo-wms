@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Stock.Commands;
 using Nimbo.Wms.Contracts.Stock.Dtos;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Stock;
 
 namespace Nimbo.Wms.Controllers.Stock;
@@ -32,12 +33,12 @@ public class InventoryItemsController : ControllerBase
         CancellationToken ct)
     {
         var command = new CreateInventoryItemCommand(request.ItemId, request.WarehouseId, request.LocationId, request.Quantity, request.QuantityUom, request.Status, request.StockLotId, request.SerialNumber, request.UnitCost);
-        var inventoryItemGuid = await mediator.Send(command, ct);
-        return CreatedAtAction(
-            nameof(GetInventoryItem),
-            "InventoryItems",
-            new { inventoryItemGuid = inventoryItemGuid },
-            new CreateInventoryItemResponse(inventoryItemGuid));
+        var result = await mediator.Send(command, ct);
+        return result.ToActionResult(
+            this,
+            v => new CreateInventoryItemResponse(v),
+            nameof(GetInventoryItems),
+            "InventoryItems");
     }
 
     /// <summary>
@@ -56,13 +57,14 @@ public class InventoryItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<InventoryItemDto> GetInventoryItem(
+    public async Task<IActionResult> GetInventoryItem(
         [FromRoute] Guid inventoryItemGuid,
         [FromServices] IMediator mediator,
         CancellationToken ct)
     {
         var query = new GetInventoryItemQuery(inventoryItemGuid);
-        return await mediator.Send(query, ct);
+        var result = await mediator.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -80,7 +82,7 @@ public class InventoryItemsController : ControllerBase
     [HttpGet("inventory-items")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<InventoryItemDto>> GetInventoryItems(
+    public async Task<IActionResult> GetInventoryItems(
         [FromQuery] Guid? warehouseGuid,
         [FromQuery] Guid? itemGuid,
         [FromQuery] Guid? stockLotGuid,
@@ -88,6 +90,7 @@ public class InventoryItemsController : ControllerBase
         CancellationToken ct)
     {
         var query = new GetInventoryItemsQuery(warehouseGuid, itemGuid, stockLotGuid);
-        return await mediator.Send(query, ct);
+        var result = await mediator.Send(query, ct);
+        return result.ToActionResult(this);
     }
 }

@@ -48,7 +48,7 @@ public class WarehouseTopologyLifecycleApiTests : ApiTestBase
 
         var createdZone = await addZoneResponse.Content.ReadFromJsonAsync<AddZoneResponse>();
         createdZone.Should().NotBeNull();
-        var zoneGuid = createdZone.ZoneId;
+        var zoneGuid = createdZone.Id;
 
         // 3) Add location
         var addLocation = new AddLocationCommand(

@@ -14,4 +14,4 @@ public sealed record AddReceivingDocumentLineCommand(
     string? BatchNumber,
     string? Notes,
     long DocumentVersion
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;

@@ -10,4 +10,4 @@ public sealed record PatchReceivingDocumentCommand(
     string? Title,
     string? Notes,
     long Version
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

@@ -1,8 +1,6 @@
 using System.Net.Mime;
-using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
-using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Domain.Common;
 
 namespace Nimbo.Wms.Middlewares;
@@ -71,18 +69,11 @@ public sealed class ProblemDetailsExceptionMiddleware
         // NOTE: Add your project-specific exceptions here.
         return ex switch
         {
-            // Application/Common/NotFoundException (or wherever it lives)
-            NotFoundException => (StatusCodes.Status404NotFound, "Not Found", "https://httpstatuses.com/404"),
-
-            // Application/Common/ConflictException (or wherever it lives)
-            ConcurrencyException => (StatusCodes.Status409Conflict, "Conflict", "https://httpstatuses.com/409"),
-
             // Common "bad input" exceptions
             InvalidOperationException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
             ArgumentException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
             FormatException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
             DomainException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
-            ValidationException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
 
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error", "https://httpstatuses.com/500")
         };

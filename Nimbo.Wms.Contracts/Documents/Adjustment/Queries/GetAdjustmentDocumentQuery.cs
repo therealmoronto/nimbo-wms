@@ -5,4 +5,4 @@ using Nimbo.Wms.Contracts.Documents.Adjustment.Dtos;
 namespace Nimbo.Wms.Contracts.Documents.Adjustment.Queries;
 
 [PublicAPI]
-public sealed record GetAdjustmentDocumentQuery(Guid Id) : IRequest<AdjustmentDocumentDto>;
+public sealed record GetAdjustmentDocumentQuery(Guid Id) : IRequest<Result<AdjustmentDocumentDto>>;

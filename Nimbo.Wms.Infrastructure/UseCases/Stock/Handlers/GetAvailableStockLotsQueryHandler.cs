@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Stock.Dtos;
 using Nimbo.Wms.Contracts.Stock.Queries;
 using Nimbo.Wms.Contracts.ValueObject;
@@ -16,7 +17,7 @@ namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 /// read query — no allocation logic; the caller picks a lot and passes its id explicitly to a pick line.
 /// </summary>
 [PublicAPI]
-internal sealed class GetAvailableStockLotsQueryHandler : IRequestHandler<GetAvailableStockLotsQuery, IReadOnlyList<AvailableStockLotDto>>
+internal sealed class GetAvailableStockLotsQueryHandler : IRequestHandler<GetAvailableStockLotsQuery, Result<IReadOnlyList<AvailableStockLotDto>>>
 {
     private readonly NimboWmsDbContext _dbContext;
 
@@ -25,7 +26,7 @@ internal sealed class GetAvailableStockLotsQueryHandler : IRequestHandler<GetAva
         _dbContext = dbContext;
     }
 
-    public async Task<IReadOnlyList<AvailableStockLotDto>> Handle(GetAvailableStockLotsQuery query, CancellationToken ct = default)
+    public async Task<Result<IReadOnlyList<AvailableStockLotDto>>> Handle(GetAvailableStockLotsQuery query, CancellationToken ct = default)
     {
         var itemId = ItemId.From(query.ItemId);
 
@@ -44,10 +45,13 @@ internal sealed class GetAvailableStockLotsQueryHandler : IRequestHandler<GetAva
             inventory = inventory.Where(i => i.LocationId == locationId);
         }
 
+        var stockLots = _dbContext.Set<StockLot>().AsNoTracking();
+        var vendorLots = _dbContext.Set<VendorLot>().AsNoTracking();
+
         var rows = from i in inventory
-            join sl in _dbContext.Set<StockLot>().AsNoTracking() on i.StockLotId equals sl.Id
-            join vl in _dbContext.Set<VendorLot>().AsNoTracking() on sl.VendorLotId equals vl.Id into vendorLots
-            from vl in vendorLots.DefaultIfEmpty()
+            join sl in stockLots on i.StockLotId equals sl.Id
+            join vl in vendorLots on sl.VendorLotId equals vl.Id into tmpVendorLots
+            from vl in tmpVendorLots.DefaultIfEmpty()
             select new AvailableStockLotDto(
                 sl.Id.Value,
                 i.ItemId.Value,

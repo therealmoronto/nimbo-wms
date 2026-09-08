@@ -7,4 +7,4 @@ namespace Nimbo.Wms.Contracts.MasterData.Commands;
 public sealed record CreateSupplierCommand(
     string Code,
     string Name
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;

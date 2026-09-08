@@ -46,7 +46,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
 
         var addZoneResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/zones", addZoneRequest);
         var createdZone = (await addZoneResponse.Content.ReadFromJsonAsync<AddZoneResponse>())!;
-        var zoneGuid = createdZone.ZoneId;
+        var zoneGuid = createdZone.Id;
 
         var addLocationRequest = new AddLocationCommand(
             warehouseGuid,
@@ -56,7 +56,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
 
         var addLocationResponse = await Client.PostAsJsonAsync($"/api/topology/warehouses/{warehouseGuid}/locations", addLocationRequest);
         var createdLocation = (await addLocationResponse.Content.ReadFromJsonAsync<AddLocationResponse>())!;
-        var locationId = createdLocation.LocationId;
+        var locationId = createdLocation.Id;
 
         var createItemRequest = new CreateItemCommand(
             "INV-TEST-ITEM",
@@ -66,7 +66,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
 
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemId = createdItem.ItemGuid;
+        var itemId = createdItem.Id;
 
         // StockLotId is now mandatory on CreateInventoryItemCommand — there's no HTTP-reachable way to
         // mint one yet (Receiving posting isn't exposed over the API), so seed one directly via the
@@ -110,7 +110,6 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
 
         // 2) Get inventory item by id
         var inventoryItemDto = await Client.GetFromJsonAsync<InventoryItemDto>($"/api/stock/inventory-items/{inventoryItemId}");
-
         inventoryItemDto.Should().NotBeNull();
         inventoryItemDto.Id.Should().Be(inventoryItemId);
         inventoryItemDto.ItemId.Should().Be(itemId);
@@ -124,7 +123,6 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
 
         // 3) List inventory items with filter
         var inventoryItems = await Client.GetFromJsonAsync<IReadOnlyList<InventoryItemDto>>($"/api/stock/inventory-items?warehouseGuid={warehouseGuid}&itemGuid={itemId}");
-
         inventoryItems.Should().NotBeNullOrEmpty();
 
         var listedInventoryItem = inventoryItems.Single(i => i.Id == inventoryItemId);

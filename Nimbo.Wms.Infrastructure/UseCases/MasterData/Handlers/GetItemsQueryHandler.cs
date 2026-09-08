@@ -10,7 +10,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
 [PublicAPI]
-internal class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, IReadOnlyList<ItemDto>>
+internal class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, Result<IReadOnlyList<ItemDto>>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<Item, ItemDto> _mapper;
@@ -21,7 +21,7 @@ internal class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, IReadOnlyLi
         _mapper = mapper;
     }
 
-    public async Task<IReadOnlyList<ItemDto>> Handle(GetItemsQuery query, CancellationToken ct = default)
+    public async Task<Result<IReadOnlyList<ItemDto>>> Handle(GetItemsQuery query, CancellationToken ct = default)
     {
         var dbQuery = _dbContext.Set<Item>().AsNoTracking();
         var items = await _mapper.ProjectToDto(dbQuery).ToListAsync(ct);

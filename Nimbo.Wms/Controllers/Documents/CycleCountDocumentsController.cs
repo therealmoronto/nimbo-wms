@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Commands;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Dtos;
 using Nimbo.Wms.Contracts.Documents.CycleCount.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Documents.CycleCount;
 
 namespace Nimbo.Wms.Controllers.Documents;
@@ -29,12 +30,14 @@ public class CycleCountDocumentsController(ISender sender) : ControllerBase
             request.WarehouseId,
             request.Code,
             request.Title);
-        var documentGuid = await sender.Send(command, ct);
+        var result = await sender.Send(command, ct);
 
-        return CreatedAtAction(
-            actionName: nameof(GetDocument),
-            new { documentGuid = documentGuid },
-            new CreateCycleCountDocumentResponse(documentGuid));
+        return result.ToActionResult(
+            this,
+            v => new CreateCycleCountDocumentResponse(v),
+            nameof(GetDocument),
+            "CycleCountDocuments",
+            result.IsSuccess ? new { documentGuid = result.Value } : null);
     }
 
     /// <summary>
@@ -45,10 +48,11 @@ public class CycleCountDocumentsController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<CycleCountDocumentBodyDto>> GetDocuments(CancellationToken ct)
+    public async Task<IActionResult> GetDocuments(CancellationToken ct)
     {
         var query = new GetCycleCountDocumentsQuery();
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -62,10 +66,11 @@ public class CycleCountDocumentsController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<CycleCountDocumentDto> GetDocument(Guid documentGuid, CancellationToken ct)
+    public async Task<IActionResult> GetDocument(Guid documentGuid, CancellationToken ct)
     {
         var query = new GetCycleCountDocumentQuery(documentGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -89,8 +94,8 @@ public class CycleCountDocumentsController(ISender sender) : ControllerBase
             request.Code,
             request.Title,
             request.Version);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -107,7 +112,7 @@ public class CycleCountDocumentsController(ISender sender) : ControllerBase
     public async Task<IActionResult> DeleteDocument(Guid documentGuid, [FromQuery] long version, CancellationToken ct)
     {
         var command = new DeleteCycleCountDocumentCommand(documentGuid, version);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }

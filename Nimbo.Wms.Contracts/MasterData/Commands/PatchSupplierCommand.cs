@@ -14,4 +14,4 @@ public sealed record PatchSupplierCommand(
     string? Phone,
     string? Email,
     bool? IsActive
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.Relocation.Commands;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
@@ -10,7 +10,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Relocation;
 
 [PublicAPI]
-public class PatchRelocationDocumentLineCommandHandler : IRequestHandler<PatchRelocationDocumentLineCommand>
+public class PatchRelocationDocumentLineCommandHandler : IRequestHandler<PatchRelocationDocumentLineCommand, Result>
 {
     private readonly IRelocationDocumentRepository _repository;
 
@@ -19,15 +19,15 @@ public class PatchRelocationDocumentLineCommandHandler : IRequestHandler<PatchRe
         _repository = repository;
     }
 
-    public async Task Handle(PatchRelocationDocumentLineCommand request, CancellationToken ct)
+    public async Task<Result> Handle(PatchRelocationDocumentLineCommand request, CancellationToken ct)
     {
         var documentId = RelocationDocumentId.From(request.DocumentId);
         var document = await _repository.GetByIdWithLinesAsync(documentId, ct);
         if (document is null)
-            throw new NotFoundException($"Relocation document with ID '{documentId}' not found");
+            return Error.NotFound("document.notfound", $"Relocation document with ID '{documentId}' not found");
 
         if (document.Version > request.DocumentVersion)
-            throw new ConcurrencyException($"Document version mismatch. Expected: {document.Version}, Actual: {request.DocumentVersion}");
+            return Error.Conflict("document.conflict", $"Document version mismatch. Expected: {document.Version}, Actual: {request.DocumentVersion}");
 
         if (request.Quantity is not null)
         {
@@ -51,5 +51,7 @@ public class PatchRelocationDocumentLineCommandHandler : IRequestHandler<PatchRe
         var line = document.GetLine(request.Id);
         if (request.Notes is not null)
             line.ChangeNotes(request.Notes);
+
+        return Result.Success();
     }
 }

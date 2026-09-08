@@ -10,4 +10,4 @@ public sealed record CreateReceivingDocumentCommand(
     string Code,
     string Title,
     string? ExternalReference
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;

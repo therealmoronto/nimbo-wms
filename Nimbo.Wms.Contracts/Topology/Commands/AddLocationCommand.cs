@@ -9,4 +9,5 @@ public sealed record AddLocationCommand(
     Guid ZoneGuid,
     string Code,
     string Type
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;
+

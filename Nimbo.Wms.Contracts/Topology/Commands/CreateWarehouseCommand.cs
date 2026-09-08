@@ -7,4 +7,5 @@ namespace Nimbo.Wms.Contracts.Topology.Commands;
 public sealed record CreateWarehouseCommand(
     string Code,
     string Name
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;
+

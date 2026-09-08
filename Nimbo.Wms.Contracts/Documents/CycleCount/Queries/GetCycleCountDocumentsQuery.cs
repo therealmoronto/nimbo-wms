@@ -5,4 +5,4 @@ using Nimbo.Wms.Contracts.Documents.CycleCount.Dtos;
 namespace Nimbo.Wms.Contracts.Documents.CycleCount.Queries;
 
 [PublicAPI]
-public sealed record GetCycleCountDocumentsQuery : IRequest<IReadOnlyList<CycleCountDocumentBodyDto>>;
+public sealed record GetCycleCountDocumentsQuery : IRequest<Result<IReadOnlyList<CycleCountDocumentBodyDto>>>;

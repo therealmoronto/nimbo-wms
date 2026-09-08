@@ -8,4 +8,4 @@ public sealed record DeleteShipmentDocumentLineCommand(
     Guid DocumentId,
     Guid Id,
     long DocumentVersion
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

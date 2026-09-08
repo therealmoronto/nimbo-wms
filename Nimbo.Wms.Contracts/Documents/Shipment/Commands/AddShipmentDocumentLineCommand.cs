@@ -12,4 +12,4 @@ public sealed record AddShipmentDocumentLineCommand(
     Guid? StockLotId,
     string? Notes,
     long DocumentVersion
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;

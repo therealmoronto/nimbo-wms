@@ -28,7 +28,7 @@ public class SupplierLifecycleApiTests : ApiTestBase
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
         var createSupplierResponse = (await createResponse.Content.ReadFromJsonAsync<CreateSupplierResponse>())!;
-        var supplierGuid = createSupplierResponse.SupplierGuid;
+        var supplierGuid = createSupplierResponse.Id;
         var patchSupplierRequest = new PatchSupplierRequest(
             supplierGuid,
             "SUP-002",
@@ -48,14 +48,14 @@ public class SupplierLifecycleApiTests : ApiTestBase
         
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemGuid = createdItem.ItemGuid;
+        var itemGuid = createdItem.Id;
 
         var addSupplierItemRequest = new AddSupplierItemCommand(supplierGuid, itemGuid);
         var addedSupplierItemResponse = await Client.PostAsJsonAsync($"/api/suppliers/{supplierGuid}/items", addSupplierItemRequest);
         addedSupplierItemResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         
         var addedSupplierItem = (await addedSupplierItemResponse.Content.ReadFromJsonAsync<AddSupplierItemResponse>())!;
-        var supplierItemGuid = addedSupplierItem.SupplierItemGuid;
+        var supplierItemGuid = addedSupplierItem.Id;
 
         var patchSupplierItemRequest = new PatchSupplierItemRequest(
             supplierGuid,
@@ -77,7 +77,6 @@ public class SupplierLifecycleApiTests : ApiTestBase
         patchResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         var supplierDto = await Client.GetFromJsonAsync<SupplierDto>($"/api/suppliers/{supplierGuid}");
-
         supplierDto.Should().NotBeNull();
         supplierDto.Id.Should().Be(supplierGuid);
         supplierDto.Code.Should().Be("SUP-002");

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.MasterData;
 
 namespace Nimbo.Wms.Controllers.MasterData;
@@ -22,13 +23,12 @@ public class SuppliersController(ISender sender) : ControllerBase
     public async Task<IActionResult> CreateSupplier([FromBody] CreateSupplierRequest request, CancellationToken ct)
     {
         var command = new CreateSupplierCommand(request.Code, request.Name);
-        var supplierGuid = await sender.Send(command, ct);
-        
-        return CreatedAtAction(
-            actionName: nameof(GetSupplier),
-            controllerName: "Suppliers",
-            routeValues: new { supplierGuid = supplierGuid },
-            value: new CreateSupplierResponse(supplierGuid));
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(
+            this,
+            v => new CreateSupplierResponse(v),
+            nameof(GetSuppliers),
+            "Suppliers");
     }
 
     /// <summary>
@@ -39,10 +39,11 @@ public class SuppliersController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<SupplierDto> GetSupplier([FromRoute] Guid supplierGuid, CancellationToken ct)
+    public async Task<IActionResult> GetSupplier([FromRoute] Guid supplierGuid, CancellationToken ct)
     {
         var query = new GetSupplierQuery(supplierGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -52,9 +53,10 @@ public class SuppliersController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<SupplierDto>> GetSuppliers(CancellationToken ct)
+    public async Task<IActionResult> GetSuppliers(CancellationToken ct)
     {
-        return await sender.Send(new GetSuppliersQuery(), ct);
+        var result = await sender.Send(new GetSuppliersQuery(), ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -78,8 +80,8 @@ public class SuppliersController(ISender sender) : ControllerBase
             request.Email,
             request.IsActive);
 
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -91,7 +93,7 @@ public class SuppliersController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteSupplier([FromRoute] Guid supplierGuid, CancellationToken ct)
     {
-        await sender.Send(new DeleteSupplierCommand(supplierGuid), ct);
-        return NoContent();
+        var result = await sender.Send(new DeleteSupplierCommand(supplierGuid), ct);
+        return result.ToActionResult(this);
     }
 }

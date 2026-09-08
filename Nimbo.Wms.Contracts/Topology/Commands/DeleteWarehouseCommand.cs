@@ -4,4 +4,4 @@ using MediatR;
 namespace Nimbo.Wms.Contracts.Topology.Commands;
 
 [PublicAPI]
-public sealed record DeleteWarehouseCommand(Guid WarehouseId) : IRequest, ITxRequest;
+public sealed record DeleteWarehouseCommand(Guid WarehouseId) : IRequest<Result>, ITxRequest;

@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.Receiving.Commands;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
@@ -11,7 +11,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Receiving;
 
 [PublicAPI]
-public class AddReceivingDocumentLineCommandHandler : IRequestHandler<AddReceivingDocumentLineCommand, Guid>
+public class AddReceivingDocumentLineCommandHandler : IRequestHandler<AddReceivingDocumentLineCommand, Result<Guid>>
 {
     private readonly IReceivingDocumentRepository _repository;
     private readonly IItemRepository _itemRepository;
@@ -22,20 +22,20 @@ public class AddReceivingDocumentLineCommandHandler : IRequestHandler<AddReceivi
         _itemRepository = itemRepository;
     }
 
-    public async Task<Guid> Handle(AddReceivingDocumentLineCommand request, CancellationToken ct)
+    public async Task<Result<Guid>> Handle(AddReceivingDocumentLineCommand request, CancellationToken ct)
     {
         var documentId = ReceivingDocumentId.From(request.DocumentId);
         var document = await _repository.GetByIdWithLinesAsync(documentId, ct);
         if (document is null)
-            throw new NotFoundException($"Receiving document with ID '{documentId}' not found");
+            return Error.NotFound("document.notfound", $"Receiving document with ID '{documentId}' not found");
 
         if (document.Version > request.DocumentVersion)
-            throw new ConcurrencyException($"Document version mismatch. Expected: {document.Version}, Actual: {request.DocumentVersion}");
+            return Error.Conflict("document.conflict", $"Document version mismatch. Expected: {document.Version}, Actual: {request.DocumentVersion}");
 
         var itemId = ItemId.From(request.ItemId);
         var item = await _itemRepository.GetByIdAsync(itemId, ct);
         if (item is null)
-            throw new InvalidOperationException($"Item with ID '{itemId}' not found");
+            return Error.NotFound("item.notfound", $"Item with ID '{itemId}' not found");
 
         var toLocationId = LocationId.From(request.ToLocationId);
         var uom = Enum.Parse<UnitOfMeasure>(request.ExpectedQuantity.Uom);

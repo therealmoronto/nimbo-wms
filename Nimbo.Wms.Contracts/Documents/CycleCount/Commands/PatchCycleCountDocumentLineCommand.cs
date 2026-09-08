@@ -11,4 +11,4 @@ public sealed record PatchCycleCountDocumentLineCommand(
     QuantityDto? ExpectedQuantity,
     string? Notes,
     long DocumentVersion
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

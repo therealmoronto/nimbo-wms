@@ -8,4 +8,4 @@ public sealed record ChangeCustomerCommand(
     Guid DocumentId,
     Guid? CustomerId,
     long DocumentVersion
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

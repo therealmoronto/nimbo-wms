@@ -5,4 +5,4 @@ using Nimbo.Wms.Contracts.Documents.Receiving.Dtos;
 namespace Nimbo.Wms.Contracts.Documents.Receiving.Queries;
 
 [PublicAPI]
-public sealed record GetReceivingDocumentQuery(Guid Id) : IRequest<ReceivingDocumentDto>;
+public sealed record GetReceivingDocumentQuery(Guid Id) : IRequest<Result<ReceivingDocumentDto>>;

@@ -10,4 +10,4 @@ public sealed record CreateAdjustmentDocumentCommand(
     string Title,
     string ReasonCode,
     string? ReasonText
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;

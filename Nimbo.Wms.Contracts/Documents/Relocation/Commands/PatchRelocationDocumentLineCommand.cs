@@ -13,4 +13,4 @@ public sealed record PatchRelocationDocumentLineCommand(
     QuantityDto? Quantity,
     string? Notes,
     long DocumentVersion
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

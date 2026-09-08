@@ -11,7 +11,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Adjustment;
 
 [PublicAPI]
-public class GetAdjustmentDocumentLinesQueryHandler : IRequestHandler<GetAdjustmentDocumentLinesQuery, List<AdjustmentDocumentLineDto>>
+public class GetAdjustmentDocumentLinesQueryHandler : IRequestHandler<GetAdjustmentDocumentLinesQuery, Result<List<AdjustmentDocumentLineDto>>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<AdjustmentDocumentLine, AdjustmentDocumentLineDto> _mapper;
@@ -22,7 +22,7 @@ public class GetAdjustmentDocumentLinesQueryHandler : IRequestHandler<GetAdjustm
         _mapper = mapper;
     }
 
-    public async Task<List<AdjustmentDocumentLineDto>> Handle(GetAdjustmentDocumentLinesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<AdjustmentDocumentLineDto>>> Handle(GetAdjustmentDocumentLinesQuery request, CancellationToken cancellationToken)
     {
         var documentId = AdjustmentDocumentId.From(request.Id);
         var dbQuery = _dbContext.Set<AdjustmentDocumentLine>()

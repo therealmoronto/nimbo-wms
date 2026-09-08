@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Documents.Shipment.Commands;
 using Nimbo.Wms.Contracts.Documents.Shipment.Dtos;
 using Nimbo.Wms.Contracts.Documents.Shipment.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Documents.Shipment;
 
 namespace Nimbo.Wms.Controllers.Documents;
@@ -36,12 +37,14 @@ public class ShipmentPickLinesController(ISender sender) : ControllerBase
             request.Quantity,
             request.Notes,
             documentVersion);
-        var pickLineGuid = await sender.Send(command, ct);
+        var result = await sender.Send(command, ct);
 
-        return CreatedAtAction(
-            actionName: nameof(GetPickLines),
-            new { documentGuid = documentGuid },
-            new AddPickLineResponse(pickLineGuid));
+        return result.ToActionResult(
+            this,
+            v => new AddPickLineResponse(v),
+            nameof(GetPickLines),
+            "ShipmentPickLines",
+            result.IsSuccess ? new { documentGuid } : null);
     }
 
     /// <summary>
@@ -53,10 +56,11 @@ public class ShipmentPickLinesController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<ShipmentPickLineDto>> GetPickLines(Guid documentGuid, CancellationToken ct)
+    public async Task<IActionResult> GetPickLines(Guid documentGuid, CancellationToken ct)
     {
         var query = new GetShipmentPickLinesQuery(documentGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -77,7 +81,7 @@ public class ShipmentPickLinesController(ISender sender) : ControllerBase
         CancellationToken ct)
     {
         var command = new RemovePickLineCommand(documentGuid, pickLineGuid, documentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }

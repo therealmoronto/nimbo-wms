@@ -14,4 +14,4 @@ public sealed record CreateInventoryItemCommand(
     Guid StockLotId,
     string? SerialNumber,
     decimal? UnitCost
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;

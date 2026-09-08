@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Topology.Commands;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Topology;
 
 namespace Nimbo.Wms.Controllers.Topology;
@@ -18,20 +19,21 @@ public class WarehouseTopologyController(ISender sender) : ControllerBase
     [HttpPost("zones")]
     [ProducesResponseType(typeof(AddZoneResponse), StatusCodes.Status201Created)]
     [Produces("application/json")]
-    public async Task<ActionResult<AddZoneResponse>> AddZone(
+    public async Task<IActionResult> AddZone(
         [FromRoute] Guid warehouseGuid,
         [FromBody] AddZoneRequest request,
         CancellationToken ct)
     {
         var command  = new AddZoneCommand(warehouseGuid, request.Code, request.Name, request.Type);
-        var zoneGuid = await sender.Send(command, ct);
+        var result = await sender.Send(command, ct);
 
         // Location header points to warehouse topology
-        return CreatedAtAction(
-            actionName: nameof(WarehousesController.GetWarehouseTopology),
-            controllerName: "Warehouses",
-            routeValues: new { warehouseGuid },
-            value: new AddZoneResponse(zoneGuid));
+        return result.ToActionResult(
+            this,
+            v => new AddZoneResponse(v),
+            nameof(WarehousesController.GetWarehouseTopology),
+            "Warehouses",
+            new { warehouseGuid });
     }
 
     /// <summary>
@@ -41,20 +43,21 @@ public class WarehouseTopologyController(ISender sender) : ControllerBase
     /// An ActionResult containing the response with the newly created location's identifier.
     /// </returns>
     [HttpPost("locations")]
-    [ProducesResponseType(typeof(AddLocationResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [Produces("application/json")]
-    public async Task<ActionResult<AddLocationResponse>> AddLocation(
+    public async Task<IActionResult> AddLocation(
         [FromRoute] Guid warehouseGuid,
         [FromBody] AddLocationRequest request,
         CancellationToken ct)
     {
         var command = new AddLocationCommand(warehouseGuid, request.ZoneGuid, request.Code, request.Type);
-        var locationGuid = await sender.Send(command, ct);
+        var result = await sender.Send(command, ct);
 
-        return CreatedAtAction(
+        return result.ToActionResult(
+            this,
+            v => new AddLocationResponse(v),
             actionName: nameof(WarehousesController.GetWarehouseTopology),
             controllerName: "Warehouses",
-            routeValues: new { warehouseGuid },
-            value: new AddLocationResponse(locationGuid));
+            routeValues: new { warehouseGuid });
     }
 }

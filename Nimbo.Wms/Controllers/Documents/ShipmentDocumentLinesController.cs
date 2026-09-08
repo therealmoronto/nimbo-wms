@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Documents.Shipment.Commands;
 using Nimbo.Wms.Contracts.Documents.Shipment.Dtos;
 using Nimbo.Wms.Contracts.Documents.Shipment.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Documents.Shipment;
 
 namespace Nimbo.Wms.Controllers.Documents;
@@ -35,12 +36,14 @@ public class ShipmentDocumentLinesController(ISender sender) : ControllerBase
             request.StockLotId,
             request.Notes,
             documentVersion);
-        var lineGuid = await sender.Send(command, ct);
+        var result = await sender.Send(command, ct);
 
-        return CreatedAtAction(
-            actionName: nameof(GetLines),
-            new { documentGuid = documentGuid },
-            new AddShipmentDocumentLineResponse(lineGuid));
+        return result.ToActionResult(
+            this,
+            v => new AddShipmentDocumentLineResponse(v),
+            nameof(GetLines),
+            "ShipmentDocumentLines",
+            result.IsSuccess ? new { documentGuid } : null);
     }
 
     /// <summary>
@@ -52,10 +55,11 @@ public class ShipmentDocumentLinesController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<ShipmentDocumentLineDto>> GetLines(Guid documentGuid, CancellationToken ct)
+    public async Task<IActionResult> GetLines(Guid documentGuid, CancellationToken ct)
     {
         var query = new GetShipmentDocumentLinesQuery(documentGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -81,8 +85,8 @@ public class ShipmentDocumentLinesController(ISender sender) : ControllerBase
             request.RequestedQuantity,
             request.Notes,
             request.DocumentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -103,7 +107,7 @@ public class ShipmentDocumentLinesController(ISender sender) : ControllerBase
         CancellationToken ct)
     {
         var command = new DeleteShipmentDocumentLineCommand(documentGuid, lineGuid, documentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Documents.Shipment.Commands;
 using Nimbo.Wms.Contracts.Documents.Shipment.Dtos;
 using Nimbo.Wms.Contracts.Documents.Shipment.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Documents.Shipment;
 
 namespace Nimbo.Wms.Controllers.Documents;
@@ -29,12 +30,14 @@ public class ShipmentDocumentsController(ISender sender) : ControllerBase
             request.WarehouseId,
             request.Code,
             request.Title);
-        var documentGuid = await sender.Send(command, ct);
+        var result = await sender.Send(command, ct);
 
-        return CreatedAtAction(
-            actionName: nameof(GetDocument),
-            new { documentGuid = documentGuid },
-            new CreateShipmentDocumentResponse(documentGuid));
+        return result.ToActionResult(
+            this,
+            v => new CreateShipmentDocumentResponse(v),
+            nameof(GetDocument),
+            "ShipmentDocuments",
+            result.IsSuccess ? new { documentGuid = result.Value } : null);
     }
 
     /// <summary>
@@ -45,10 +48,11 @@ public class ShipmentDocumentsController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<ShipmentDocumentBodyDto>> GetDocuments(CancellationToken ct)
+    public async Task<IActionResult> GetDocuments(CancellationToken ct)
     {
         var query = new GetShipmentDocumentsQuery();
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -62,10 +66,11 @@ public class ShipmentDocumentsController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<ShipmentDocumentDto> GetDocument(Guid documentGuid, CancellationToken ct)
+    public async Task<IActionResult> GetDocument(Guid documentGuid, CancellationToken ct)
     {
         var query = new GetShipmentDocumentQuery(documentGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -91,8 +96,8 @@ public class ShipmentDocumentsController(ISender sender) : ControllerBase
             request.Title,
             request.Notes,
             request.Version);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -111,7 +116,7 @@ public class ShipmentDocumentsController(ISender sender) : ControllerBase
         CancellationToken ct)
     {
         var command = new DeleteShipmentDocumentCommand(documentGuid, version);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }

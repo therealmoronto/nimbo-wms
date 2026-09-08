@@ -10,4 +10,4 @@ public sealed record PatchWarehouseCommand(
     string? Name = null,
     string? Address = null,
     string? Description = null
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;
