@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Topology.Commands;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Topology;
 
 namespace Nimbo.Wms.Controllers.Topology;
@@ -37,8 +38,8 @@ public class ZonesController(ISender sender) : ControllerBase
             request.IsQuarantine,
             request.IsDamagedArea);
 
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -58,7 +59,7 @@ public class ZonesController(ISender sender) : ControllerBase
         [FromRoute] Guid zoneGuid,
         CancellationToken ct)
     {
-        await sender.Send(new DeleteZoneCommand(zoneGuid), ct);
-        return NoContent();
+        var result = await sender.Send(new DeleteZoneCommand(zoneGuid), ct);
+        return result.ToActionResult(this);
     }
 }

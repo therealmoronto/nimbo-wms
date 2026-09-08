@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Topology.Commands;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
@@ -9,7 +9,7 @@ using Nimbo.Wms.Domain.References;
 namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 
 [PublicAPI]
-internal sealed class PatchZoneRequestHandler : IRequestHandler<PatchZoneCommand>
+internal sealed class PatchZoneRequestHandler : IRequestHandler<PatchZoneCommand, Result>
 {
     private readonly IWarehouseRepository _repository;
 
@@ -18,12 +18,12 @@ internal sealed class PatchZoneRequestHandler : IRequestHandler<PatchZoneCommand
         _repository = repository;
     }
     
-    public async Task Handle(PatchZoneCommand command, CancellationToken ct = default)
+    public async Task<Result> Handle(PatchZoneCommand command, CancellationToken ct = default)
     {
         var zoneId = ZoneId.From(command.ZoneGuid);
         var warehouse = await _repository.GetByZoneIdAsync(zoneId, ct);
         if (warehouse is null)
-            throw new NotFoundException("Zone not found");
+            return Error.NotFound("zone.notfound", "Zone not found");
         
         var zone = warehouse.GetZone(zoneId);
         if (command.Name is not null)
@@ -48,5 +48,7 @@ internal sealed class PatchZoneRequestHandler : IRequestHandler<PatchZoneCommand
             var isDamagedArea = command.IsDamagedArea ?? zone.IsDamagedArea;
             zone.SetAreaFlags(isQuarantine, isDamagedArea);
         }
+
+        return Result.Success();
     }
 }

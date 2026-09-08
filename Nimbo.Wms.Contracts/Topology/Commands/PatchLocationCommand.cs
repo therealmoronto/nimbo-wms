@@ -25,4 +25,4 @@ public sealed record PatchLocationCommand(
     string? Rack = null,
     string? Level = null,
     string? Position = null
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

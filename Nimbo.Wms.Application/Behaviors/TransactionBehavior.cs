@@ -10,8 +10,8 @@ public class TransactionBehavior<TRequest, TResponse>(IUnitOfWork uow)
 {
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
-        var response = await next();
-        // if (response is Result { IsSuccess: true })
+        var response = await next(ct);
+        if (response is Result { IsSuccess: true })
         {
             await uow.CommitAsync(ct);
         }
