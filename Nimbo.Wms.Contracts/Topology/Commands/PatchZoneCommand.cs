@@ -16,4 +16,4 @@ public sealed record PatchZoneCommand(
 
     bool? IsQuarantine = null,
     bool? IsDamagedArea = null
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

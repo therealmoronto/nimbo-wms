@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Topology.Commands;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Topology;
 
 namespace Nimbo.Wms.Controllers.Topology;
@@ -37,8 +38,8 @@ public class LocationsController(ISender sender) : ControllerBase
             request.Level,
             request.Position);
 
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -51,7 +52,7 @@ public class LocationsController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteLocation([FromRoute] Guid locationGuid, CancellationToken ct)
     {
-        await sender.Send(new DeleteLocationCommand(locationGuid), ct);
-        return NoContent();
+        var result = await sender.Send(new DeleteLocationCommand(locationGuid), ct);
+        return result.ToActionResult(this);
     }
 }

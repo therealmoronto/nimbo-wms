@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Topology;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Topology.Commands;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
@@ -9,7 +9,7 @@ using Nimbo.Wms.Domain.References;
 namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 
 [PublicAPI]
-internal sealed class PatchLocationCommandHandler : IRequestHandler<PatchLocationCommand>
+internal sealed class PatchLocationCommandHandler : IRequestHandler<PatchLocationCommand, Result>
 {
     private readonly IWarehouseRepository _repository;
 
@@ -18,12 +18,12 @@ internal sealed class PatchLocationCommandHandler : IRequestHandler<PatchLocatio
         _repository = repository;
     }
 
-    public async Task Handle(PatchLocationCommand command, CancellationToken ct = default)
+    public async Task<Result> Handle(PatchLocationCommand command, CancellationToken ct = default)
     {
         var locationId = LocationId.From(command.LocationGuid);
         var warehouse = await _repository.GetByLocationIdAsync(locationId, ct);
         if (warehouse is null)
-            throw new NotFoundException("Location not found");
+            return Error.NotFound("warehouse.notfound", $"Warehouse with location id {command.LocationGuid} does not exist");
 
         var location = warehouse.GetLocation(locationId);
         // Code / Type
@@ -78,5 +78,7 @@ internal sealed class PatchLocationCommandHandler : IRequestHandler<PatchLocatio
             if (command.IsBlocked.Value) location.Block();
             else location.Unblock();
         }
+
+        return Result.Success();
     }
 }
