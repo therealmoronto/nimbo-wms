@@ -11,4 +11,4 @@ public sealed record PatchShipmentDocumentLineCommand(
     QuantityDto? RequestedQuantity,
     string? Notes,
     long DocumentVersion
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

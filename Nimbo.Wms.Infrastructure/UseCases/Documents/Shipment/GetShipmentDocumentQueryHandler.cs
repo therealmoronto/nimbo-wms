@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.Shipment.Dtos;
 using Nimbo.Wms.Contracts.Documents.Shipment.Queries;
@@ -11,7 +10,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Shipment;
 
 [PublicAPI]
-public class GetShipmentDocumentQueryHandler : IRequestHandler<GetShipmentDocumentQuery, ShipmentDocumentDto>
+public class GetShipmentDocumentQueryHandler : IRequestHandler<GetShipmentDocumentQuery, Result<ShipmentDocumentDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<ShipmentDocument, ShipmentDocumentBodyDto> _bodyMapper;
@@ -30,7 +29,7 @@ public class GetShipmentDocumentQueryHandler : IRequestHandler<GetShipmentDocume
         _pickLineMapper = pickLineMapper;
     }
 
-    public async Task<ShipmentDocumentDto> Handle(GetShipmentDocumentQuery request, CancellationToken ct)
+    public async Task<Result<ShipmentDocumentDto>> Handle(GetShipmentDocumentQuery request, CancellationToken ct)
     {
         var dbQuery = _dbContext.Set<ShipmentDocument>()
             .AsNoTracking()
@@ -45,7 +44,7 @@ public class GetShipmentDocumentQueryHandler : IRequestHandler<GetShipmentDocume
                     _pickLineMapper.MapToDto(d.PickLines).ToList()))
             .SingleOrDefaultAsync(ct);
         if (document is null)
-            throw new NotFoundException($"Shipment document with ID {request.Id} not found");
+            return Error.NotFound("document.notfound", $"Shipment document with ID {request.Id} not found");
 
         return document;
     }

@@ -8,4 +8,4 @@ public sealed record RemovePickLineCommand(
     Guid DocumentId,
     Guid PickLineId,
     long DocumentVersion
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

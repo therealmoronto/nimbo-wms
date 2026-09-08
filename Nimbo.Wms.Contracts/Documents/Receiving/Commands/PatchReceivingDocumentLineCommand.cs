@@ -12,4 +12,4 @@ public sealed record PatchReceivingDocumentLineCommand(
     QuantityDto? ExpectedQuantity,
     string? Notes,
     long DocumentVersion
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

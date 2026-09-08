@@ -5,4 +5,4 @@ using Nimbo.Wms.Contracts.Documents.Shipment.Dtos;
 namespace Nimbo.Wms.Contracts.Documents.Shipment.Queries;
 
 [PublicAPI]
-public sealed record GetShipmentDocumentLinesQuery(Guid DocumentId) : IRequest<IReadOnlyList<ShipmentDocumentLineDto>>;
+public sealed record GetShipmentDocumentLinesQuery(Guid DocumentId) : IRequest<Result<IReadOnlyList<ShipmentDocumentLineDto>>>;

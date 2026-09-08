@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.Receiving.Dtos;
 using Nimbo.Wms.Contracts.Documents.Receiving.Queries;
@@ -9,7 +8,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Receiving;
 
-public class GetReceivingDocumentQueryHandler : IRequestHandler<GetReceivingDocumentQuery, ReceivingDocumentDto>
+public class GetReceivingDocumentQueryHandler : IRequestHandler<GetReceivingDocumentQuery, Result<ReceivingDocumentDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<ReceivingDocument, ReceivingDocumentBodyDto> _bodyMapper;
@@ -25,7 +24,7 @@ public class GetReceivingDocumentQueryHandler : IRequestHandler<GetReceivingDocu
         _lineMapper = lineMapper;
     }
 
-    public async Task<ReceivingDocumentDto> Handle(GetReceivingDocumentQuery request, CancellationToken ct)
+    public async Task<Result<ReceivingDocumentDto>> Handle(GetReceivingDocumentQuery request, CancellationToken ct)
     {
         var dbQuery = _dbContext.Set<ReceivingDocument>()
             .AsNoTracking()
@@ -38,7 +37,7 @@ public class GetReceivingDocumentQueryHandler : IRequestHandler<GetReceivingDocu
                     _lineMapper.MapToDto(d.Lines).ToList()))
             .SingleOrDefaultAsync(ct);
         if (document is null)
-            throw new NotFoundException($"Receiving document with ID {request.Id} not found");
+            return Error.NotFound("document.notfound", $"Receiving document with ID {request.Id} not found");
 
         return document;
     }

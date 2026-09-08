@@ -10,7 +10,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Shipment;
 
 [PublicAPI]
-public class GetShipmentDocumentsQueryHandler : IRequestHandler<GetShipmentDocumentsQuery, IReadOnlyList<ShipmentDocumentBodyDto>>
+public class GetShipmentDocumentsQueryHandler : IRequestHandler<GetShipmentDocumentsQuery, Result<IReadOnlyList<ShipmentDocumentBodyDto>>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<ShipmentDocument, ShipmentDocumentBodyDto> _mapper;
@@ -21,7 +21,7 @@ public class GetShipmentDocumentsQueryHandler : IRequestHandler<GetShipmentDocum
         _mapper = mapper;
     }
 
-    public async Task<IReadOnlyList<ShipmentDocumentBodyDto>> Handle(GetShipmentDocumentsQuery request, CancellationToken ct)
+    public async Task<Result<IReadOnlyList<ShipmentDocumentBodyDto>>> Handle(GetShipmentDocumentsQuery request, CancellationToken ct)
     {
         var documents = await _dbContext.Set<ShipmentDocument>()
             .AsNoTracking()

@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.Shipment.Commands;
 using Nimbo.Wms.Domain.Identification;
 using Nimbo.Wms.Domain.References;
@@ -10,7 +10,7 @@ using Nimbo.Wms.Domain.ValueObject;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Shipment;
 
 [PublicAPI]
-public class PatchShipmentDocumentLineCommandHandler : IRequestHandler<PatchShipmentDocumentLineCommand>
+public class PatchShipmentDocumentLineCommandHandler : IRequestHandler<PatchShipmentDocumentLineCommand, Result>
 {
     private readonly IShipmentDocumentRepository _repository;
 
@@ -19,15 +19,15 @@ public class PatchShipmentDocumentLineCommandHandler : IRequestHandler<PatchShip
         _repository = repository;
     }
 
-    public async Task Handle(PatchShipmentDocumentLineCommand request, CancellationToken ct)
+    public async Task<Result> Handle(PatchShipmentDocumentLineCommand request, CancellationToken ct)
     {
         var documentId = ShipmentDocumentId.From(request.DocumentId);
         var document = await _repository.GetByIdWithLinesAsync(documentId, ct);
         if (document is null)
-            throw new InvalidOperationException($"Shipment document with ID {request.DocumentId} not found");
+            return Error.NotFound("document.notfound", $"Shipment document with ID '{documentId}' not found");
 
         if (document.Version > request.DocumentVersion)
-            throw new ConcurrencyException($"Document version mismatch. Expected: {document.Version}, Actual: {request.DocumentVersion}");
+            return Error.Conflict("document.conflict", $"Document version mismatch. Expected: {document.Version}, Actual: {request.DocumentVersion}");
 
         if (request.RequestedQuantity is not null)
         {
@@ -40,5 +40,7 @@ public class PatchShipmentDocumentLineCommandHandler : IRequestHandler<PatchShip
         {
             document.ChangeLineNotes(request.Id, request.Notes);
         }
+
+        return Result.Success();
     }
 }

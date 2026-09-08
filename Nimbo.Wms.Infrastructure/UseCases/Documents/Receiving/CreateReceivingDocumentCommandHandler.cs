@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.Receiving.Commands;
 using Nimbo.Wms.Domain.Entities.Documents.Receiving;
 using Nimbo.Wms.Domain.Identification;
@@ -8,7 +9,7 @@ using Nimbo.Wms.Domain.Identification;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Receiving;
 
 [PublicAPI]
-public class CreateReceivingDocumentCommandHandler : IRequestHandler<CreateReceivingDocumentCommand, Guid>
+public class CreateReceivingDocumentCommandHandler : IRequestHandler<CreateReceivingDocumentCommand, Result<Guid>>
 {
     private readonly IReceivingDocumentRepository _repository;
 
@@ -17,7 +18,7 @@ public class CreateReceivingDocumentCommandHandler : IRequestHandler<CreateRecei
         _repository = repository;
     }
 
-    public async Task<Guid> Handle(CreateReceivingDocumentCommand request, CancellationToken ct)
+    public async Task<Result<Guid>> Handle(CreateReceivingDocumentCommand request, CancellationToken ct)
     {
         var warehouseId = WarehouseId.From(request.WarehouseId);
         var supplierId = SupplierId.From(request.SupplierId);
@@ -26,6 +27,6 @@ public class CreateReceivingDocumentCommandHandler : IRequestHandler<CreateRecei
         var document = new ReceivingDocument(documentId, warehouseId, supplierId, request.Code, request.Title, DateTime.UtcNow, request.ExternalReference);
         await _repository.AddAsync(document, ct);
 
-        return documentId;
+        return documentId.Value;
     }
 }

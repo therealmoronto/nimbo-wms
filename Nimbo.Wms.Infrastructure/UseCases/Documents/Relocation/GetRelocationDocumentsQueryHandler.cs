@@ -10,7 +10,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Relocation;
 
 [PublicAPI]
-public class GetRelocationDocumentsQueryHandler : IRequestHandler<GetRelocationDocumentsQuery, List<RelocationDocumentBodyDto>>
+public class GetRelocationDocumentsQueryHandler : IRequestHandler<GetRelocationDocumentsQuery, Result<List<RelocationDocumentBodyDto>>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<RelocationDocument, RelocationDocumentBodyDto> _mapper;
@@ -21,7 +21,7 @@ public class GetRelocationDocumentsQueryHandler : IRequestHandler<GetRelocationD
         _mapper = mapper;
     }
 
-    public async Task<List<RelocationDocumentBodyDto>> Handle(GetRelocationDocumentsQuery request, CancellationToken ct)
+    public async Task<Result<List<RelocationDocumentBodyDto>>> Handle(GetRelocationDocumentsQuery request, CancellationToken ct)
     {
         var dbQuery = _dbContext.Set<RelocationDocument>().AsNoTracking();
         var documents = await _mapper.ProjectToDto(dbQuery).ToListAsync(ct);

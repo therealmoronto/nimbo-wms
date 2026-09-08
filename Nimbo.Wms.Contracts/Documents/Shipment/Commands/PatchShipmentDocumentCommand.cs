@@ -11,4 +11,4 @@ public sealed record PatchShipmentDocumentCommand(
     string? Title,
     string? Notes,
     long Version
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

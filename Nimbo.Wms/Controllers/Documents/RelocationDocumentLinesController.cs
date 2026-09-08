@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Documents.Relocation.Commands;
 using Nimbo.Wms.Contracts.Documents.Relocation.Dtos;
 using Nimbo.Wms.Contracts.Documents.Relocation.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Documents.Relocation;
 
 namespace Nimbo.Wms.Controllers.Documents;
@@ -36,11 +37,14 @@ public class RelocationDocumentLinesController(ISender sender) : ControllerBase
             request.Notes,
             request.DocumentVersion);
 
-        var lineGuid = await sender.Send(command, ct);
-        return CreatedAtAction(
+        var result = await sender.Send(command, ct);
+
+        return result.ToActionResult(
+            this,
+            v => new AddRelocationDocumentLineResponse(v),
             nameof(GetLines),
-            new { documentGuid, lineGuid },
-            new AddRelocationDocumentLineResponse(lineGuid));
+            "RelocationDocumentLines",
+            result.IsSuccess ? new { documentGuid, lineGuid = result.Value } : null);
     }
 
     /// <summary>
@@ -52,12 +56,13 @@ public class RelocationDocumentLinesController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<RelocationDocumentLineDto>> GetLines(
+    public async Task<IActionResult> GetLines(
         Guid documentGuid,
         CancellationToken ct)
     {
         var query = new GetRelocationDocumentLinesQuery(documentGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -85,8 +90,8 @@ public class RelocationDocumentLinesController(ISender sender) : ControllerBase
             request.Quantity,
             request.Notes,
             request.DocumentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -110,7 +115,7 @@ public class RelocationDocumentLinesController(ISender sender) : ControllerBase
             documentGuid,
             lineGuid,
             documentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }

@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.Documents;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.Documents.Relocation.Commands;
 using Nimbo.Wms.Domain.Entities.Documents.Relocation;
 using Nimbo.Wms.Domain.Identification;
@@ -8,7 +9,7 @@ using Nimbo.Wms.Domain.Identification;
 namespace Nimbo.Wms.Infrastructure.UseCases.Documents.Relocation;
 
 [PublicAPI]
-public class CreateRelocationDocumentCommandHandler : IRequestHandler<CreateRelocationDocumentCommand, Guid>
+public class CreateRelocationDocumentCommandHandler : IRequestHandler<CreateRelocationDocumentCommand, Result<Guid>>
 {
     private readonly IRelocationDocumentRepository _repository;
 
@@ -17,7 +18,7 @@ public class CreateRelocationDocumentCommandHandler : IRequestHandler<CreateRelo
         _repository = repository;
     }
 
-    public async Task<Guid> Handle(CreateRelocationDocumentCommand request, CancellationToken ct)
+    public async Task<Result<Guid>> Handle(CreateRelocationDocumentCommand request, CancellationToken ct)
     {
         var warehouseId = WarehouseId.From(request.WarehouseId);
         var documentId = RelocationDocumentId.New();
@@ -25,6 +26,6 @@ public class CreateRelocationDocumentCommandHandler : IRequestHandler<CreateRelo
         var document = new RelocationDocument(documentId, warehouseId, request.Code, request.Title, DateTime.UtcNow);
         await _repository.AddAsync(document, ct);
 
-        return documentId;
+        return documentId.Value;
     }
 }

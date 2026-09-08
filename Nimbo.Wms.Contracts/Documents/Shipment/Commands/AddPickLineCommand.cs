@@ -13,4 +13,4 @@ public sealed record AddPickLineCommand(
     QuantityDto Quantity,
     string? Notes,
     long DocumentVersion
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;
