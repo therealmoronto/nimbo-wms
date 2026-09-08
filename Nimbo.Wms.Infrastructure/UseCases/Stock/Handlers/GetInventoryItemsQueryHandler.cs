@@ -10,7 +10,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
 [PublicAPI]
-internal sealed class GetInventoryItemsQueryHandler : IRequestHandler<GetInventoryItemsQuery, IReadOnlyList<InventoryItemDto>>
+internal sealed class GetInventoryItemsQueryHandler : IRequestHandler<GetInventoryItemsQuery, Result<IReadOnlyList<InventoryItemDto>>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<InventoryItem, InventoryItemDto> _mapper;
@@ -21,7 +21,7 @@ internal sealed class GetInventoryItemsQueryHandler : IRequestHandler<GetInvento
         _mapper = mapper;
     }
     
-    public async Task<IReadOnlyList<InventoryItemDto>> Handle(GetInventoryItemsQuery query, CancellationToken ct = default)
+    public async Task<Result<IReadOnlyList<InventoryItemDto>>> Handle(GetInventoryItemsQuery query, CancellationToken ct = default)
     {
         var dbQuery = _dbContext.Set<InventoryItem>().AsNoTracking();
         if (query.WarehouseId is not null)

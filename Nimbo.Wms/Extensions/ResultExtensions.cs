@@ -14,6 +14,13 @@ public static class ResultExtensions
             : controller.Problem(result.Error);
     }
 
+    public static IActionResult ToActionResult<T>(this Result<T> result, ControllerBase controller, string actionName)
+    {
+        return result.IsSuccess
+            ? controller.CreatedAtAction(actionName, new { result.Value })
+            : controller.Problem(result.Error);
+    }
+
     public static IActionResult ToActionResult<T>(this Result<T> result, ControllerBase controller)
     {
         return result.IsSuccess

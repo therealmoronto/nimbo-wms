@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Nimbo.Wms.Contracts.MasterData.Commands;
-using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Domain.References;
 using Nimbo.Wms.Models.MasterData;
 using Nimbo.Wms.Tests.Common.Attributes;
@@ -33,14 +32,19 @@ public class ItemsLifecycleApiTests : ApiTestBase
         var itemGuid = createItemResponse.Value;
 
         // 2) Get item by id
-        var created = await Client.GetFromJsonAsync<ItemDto>($"/api/items/{itemGuid}");
+        var itemResponse = await Client.GetFromJsonAsync<GetItemResponse>($"/api/items/{itemGuid}");
 
-        created.Should().NotBeNull();
-        created.Id.Should().Be(itemGuid);
-        created.Name.Should().Be("ITEM-001");
-        created.InternalSku.Should().Be("I-001");
-        created.Barcode.Should().Be("00100245");
-        created.BaseUomCode.Should().Be(nameof(UnitOfMeasure.Kilogram));
+        itemResponse.Should().NotBeNull();
+        itemResponse.Value.Should().NotBeNull();
+
+        var item = itemResponse.Value;
+
+        item.Should().NotBeNull();
+        item.Id.Should().Be(itemGuid);
+        item.Name.Should().Be("ITEM-001");
+        item.InternalSku.Should().Be("I-001");
+        item.Barcode.Should().Be("00100245");
+        item.BaseUomCode.Should().Be(nameof(UnitOfMeasure.Kilogram));
         
         // 3) Patch item
         var patchItemRequest = new PatchItemRequest(itemGuid)
@@ -58,8 +62,12 @@ public class ItemsLifecycleApiTests : ApiTestBase
         patchResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // 4) Get list of items
-        var items = await Client.GetFromJsonAsync<List<ItemDto>>("/api/items");
-        items.Should().NotBeNullOrEmpty();
+        var itemsResponse = await Client.GetFromJsonAsync<GetItemsResponse>("/api/items");
+
+        itemsResponse.Should().NotBeNull();
+        itemsResponse.Value.Should().NotBeNullOrEmpty();
+
+        var items = itemsResponse.Value;
 
         var updated = items.Single(i => i.Id == itemGuid);
         updated.Id.Should().Be(itemGuid);
@@ -74,9 +82,13 @@ public class ItemsLifecycleApiTests : ApiTestBase
         // 5) Delete item
         var deleteResponse = await Client.DeleteAsync($"/api/items/{itemGuid}");
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
-        
+
         // 6) Get list of items
-        items = await Client.GetFromJsonAsync<List<ItemDto>>("/api/items");
+        itemsResponse = await Client.GetFromJsonAsync<GetItemsResponse>("/api/items");
+        itemsResponse.Should().NotBeNull();
+
+        items = itemsResponse.Value;
+
         items.Should().NotBeNull();
         items.Should().NotContain(i => i.Id == itemGuid);
     }

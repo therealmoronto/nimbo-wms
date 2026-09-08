@@ -5,12 +5,13 @@ using Nimbo.Wms.Contracts;
 namespace Nimbo.Wms.Application.Behaviors;
 
 public class TransactionBehavior<TRequest, TResponse>(IUnitOfWork uow)
-    : IPipelineBehavior<TRequest, TResponse> where TRequest : ITxRequest
+    : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : ITxRequest
 {
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
         var response = await next();
-        if (response is Result { IsSuccess: true })
+        // if (response is Result { IsSuccess: true })
         {
             await uow.CommitAsync(ct);
         }

@@ -11,7 +11,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.Stock.Handlers;
 
 [PublicAPI]
-internal sealed class GetInventoryItemQueryHandler : IRequestHandler<GetInventoryItemQuery, InventoryItemDto>
+internal sealed class GetInventoryItemQueryHandler : IRequestHandler<GetInventoryItemQuery, Result<InventoryItemDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<InventoryItem, InventoryItemDto> _mapper;
@@ -22,7 +22,7 @@ internal sealed class GetInventoryItemQueryHandler : IRequestHandler<GetInventor
         _mapper = mapper;
     }
 
-    public async Task<InventoryItemDto> Handle(GetInventoryItemQuery request, CancellationToken ct = default)
+    public async Task<Result<InventoryItemDto>> Handle(GetInventoryItemQuery request, CancellationToken ct = default)
     {
         var dbQuery = _dbContext.Set<InventoryItem>()
             .AsNoTracking()
@@ -30,7 +30,7 @@ internal sealed class GetInventoryItemQueryHandler : IRequestHandler<GetInventor
 
         var inventoryItem = await _mapper.ProjectToDto(dbQuery).SingleOrDefaultAsync(ct);
         if (inventoryItem is null)
-            throw new NotFoundException("Inventory item not found");
+            return Error.NotFound("inventory_item.notfound", "Inventory item not found");
 
         return inventoryItem;
     }

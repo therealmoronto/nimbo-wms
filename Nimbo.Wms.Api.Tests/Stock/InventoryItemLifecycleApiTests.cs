@@ -106,10 +106,15 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         createInventoryItemResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
         var createdInventoryItem = (await createInventoryItemResponse.Content.ReadFromJsonAsync<CreateInventoryItemResponse>())!;
-        var inventoryItemId = createdInventoryItem.Id;
+        var inventoryItemId = createdInventoryItem.Value;
 
         // 2) Get inventory item by id
-        var inventoryItemDto = await Client.GetFromJsonAsync<InventoryItemDto>($"/api/stock/inventory-items/{inventoryItemId}");
+        var inventoryItemResponse = await Client.GetFromJsonAsync<GetInventoryItemResponse>($"/api/stock/inventory-items/{inventoryItemId}");
+
+        inventoryItemResponse.Should().NotBeNull();
+        inventoryItemResponse.Value.Should().NotBeNull();
+
+        var inventoryItemDto = inventoryItemResponse.Value;
 
         inventoryItemDto.Should().NotBeNull();
         inventoryItemDto.Id.Should().Be(inventoryItemId);
@@ -123,7 +128,12 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
         inventoryItemDto.UnitCost.Should().Be(25.50m);
 
         // 3) List inventory items with filter
-        var inventoryItems = await Client.GetFromJsonAsync<IReadOnlyList<InventoryItemDto>>($"/api/stock/inventory-items?warehouseGuid={warehouseGuid}&itemGuid={itemId}");
+        var inventoryItemsResponse = await Client.GetFromJsonAsync<GetInventoryItemsResponse>($"/api/stock/inventory-items?warehouseGuid={warehouseGuid}&itemGuid={itemId}");
+
+        inventoryItemsResponse.Should().NotBeNull();
+        inventoryItemsResponse.Value.Should().NotBeNull();
+
+        var inventoryItems = inventoryItemsResponse.Value;
 
         inventoryItems.Should().NotBeNullOrEmpty();
 

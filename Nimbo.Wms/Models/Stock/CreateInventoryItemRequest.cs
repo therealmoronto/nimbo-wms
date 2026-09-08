@@ -16,4 +16,4 @@ public sealed record CreateInventoryItemRequest(
 );
 
 [PublicAPI]
-public sealed record CreateInventoryItemResponse(Guid Id);
+public sealed record CreateInventoryItemResponse(Guid Value);

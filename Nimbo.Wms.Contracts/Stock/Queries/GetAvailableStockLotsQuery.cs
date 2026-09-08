@@ -9,4 +9,4 @@ public sealed record GetAvailableStockLotsQuery(
     Guid ItemId,
     Guid? WarehouseId,
     Guid? LocationId
-) : IRequest<IReadOnlyList<AvailableStockLotDto>>;
+) : IRequest<Result<IReadOnlyList<AvailableStockLotDto>>>;
