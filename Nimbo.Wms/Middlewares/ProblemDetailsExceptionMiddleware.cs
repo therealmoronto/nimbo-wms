@@ -1,5 +1,4 @@
 using System.Net.Mime;
-using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Domain.Common;
@@ -75,7 +74,6 @@ public sealed class ProblemDetailsExceptionMiddleware
             ArgumentException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
             FormatException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
             DomainException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
-            ValidationException => (StatusCodes.Status400BadRequest, "Bad Request", "https://httpstatuses.com/400"),
 
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error", "https://httpstatuses.com/500")
         };

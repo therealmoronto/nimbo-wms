@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Topology.Commands;
-using Nimbo.Wms.Contracts.Topology.Dtos;
 using Nimbo.Wms.Contracts.Topology.Queries;
 using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Topology;
@@ -19,11 +18,12 @@ public sealed class WarehousesController(ISender sender) : ControllerBase
     /// A task representing the asynchronous operation, containing a read-only list of warehouse items with their identifiers, codes, and names.
     /// </returns>
     [HttpGet]
-    [ProducesResponseType(typeof(IReadOnlyList<WarehouseListItemDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<WarehouseListItemDto>> GetWarehouses(CancellationToken ct)
+    public async Task<IActionResult> GetWarehouses(CancellationToken ct)
     {
-        return await sender.Send(new GetWarehousesQuery(), ct);
+        var result = await sender.Send(new GetWarehousesQuery(), ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>

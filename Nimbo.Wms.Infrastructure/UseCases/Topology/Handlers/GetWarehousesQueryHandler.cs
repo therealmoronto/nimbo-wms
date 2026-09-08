@@ -10,7 +10,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.Topology.Handlers;
 
 [PublicAPI]
-internal sealed class GetWarehousesQueryHandler : IRequestHandler<GetWarehousesQuery, IReadOnlyList<WarehouseListItemDto>>
+internal sealed class GetWarehousesQueryHandler : IRequestHandler<GetWarehousesQuery, Result<IReadOnlyList<WarehouseListItemDto>>>
 {
     private readonly NimboWmsDbContext _db;
     private readonly IMapper<Warehouse, WarehouseListItemDto> _mapper;
@@ -21,7 +21,7 @@ internal sealed class GetWarehousesQueryHandler : IRequestHandler<GetWarehousesQ
         _mapper = mapper;
     }
 
-    public async Task<IReadOnlyList<WarehouseListItemDto>> Handle(GetWarehousesQuery query, CancellationToken ct = default)
+    public async Task<Result<IReadOnlyList<WarehouseListItemDto>>> Handle(GetWarehousesQuery query, CancellationToken ct = default)
     {
         var dbQuery = _db.Set<Warehouse>().AsNoTracking();
         return await _mapper.ProjectToDto(dbQuery).ToListAsync(ct);

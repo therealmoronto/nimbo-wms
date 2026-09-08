@@ -1,12 +1,14 @@
 using System.Diagnostics;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Nimbo.Wms.Contracts;
 
 namespace Nimbo.Wms.Application.Behaviors;
 
-public class LoggingBehavior<TRequest, TResponse>(
-    ILogger<LoggingBehavior<TRequest, TResponse>> logger)
-    : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
+    : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull
+        where TResponse : Result
 {
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
@@ -17,7 +19,14 @@ public class LoggingBehavior<TRequest, TResponse>(
         var stopwatch = Stopwatch.StartNew();
         try
         {
-            var response = await next();
+            var response = await next(ct);
+
+            if (response.IsFailure)
+                logger.LogError(
+                    "Error with code {Code} occured: {Type} -- {Message}",
+                    response.Error.Code,
+                    response.Error.Type,
+                    response.Error.Message);
 
             stopwatch.Stop();
             logger.LogInformation(
