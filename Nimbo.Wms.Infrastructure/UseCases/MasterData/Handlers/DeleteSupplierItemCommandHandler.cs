@@ -1,14 +1,14 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
 [PublicAPI]
-internal sealed class DeleteSupplierItemCommandHandler : IRequestHandler<DeleteSupplierItemCommand>
+internal sealed class DeleteSupplierItemCommandHandler : IRequestHandler<DeleteSupplierItemCommand, Result>
 {
     private readonly ISupplierRepository _repository;
 
@@ -17,15 +17,17 @@ internal sealed class DeleteSupplierItemCommandHandler : IRequestHandler<DeleteS
         _repository = repository;
     }
 
-    public async Task Handle(DeleteSupplierItemCommand command, CancellationToken ct = default)
+    public async Task<Result> Handle(DeleteSupplierItemCommand command, CancellationToken ct = default)
     {
         var supplierId = SupplierId.From(command.SupplierGuid);
         var supplier = await _repository.GetByIdAsync(supplierId, ct);
         if (supplier is null)
-            throw new NotFoundException("Supplier not found");
+            return Error.NotFound("supplier.notfound", "Supplier not found");
 
         var supplierItemId = SupplierItemId.From(command.SupplierItemIGuid);
         if (!supplier.RemoveItem(supplierItemId))
-            throw new NotFoundException("Supplier item not found");
+            return Error.NotFound("supplier_item.notfound", "Supplier item not found");
+
+        return Result.Success();
     }
 }

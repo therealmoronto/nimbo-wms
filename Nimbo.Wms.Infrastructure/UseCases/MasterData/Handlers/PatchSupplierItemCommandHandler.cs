@@ -1,14 +1,14 @@
 using JetBrains.Annotations;
 using MediatR;
 using Nimbo.Wms.Application.Abstractions.Persistence.Repositories.MasterData;
-using Nimbo.Wms.Application.Common;
+using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.MasterData.Commands;
 using Nimbo.Wms.Domain.Identification;
 
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
 [PublicAPI]
-internal sealed class PatchSupplierItemCommandHandler : IRequestHandler<PatchSupplierItemCommand>
+internal sealed class PatchSupplierItemCommandHandler : IRequestHandler<PatchSupplierItemCommand, Result>
 {
     private readonly ISupplierRepository _repository;
 
@@ -17,17 +17,17 @@ internal sealed class PatchSupplierItemCommandHandler : IRequestHandler<PatchSup
         _repository = repository;
     }
     
-    public async Task Handle(PatchSupplierItemCommand command, CancellationToken ct = default)
+    public async Task<Result> Handle(PatchSupplierItemCommand command, CancellationToken ct = default)
     {
         var supplierId = SupplierId.From(command.SupplierGuid);
         var supplier = await _repository.GetByIdWithItemsAsync(supplierId, ct);
         if (supplier is null)
-            throw new NotFoundException("Supplier not found");
+            return Error.NotFound("supplier.notfound", "Supplier not found");
 
         var supplierItemId = SupplierItemId.From(command.SupplierItemGuid);
         var item = supplier.Items.SingleOrDefault(i => i.Id == supplierItemId);
         if (item is null)
-            throw new NotFoundException("Supplier item not found");
+            return Error.NotFound("supplier_item.notfound", "Supplier item not found");
 
         if (command.SupplierSku is not null)
             item.SetSupplierSku(command.SupplierSku);
@@ -58,5 +58,7 @@ internal sealed class PatchSupplierItemCommandHandler : IRequestHandler<PatchSup
             else
                 item.UnmarkPreferred();
         }
+
+        return Result.Success();
     }
 }

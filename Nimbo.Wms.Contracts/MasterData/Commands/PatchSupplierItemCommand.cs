@@ -15,4 +15,4 @@ public sealed record PatchSupplierItemCommand(
     int? LeadTimeDays,
     int? MinOrderQty,
     bool? IsPreferred
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;
