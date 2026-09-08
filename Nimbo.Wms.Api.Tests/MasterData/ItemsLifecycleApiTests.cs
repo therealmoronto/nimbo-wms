@@ -30,7 +30,7 @@ public class ItemsLifecycleApiTests : ApiTestBase
 
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         var createItemResponse = (await createResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemGuid = createItemResponse.ItemGuid;
+        var itemGuid = createItemResponse.Value;
 
         // 2) Get item by id
         var created = await Client.GetFromJsonAsync<ItemDto>($"/api/items/{itemGuid}");

@@ -66,7 +66,7 @@ public class InventoryItemLifecycleApiTests : ApiTestBase
 
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemId = createdItem.ItemGuid;
+        var itemId = createdItem.Value;
 
         // StockLotId is now mandatory on CreateInventoryItemCommand — there's no HTTP-reachable way to
         // mint one yet (Receiving posting isn't exposed over the API), so seed one directly via the

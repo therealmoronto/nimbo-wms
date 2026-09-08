@@ -17,7 +17,7 @@ public static class ResultExtensions
     public static IActionResult ToActionResult<T>(this Result<T> result, ControllerBase controller)
     {
         return result.IsSuccess
-            ? controller.Ok(result.Value)
+            ? controller.Ok(new { result.Value })
             : controller.Problem(result.Error);
     }
 

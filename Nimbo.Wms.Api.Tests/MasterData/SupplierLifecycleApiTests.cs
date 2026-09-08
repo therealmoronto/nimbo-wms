@@ -48,7 +48,7 @@ public class SupplierLifecycleApiTests : ApiTestBase
         
         var createItemResponse = await Client.PostAsJsonAsync("/api/items", createItemRequest);
         var createdItem = (await createItemResponse.Content.ReadFromJsonAsync<CreateItemResponse>())!;
-        var itemGuid = createdItem.ItemGuid;
+        var itemGuid = createdItem.Value;
 
         var addSupplierItemRequest = new AddSupplierItemCommand(supplierGuid, itemGuid);
         var addedSupplierItemResponse = await Client.PostAsJsonAsync($"/api/suppliers/{supplierGuid}/items", addSupplierItemRequest);
