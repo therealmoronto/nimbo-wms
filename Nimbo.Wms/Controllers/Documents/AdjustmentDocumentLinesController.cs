@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Commands;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Dtos;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Documents.Adjustment;
 
 namespace Nimbo.Wms.Controllers.Documents;
@@ -34,9 +35,14 @@ public class AdjustmentDocumentLinesController(ISender sender) : ControllerBase
             request.StockLotId,
             request.Notes,
             request.DocumentVersion);
-        var lineId = await sender.Send(command, ct);
+        var result = await sender.Send(command, ct);
 
-        return Created(string.Empty, new AddAdjustmentDocumentLineResponse(lineId));
+        return result.ToActionResult(
+            this,
+            v => new AddAdjustmentDocumentLineResponse(v),
+            nameof(AdjustmentDocumentsController.GetDocument),
+            "AdjustmentDocuments",
+            new { documentGuid });
     }
 
     /// <summary>
@@ -49,10 +55,11 @@ public class AdjustmentDocumentLinesController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<AdjustmentDocumentLineDto>> GetLines(Guid documentGuid, CancellationToken ct)
+    public async Task<IActionResult> GetLines(Guid documentGuid, CancellationToken ct)
     {
         var query = new GetAdjustmentDocumentLinesQuery(documentGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -79,8 +86,8 @@ public class AdjustmentDocumentLinesController(ISender sender) : ControllerBase
             request.Delta,
             request.Notes,
             request.DocumentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -101,7 +108,7 @@ public class AdjustmentDocumentLinesController(ISender sender) : ControllerBase
         CancellationToken ct)
     {
         var command = new DeleteAdjustmentDocumentLineCommand(documentGuid, lineGuid, documentVersion);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }

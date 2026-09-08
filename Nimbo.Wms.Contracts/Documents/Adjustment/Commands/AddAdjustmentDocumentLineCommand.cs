@@ -13,4 +13,4 @@ public sealed record AddAdjustmentDocumentLineCommand(
     Guid? StockLotId,
     string? Notes,
     long DocumentVersion
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;

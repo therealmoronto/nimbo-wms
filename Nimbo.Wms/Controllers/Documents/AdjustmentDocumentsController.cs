@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Commands;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Dtos;
 using Nimbo.Wms.Contracts.Documents.Adjustment.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.Documents.Adjustment;
 
 namespace Nimbo.Wms.Controllers.Documents;
@@ -36,12 +37,13 @@ public class AdjustmentDocumentsController(ISender sender) : ControllerBase
             request.Title,
             request.ReasonCode,
             request.ReasonText);
-        var documentGuid = await sender.Send(command, ct);
+        var result = await sender.Send(command, ct);
 
-        return CreatedAtAction(
-            actionName: nameof(GetDocument),
-            new { documentGuid = documentGuid },
-            new CreateAdjustmentDocumentResponse(documentGuid));
+        return result.ToActionResult(
+            this,
+            v => new CreateAdjustmentDocumentResponse(v),
+            nameof(GetDocuments),
+            "AdjustmentDocuments");
     }
 
     /// Retrieves a list of all adjustment documents in the system.
@@ -54,10 +56,11 @@ public class AdjustmentDocumentsController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<AdjustmentDocumentBodyDto>> GetDocuments(CancellationToken ct)
+    public async Task<IActionResult> GetDocuments(CancellationToken ct)
     {
         var query = new GetAdjustmentDocumentsQuery();
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// Retrieves an existing adjustment document based on its unique identifier.
@@ -75,10 +78,11 @@ public class AdjustmentDocumentsController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<AdjustmentDocumentDto> GetDocument(Guid documentGuid, CancellationToken ct)
+    public async Task<IActionResult> GetDocument(Guid documentGuid, CancellationToken ct)
     {
         var query = new GetAdjustmentDocumentQuery(documentGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// Updates an existing adjustment document with new details.
@@ -111,8 +115,8 @@ public class AdjustmentDocumentsController(ISender sender) : ControllerBase
             request.ReasonCode,
             request.ReasonText,
             request.Version);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// Deletes an existing adjustment document based on the provided identifier and version.
@@ -135,7 +139,7 @@ public class AdjustmentDocumentsController(ISender sender) : ControllerBase
     public async Task<IActionResult> DeleteDocument(Guid documentGuid, [FromQuery] long version, CancellationToken ct)
     {
         var command = new DeleteAdjustmentDocumentCommand(documentGuid, version);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }
