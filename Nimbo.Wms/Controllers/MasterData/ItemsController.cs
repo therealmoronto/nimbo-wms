@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Nimbo.Wms.Contracts.MasterData.Commands;
-using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Queries;
+using Nimbo.Wms.Extensions;
 using Nimbo.Wms.Models.MasterData;
 
 namespace Nimbo.Wms.Controllers.MasterData;
@@ -23,11 +23,8 @@ public class ItemsController(ISender sender) : ControllerBase
     public async Task<IActionResult> CreateItem([FromBody] CreateItemRequest request, CancellationToken ct)
     {
         var command = new CreateItemCommand(request.Name, request.InternalSku, request.Barcode, request.BaseUom, request.IsBatchManaged);
-        var itemGuid = await sender.Send(command, ct);
-        return CreatedAtAction(
-            actionName: nameof(GetItem),
-            new { itemGuid = itemGuid },
-            new CreateItemResponse(itemGuid));
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -38,10 +35,11 @@ public class ItemsController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json")]
-    public async Task<IReadOnlyList<ItemDto>> GetItems(CancellationToken ct)
+    public async Task<IActionResult> GetItems(CancellationToken ct)
     {
         var query = new GetItemsQuery();
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -55,10 +53,11 @@ public class ItemsController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public async Task<ItemDto> GetItem([FromRoute] Guid itemGuid, CancellationToken ct)
+    public async Task<IActionResult> GetItem([FromRoute] Guid itemGuid, CancellationToken ct)
     {
         var query = new GetItemQuery(itemGuid);
-        return await sender.Send(query, ct);
+        var result = await sender.Send(query, ct);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -83,8 +82,10 @@ public class ItemsController(ISender sender) : ControllerBase
             request.Manufacturer,
             request.WeightKg,
             request.VolumeM3);
-        await sender.Send(command, ct);
-        return NoContent();
+
+        var result = await sender.Send(command, ct);
+
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -99,7 +100,7 @@ public class ItemsController(ISender sender) : ControllerBase
     public async Task<IActionResult> DeleteItem([FromRoute] Guid itemGuid, CancellationToken ct)
     {
         var command = new DeleteItemCommand(itemGuid);
-        await sender.Send(command, ct);
-        return NoContent();
+        var result = await sender.Send(command, ct);
+        return result.ToActionResult(this);
     }
 }

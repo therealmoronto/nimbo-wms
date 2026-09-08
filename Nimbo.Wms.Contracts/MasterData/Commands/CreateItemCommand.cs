@@ -10,4 +10,4 @@ public sealed record CreateItemCommand(
     string Barcode,
     string BaseUom,
     bool IsBatchManaged = false
-) : IRequest<Guid>, ITxRequest;
+) : IRequest<Result<Guid>>, ITxRequest;

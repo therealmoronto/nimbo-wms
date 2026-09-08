@@ -14,4 +14,4 @@ public sealed record PatchItemCommand(
     string? Manufacturer = null,
     decimal? WeightKg = null,
     decimal? VolumeM3 = null
-) : IRequest, ITxRequest;
+) : IRequest<Result>, ITxRequest;

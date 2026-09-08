@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Nimbo.Wms.Application.Common;
 using Nimbo.Wms.Contracts;
 using Nimbo.Wms.Contracts.MasterData.Dtos;
 using Nimbo.Wms.Contracts.MasterData.Queries;
@@ -11,7 +10,7 @@ using Nimbo.Wms.Infrastructure.Persistence;
 namespace Nimbo.Wms.Infrastructure.UseCases.MasterData.Handlers;
 
 [PublicAPI]
-internal sealed class GetItemQueryHandler : IRequestHandler<GetItemQuery, ItemDto>
+internal sealed class GetItemQueryHandler : IRequestHandler<GetItemQuery, Result<ItemDto>>
 {
     private readonly NimboWmsDbContext _dbContext;
     private readonly IMapper<Item, ItemDto> _mapper;
@@ -22,7 +21,7 @@ internal sealed class GetItemQueryHandler : IRequestHandler<GetItemQuery, ItemDt
         _mapper = mapper;
     }
 
-    public async Task<ItemDto> Handle(GetItemQuery query, CancellationToken ct = default)
+    public async Task<Result<ItemDto>> Handle(GetItemQuery query, CancellationToken ct = default)
     {
         var dbQuery = _dbContext.Set<Item>()
             .AsNoTracking()
@@ -31,7 +30,9 @@ internal sealed class GetItemQueryHandler : IRequestHandler<GetItemQuery, ItemDt
         var item = await _mapper.ProjectToDto(dbQuery).SingleOrDefaultAsync(ct);
 
         if (item == null)
-            throw new NotFoundException("Item not found");
+        {
+            return Error.NotFound("item.notfound", "Item not found");
+        }
 
         return item;
     }
